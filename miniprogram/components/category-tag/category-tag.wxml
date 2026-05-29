@@ -1,0 +1,4 @@
+<view class="category-tag category-tag--{{category}}">
+  <text class="category-tag__icon">{{icon}}</text>
+  <text class="category-tag__text">{{name}}</text>
+</view>

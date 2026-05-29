@@ -1,0 +1,29 @@
+<view class="draw-card">
+  <view class="draw-card__header">
+    <text class="draw-card__icon">{{poolType === 'small' ? '🎰' : '🎪'}}</text>
+    <view class="draw-card__header-text">
+      <text class="draw-card__title">{{poolType === 'small' ? '小抽奖' : '大抽奖'}}</text>
+      <text class="draw-card__cost">消耗 {{cost}} 积分/次</text>
+    </view>
+  </view>
+
+  <view class="draw-card__rates" wx:if="{{items.length > 0}}">
+    <view
+      class="draw-card__rate-item"
+      wx:for="{{rateItems}}"
+      wx:key="rarity"
+    >
+      <text class="draw-card__rate-name color-{{item.rarity}}">{{item.name}}</text>
+      <text class="draw-card__rate-pct">{{item.probability}}%</text>
+    </view>
+  </view>
+
+  <view class="draw-card__actions">
+    <button class="draw-card__btn draw-card__btn--primary" bindtap="onDrawOne" loading="{{loading}}">
+      抽一次 ({{cost}}分)
+    </button>
+    <button class="draw-card__btn draw-card__btn--secondary" bindtap="onDrawFive" loading="{{loading}}">
+      抽五次 ({{cost * 5}}分)
+    </button>
+  </view>
+</view>

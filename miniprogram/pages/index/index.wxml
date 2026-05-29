@@ -1,0 +1,97 @@
+<view class="index-page">
+  <!-- Nav Bar -->
+  <view class="index-page__nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="index-page__nav-content">
+      <text class="index-page__nav-title">成长之路</text>
+    </view>
+  </view>
+
+  <!-- Loading -->
+  <block wx:if="{{loading}}">
+    <view class="index-page__loading">
+      <skeleton-card wx:for="{{3}}" wx:key="index" />
+    </view>
+  </block>
+
+  <!-- No Children -->
+  <block wx:elif="{{children.length === 0}}">
+    <empty-state icon="👶" text="还没有添加孩子哦~&#10;快去设置页面添加吧" actionText="添加孩子" bind:action="onAddChild" />
+  </block>
+
+  <!-- Content -->
+  <block wx:else>
+    <!-- Child Switcher -->
+    <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+    <!-- Level Tree -->
+    <level-tree totalPoints="{{activeChild.totalPointsEarned}}" level="{{activeChild.level}}" />
+
+    <!-- Points & Streak -->
+    <view class="index-page__stats-row">
+      <view class="index-page__stat-card">
+        <points-display value="{{activeChild.currentPoints}}" label="积分" animate="{{pointsAnimate}}" />
+      </view>
+      <view class="index-page__stat-card">
+        <streak-badge days="{{activeChild.streakDays}}" />
+      </view>
+    </view>
+
+    <!-- Today Progress -->
+    <view class="index-page__section">
+      <view class="index-page__section-header">
+        <text class="index-page__section-title">今日任务</text>
+        <text class="index-page__section-link" bindtap="onGoTasks">查看全部 →</text>
+      </view>
+      <view class="index-page__progress-card">
+        <view class="index-page__progress-bar-wrap">
+          <view class="index-page__progress-bar" style="width: {{todayPercent}}%;"></view>
+        </view>
+        <view class="index-page__progress-info">
+          <text class="index-page__progress-percent">{{todayPercent}}%</text>
+          <text class="index-page__progress-text">{{todayCompleted}} / {{todayTasks}} 已完成</text>
+        </view>
+      </view>
+      <!-- Today task preview -->
+      <view wx:if="{{todayTasksList.length > 0}}">
+        <task-card
+          wx:for="{{todayTasksList}}"
+          wx:key="_id"
+          task="{{item}}"
+          bind:tasktap="onTaskTap"
+        />
+      </view>
+      <empty-state wx:else icon="📋" text="今天还没有任务" />
+    </view>
+
+    <!-- Recent Badges -->
+    <view class="index-page__section" wx:if="{{recentAchievements.length > 0}}">
+      <view class="index-page__section-header">
+        <text class="index-page__section-title">最新徽章</text>
+        <text class="index-page__section-link" bindtap="onGoAchievements">查看全部 →</text>
+      </view>
+      <scroll-view class="index-page__badge-scroll" scroll-x show-scrollbar="{{false}}">
+        <view class="index-page__badge-list">
+          <view class="index-page__badge" wx:for="{{recentAchievements}}" wx:key="_id">
+            <text class="index-page__badge-icon">🏅</text>
+            <text class="index-page__badge-name">{{item.achievementKey}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- Recent Loot -->
+    <view class="index-page__section" wx:if="{{recentDraws.length > 0}}">
+      <view class="index-page__section-header">
+        <text class="index-page__section-title">最近战利品</text>
+      </view>
+      <view class="index-page__loot-list">
+        <view class="index-page__loot-item" wx:for="{{recentDraws}}" wx:key="_id">
+          <text class="index-page__loot-icon">{{item.prizeType === 'points' ? '⭐' : '🎁'}}</text>
+          <text class="index-page__loot-name">{{item.prizeName}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="safe-area-bottom"></view>
+</view>

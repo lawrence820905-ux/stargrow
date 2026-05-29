@@ -1,0 +1,10 @@
+.category-tag {
+  display: inline-flex; align-items: center; gap: 6rpx;
+  padding: 6rpx 16rpx; border-radius: 20rpx; font-size: 22rpx; font-weight: 500;
+}
+
+.category-tag--sport { background: #E8F2FF; color: #007AFF; }
+.category-tag--life { background: #E8FFF0; color: #34C759; }
+.category-tag--study { background: #FFF3E0; color: #FF9500; }
+
+.category-tag__icon { font-size: 24rpx; }

@@ -1,0 +1,25 @@
+.confetti-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-view-particle {
+  position: absolute;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-200rpx) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1400rpx) rotate(720deg);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,140 @@
+<view class="draw-config-page">
+  <nav-bar title="抽奖配置" showBack="{{true}}" />
+
+  <view class="draw-config-page__content">
+    <!-- Segment Control -->
+    <view class="draw-config-page__segment">
+      <view
+        class="draw-config-page__segment-item {{poolType === 'small' ? 'draw-config-page__segment-item--active' : ''}}"
+        bindtap="onSwitchType"
+        data-type="small"
+      >
+        <text>🎰 小抽奖</text>
+      </view>
+      <view
+        class="draw-config-page__segment-item {{poolType === 'big' ? 'draw-config-page__segment-item--active' : ''}}"
+        bindtap="onSwitchType"
+        data-type="big"
+      >
+        <text>🎪 大抽奖</text>
+      </view>
+    </view>
+
+    <!-- Cost -->
+    <view class="draw-config-page__field">
+      <text class="draw-config-page__label">单次消耗积分: {{cost}} 分</text>
+      <view class="draw-config-page__slider-row">
+        <view class="draw-config-page__slider-btn" bindtap="onCostDecrease">−</view>
+        <text class="draw-config-page__slider-min">5</text>
+        <slider
+          class="draw-config-page__slider"
+          min="5" max="500" value="{{cost}}"
+          activeColor="#007AFF" backgroundColor="#E5E5EA"
+          block-size="24" bindchange="onCostChange"
+        />
+        <text class="draw-config-page__slider-max">500</text>
+        <view class="draw-config-page__slider-btn" bindtap="onCostIncrease">+</view>
+      </view>
+    </view>
+
+    <!-- Items -->
+    <view class="draw-config-page__section">
+      <text class="draw-config-page__section-title">奖品列表 (总权重: {{totalWeight}})</text>
+
+      <view
+        class="draw-config-page__item bg-{{item.rarity}}"
+        wx:for="{{items}}"
+        wx:key="id"
+      >
+        <view class="draw-config-page__item-header">
+          <text class="draw-config-page__item-icon">{{item.icon}}</text>
+          <text class="draw-config-page__item-name color-{{item.rarity}}">{{item.name}}</text>
+          <text class="draw-config-page__item-weight">权重: {{item.weight}}</text>
+          <view class="draw-config-page__item-delete" data-index="{{index}}" bindtap="onDeleteItem">
+            <text>✕</text>
+          </view>
+        </view>
+        <view class="draw-config-page__item-prob">
+          <text>概率: {{item.probability}}%</text>
+        </view>
+      </view>
+
+      <view class="draw-config-page__add-btn" bindtap="onAddItem">
+        <text>+ 添加奖品</text>
+      </view>
+    </view>
+
+    <button class="draw-config-page__save" bindtap="onSave">保存配置</button>
+    <view style="height: 60rpx;"></view>
+  </view>
+
+  <!-- Add Item Sheet -->
+  <view class="draw-config-page__overlay" wx:if="{{showAddItem}}" bindtap="onCloseAddItem">
+    <view class="draw-config-page__modal" catchtap="preventBubble">
+      <text class="draw-config-page__modal-title">添加奖品</text>
+
+      <view class="draw-config-page__field">
+        <text class="draw-config-page__label">奖品名称</text>
+        <input class="draw-config-page__input" placeholder="如：50积分" value="{{newItem.name}}" bindinput="onNewItemField" data-field="name" />
+      </view>
+
+      <view class="draw-config-page__field">
+        <text class="draw-config-page__label">类型</text>
+        <view class="draw-config-page__type-row">
+          <view class="draw-config-page__type-option {{newItem.type === 'points' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemType" data-type="points"><text>积分</text></view>
+          <view class="draw-config-page__type-option {{newItem.type === 'reward' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemType" data-type="reward"><text>奖励</text></view>
+        </view>
+      </view>
+
+      <block wx:if="{{newItem.type === 'points'}}">
+        <view class="draw-config-page__field">
+          <text class="draw-config-page__label">奖励积分: {{newItem.pointsValue}}</text>
+          <view class="draw-config-page__slider-row">
+            <view class="draw-config-page__slider-btn" bindtap="onModalPointsDecrease">−</view>
+            <slider min="-100" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
+            <view class="draw-config-page__slider-btn" bindtap="onModalPointsIncrease">+</view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:if="{{newItem.type === 'reward'}}">
+        <view class="draw-config-page__field">
+          <text class="draw-config-page__label">奖励名称</text>
+          <input class="draw-config-page__input" placeholder="如：看动画片30分钟" value="{{newItem.rewardTitle}}" bindinput="onNewItemField" data-field="rewardTitle" />
+        </view>
+        <view class="draw-config-page__field">
+          <text class="draw-config-page__label">奖励描述</text>
+          <input class="draw-config-page__input" value="{{newItem.rewardDescription}}" bindinput="onNewItemField" data-field="rewardDescription" />
+        </view>
+        <view class="draw-config-page__field">
+          <text class="draw-config-page__label">附送积分: {{newItem.pointsValue}}</text>
+          <view class="draw-config-page__slider-row">
+            <view class="draw-config-page__slider-btn" bindtap="onModalPointsDecrease">−</view>
+            <slider min="-100" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
+            <view class="draw-config-page__slider-btn" bindtap="onModalPointsIncrease">+</view>
+          </view>
+        </view>
+      </block>
+
+      <view class="draw-config-page__field">
+        <text class="draw-config-page__label">稀有度</text>
+        <view class="draw-config-page__type-row">
+          <view class="draw-config-page__type-option {{newItem.rarity === 'common' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemRarity" data-rarity="common"><text>普通 60%</text></view>
+          <view class="draw-config-page__type-option {{newItem.rarity === 'rare' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemRarity" data-rarity="rare"><text>稀有 25%</text></view>
+          <view class="draw-config-page__type-option {{newItem.rarity === 'epic' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemRarity" data-rarity="epic"><text>史诗 10%</text></view>
+          <view class="draw-config-page__type-option {{newItem.rarity === 'legendary' ? 'draw-config-page__type-option--active' : ''}}" bindtap="onNewItemRarity" data-rarity="legendary"><text>传说 5%</text></view>
+        </view>
+      </view>
+
+      <view class="draw-config-page__field">
+        <text class="draw-config-page__label">图标 Emoji</text>
+        <input class="draw-config-page__input" value="{{newItem.icon}}" bindinput="onNewItemField" data-field="icon" />
+      </view>
+
+      <view class="draw-config-page__modal-btns">
+        <button class="draw-config-page__modal-cancel" bindtap="onCloseAddItem">取消</button>
+        <button class="draw-config-page__modal-confirm" bindtap="onConfirmAddItem">确认添加</button>
+      </view>
+    </view>
+  </view>
+</view>

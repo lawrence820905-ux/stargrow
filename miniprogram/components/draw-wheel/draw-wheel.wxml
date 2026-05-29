@@ -1,0 +1,16 @@
+<view class="draw-wheel">
+  <view class="draw-wheel__container">
+    <canvas
+      type="2d"
+      id="wheel-canvas"
+      class="draw-wheel__canvas"
+      style="width: {{size}}rpx; height: {{size}}rpx;"
+    ></canvas>
+    <view class="draw-wheel__pointer" wx:if="{{spinning}}">
+      <text class="draw-wheel__pointer-text">🎯</text>
+    </view>
+  </view>
+  <view class="draw-wheel__center" wx:if="{{!spinning}}">
+    <text class="draw-wheel__center-text">抽奖</text>
+  </view>
+</view>

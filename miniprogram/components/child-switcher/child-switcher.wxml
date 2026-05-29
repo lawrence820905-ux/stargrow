@@ -1,0 +1,24 @@
+<scroll-view class="child-switcher" scroll-x enhanced show-scrollbar="{{false}}">
+  <view class="child-switcher__list">
+    <view
+      class="child-switcher__item {{item._id === activeId ? 'child-switcher__item--active' : ''}}"
+      wx:for="{{children}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onSelect"
+    >
+      <view class="child-switcher__avatar">
+        <image
+          wx:if="{{item.avatarUrl}}"
+          class="child-switcher__avatar-img"
+          src="{{item.avatarUrl}}"
+          mode="aspectFill"
+        />
+        <view wx:else class="child-switcher__avatar-placeholder">
+          <text>{{item.name[0]}}</text>
+        </view>
+      </view>
+      <text class="child-switcher__name">{{item.name}}</text>
+    </view>
+  </view>
+</scroll-view>

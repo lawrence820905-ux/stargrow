@@ -1,0 +1,34 @@
+<view class="cm-page">
+  <nav-bar title="孩子管理" showBack="{{true}}" />
+
+  <view class="cm-page__content">
+    <view class="cm-page__child" wx:for="{{children}}" wx:key="_id">
+      <view class="cm-page__child-avatar">
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <text wx:else class="cm-page__avatar-text">{{item.name[0]}}</text>
+      </view>
+      <text class="cm-page__child-name">{{item.name}}</text>
+      <text class="cm-page__child-level">Lv{{item.level}}</text>
+      <view class="cm-page__child-actions">
+        <text class="cm-page__edit-btn" data-child="{{item}}" bindtap="onEdit">编辑</text>
+        <text class="cm-page__delete-btn" data-id="{{item._id}}" bindtap="onDelete">删除</text>
+      </view>
+    </view>
+
+    <view class="cm-page__add-btn" bindtap="onAdd">
+      <text>+ 添加孩子</text>
+    </view>
+  </view>
+
+  <!-- Add/Edit Modal -->
+  <view class="cm-page__overlay" wx:if="{{showModal}}">
+    <view class="cm-page__modal" catchtap="">
+      <text class="cm-page__modal-title">{{editingChild ? '编辑' : '添加'}}孩子</text>
+      <input class="cm-page__input" placeholder="孩子名称" value="{{childName}}" bindinput="onNameInput" />
+      <view class="cm-page__modal-btns">
+        <button class="cm-page__modal-cancel" bindtap="onCloseModal">取消</button>
+        <button class="cm-page__modal-confirm" bindtap="onConfirmModal">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

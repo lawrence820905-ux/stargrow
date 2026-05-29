@@ -1,0 +1,27 @@
+<view class="ach-page">
+  <view class="ach-page__header">
+    <text class="ach-page__title">成就墙</text>
+  </view>
+
+  <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+  <view class="ach-page__count">
+    <text>{{earned.length}} / {{total}} 已获得</text>
+  </view>
+
+  <view class="ach-page__grid" wx:if="{{allBadges.length > 0}}">
+    <view
+      class="ach-page__badge {{item.earnedAt ? 'ach-page__badge--earned' : 'ach-page__badge--locked'}}"
+      wx:for="{{allBadges}}"
+      wx:key="key"
+    >
+      <text class="ach-page__badge-icon">{{item.icon}}</text>
+      <text class="ach-page__badge-name">{{item.name}}</text>
+      <text class="ach-page__badge-desc">{{item.description}}</text>
+    </view>
+  </view>
+
+  <empty-state wx:else icon="🏅" text="暂无成就数据" />
+
+  <view class="safe-area-bottom" style="height: 120rpx;"></view>
+</view>

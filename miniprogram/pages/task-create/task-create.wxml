@@ -1,0 +1,98 @@
+<view class="task-create-page">
+  <nav-bar title="{{isEdit ? '编辑任务' : '新建任务'}}" showBack="{{true}}" />
+
+  <view class="task-create-page__form">
+    <!-- Title -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">任务标题</text>
+      <input class="task-create-page__input" placeholder="例如：完成数学作业" value="{{title}}" bindinput="onTitleInput" maxlength="50" />
+    </view>
+
+    <!-- Description -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">任务描述（可选）</text>
+      <textarea class="task-create-page__textarea" placeholder="补充说明..." value="{{description}}" bindinput="onDescInput" maxlength="200" />
+    </view>
+
+    <!-- Task Type -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">任务类型</text>
+      <view class="task-create-page__type-row">
+        <view
+          class="task-create-page__type-option {{taskType === 'daily' ? 'task-create-page__type-option--active' : ''}}"
+          data-type="daily"
+          bindtap="onTaskTypeChange"
+        >
+          <text class="task-create-page__type-icon">🔄</text>
+          <text class="task-create-page__type-name">日常任务</text>
+          <text class="task-create-page__type-desc">每天重复</text>
+        </view>
+        <view
+          class="task-create-page__type-option {{taskType === 'special' ? 'task-create-page__type-option--active' : ''}}"
+          data-type="special"
+          bindtap="onTaskTypeChange"
+        >
+          <text class="task-create-page__type-icon">⭐</text>
+          <text class="task-create-page__type-name">特殊任务</text>
+          <text class="task-create-page__type-desc">一次性</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Category -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">分类</text>
+      <view class="task-create-page__category-row">
+        <view
+          class="task-create-page__category-option {{category === item.key ? 'task-create-page__category-option--active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          bindtap="onCategorySelect"
+        >
+          <text class="task-create-page__category-icon">{{item.icon}}</text>
+          <text class="task-create-page__category-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Points -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">基础积分: {{basePoints}} 分</text>
+      <view class="task-create-page__slider-row">
+        <view class="task-create-page__slider-btn" bindtap="onPointsDecrease">−</view>
+        <text class="task-create-page__slider-min">1</text>
+        <slider
+          class="task-create-page__slider"
+          min="1" max="50" value="{{basePoints}}"
+          activeColor="#007AFF" backgroundColor="#E5E5EA"
+          block-size="24" bindchange="onPointsChange"
+        />
+        <text class="task-create-page__slider-max">50</text>
+        <view class="task-create-page__slider-btn" bindtap="onPointsIncrease">+</view>
+      </view>
+    </view>
+
+    <!-- Child -->
+    <view class="task-create-page__field">
+      <text class="task-create-page__label">指派给</text>
+      <view class="task-create-page__child-row">
+        <view
+          class="task-create-page__child-option {{selectedChildId === item._id ? 'task-create-page__child-option--active' : ''}}"
+          wx:for="{{children}}"
+          wx:key="_id"
+          data-id="{{item._id}}"
+          bindtap="onChildSelect"
+        >
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="task-create-page__footer">
+    <button class="task-create-page__submit" bindtap="onSubmit">
+      {{isEdit ? '保存修改' : '创建任务'}}
+    </button>
+  </view>
+</view>

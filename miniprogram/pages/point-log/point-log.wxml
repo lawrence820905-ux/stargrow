@@ -1,0 +1,23 @@
+<view class="pl-page">
+  <nav-bar title="积分流水" showBack="{{true}}" />
+  <view>
+    <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+    <view class="pl-page__list" wx:if="{{records.length > 0}}">
+      <view class="pl-page__record" wx:for="{{records}}" wx:key="_id">
+        <view class="pl-page__record-left">
+          <text class="pl-page__record-icon">{{item.amount > 0 ? '➕' : '➖'}}</text>
+          <view>
+            <text class="pl-page__record-note">{{item.note || item.type}}</text>
+            <text class="pl-page__record-time">{{item.timeText}}</text>
+          </view>
+        </view>
+        <text class="pl-page__record-amount {{item.amount > 0 ? 'color-green' : 'color-red'}}">
+          {{item.amount > 0 ? '+' : ''}}{{item.amount}}
+        </text>
+      </view>
+    </view>
+
+    <empty-state wx:else icon="📋" text="暂无积分记录" />
+  </view>
+</view>

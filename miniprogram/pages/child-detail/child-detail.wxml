@@ -1,0 +1,24 @@
+<view class="cd-page">
+  <nav-bar title="孩子详情" showBack="{{true}}" />
+  <view>
+    <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+    <level-tree totalPoints="{{child.totalPointsEarned || 0}}" level="{{child.level || 1}}" />
+
+    <view class="cd-page__stats">
+      <view class="cd-page__stat">
+        <points-display value="{{child.currentPoints || 0}}" label="积分" />
+      </view>
+      <view class="cd-page__stat">
+        <streak-badge days="{{child.streakDays || 0}}" />
+      </view>
+    </view>
+
+    <view class="cd-page__card">
+      <view class="cd-page__row"><text>累计完成任务</text><text class="cd-page__val">{{child.totalTasksCompleted || 0}}</text></view>
+      <view class="cd-page__row"><text>累计抽奖次数</text><text class="cd-page__val">{{child.totalDraws || 0}}</text></view>
+      <view class="cd-page__row"><text>累计获得积分</text><text class="cd-page__val">⭐ {{child.totalPointsEarned || 0}}</text></view>
+      <view class="cd-page__row"><text>当前可用积分</text><text class="cd-page__val">⭐ {{child.currentPoints || 0}}</text></view>
+    </view>
+  </view>
+</view>

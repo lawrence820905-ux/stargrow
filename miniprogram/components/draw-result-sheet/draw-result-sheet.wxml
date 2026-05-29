@@ -1,0 +1,16 @@
+<view class="draw-result-overlay {{visible ? 'draw-result-overlay--visible' : ''}}" bindtap="onClose">
+  <view class="draw-result-sheet {{visible ? 'draw-result-sheet--visible' : ''}}" catchtap="">
+    <view class="draw-result-sheet__rarity-bg bg-{{record.prizeType === 'reward' ? 'legendary' : 'rare'}}"></view>
+
+    <view class="draw-result-sheet__content">
+      <text class="draw-result-sheet__emoji">{{record.prizeType === 'points' ? '⭐' : '🎁'}}</text>
+      <text class="draw-result-sheet__title">恭喜获得</text>
+      <text class="draw-result-sheet__prize">{{record.prizeName}}</text>
+      <text class="draw-result-sheet__detail" wx:if="{{record.pointsAwarded > 0}}">+{{record.pointsAwarded}} 积分</text>
+      <text class="draw-result-sheet__detail" wx:if="{{record.rewardTitle}}">{{record.rewardTitle}}</text>
+      <text class="draw-result-sheet__cost">消耗 {{record.pointsSpent}} 积分</text>
+    </view>
+
+    <button class="draw-result-sheet__btn" bindtap="onClose">太棒了！</button>
+  </view>
+</view>

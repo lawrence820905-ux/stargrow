@@ -1,0 +1,8 @@
+<view class="confetti-view" wx:if="{{active}}">
+  <view
+    class="confetti-view__particle"
+    wx:for="{{particles}}"
+    wx:key="index"
+    style="left: {{item.x}}rpx; top: {{item.y}}rpx; background: {{item.color}}; width: {{item.size}}rpx; height: {{item.size}}rpx; border-radius: {{item.round ? '50%' : '2rpx'}}; animation: confetti-fall {{item.duration}}s {{item.delay}}s linear forwards;"
+  ></view>
+</view>

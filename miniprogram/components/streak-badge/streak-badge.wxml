@@ -1,0 +1,5 @@
+<view class="streak-badge">
+  <text class="streak-badge__icon">🔥</text>
+  <text class="streak-badge__count">{{days}}</text>
+  <text class="streak-badge__label">天</text>
+</view>

@@ -1,0 +1,121 @@
+<view class="stats-page">
+  <nav-bar title="数据统计" showBack="{{true}}" />
+  <view>
+    <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+    <!-- Overview Cards -->
+    <view class="stats-page__section">
+      <text class="stats-page__section-title">概览</text>
+      <view class="stats-page__overview-grid">
+        <view class="stats-page__overview-card">
+          <text class="stats-page__overview-icon">📋</text>
+          <text class="stats-page__overview-value">{{overview.thisWeekTasks || 0}}</text>
+          <text class="stats-page__overview-label">本周任务</text>
+        </view>
+        <view class="stats-page__overview-card">
+          <text class="stats-page__overview-icon">⭐</text>
+          <text class="stats-page__overview-value">{{overview.child ? overview.child.totalPointsEarned : 0}}</text>
+          <text class="stats-page__overview-label">累计积分</text>
+        </view>
+        <view class="stats-page__overview-card">
+          <text class="stats-page__overview-icon">🔥</text>
+          <text class="stats-page__overview-value">{{overview.child ? overview.child.streakDays : 0}}<text class="stats-page__overview-unit">天</text></text>
+          <text class="stats-page__overview-label">连续天数</text>
+        </view>
+        <view class="stats-page__overview-card">
+          <text class="stats-page__overview-icon">🌳</text>
+          <text class="stats-page__overview-value">Lv{{overview.child ? overview.child.level : 1}}</text>
+          <text class="stats-page__overview-label">当前等级</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Weekly Trend Chart -->
+    <view class="stats-page__section">
+      <text class="stats-page__section-title">📈 每周趋势（近8周）</text>
+      <view class="stats-page__card">
+        <view class="stats-page__chart">
+          <view class="stats-page__bars">
+            <view class="stats-page__bar-col" wx:for="{{chartCompleted}}" wx:key="index">
+              <view class="stats-page__bar-wrapper">
+                <view
+                  class="stats-page__bar"
+                  style="height: {{maxCompleted > 0 ? (item / maxCompleted * 160) : 0}}rpx;"
+                >
+                  <text class="stats-page__bar-val" wx:if="{{item > 0}}">{{item}}</text>
+                </view>
+              </view>
+              <text class="stats-page__bar-label">{{chartLabels[index]}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="stats-page__chart-legend">
+          <view class="stats-page__legend-item">
+            <view class="stats-page__legend-dot stats-page__legend-dot--blue"></view>
+            <text>完成任务数</text>
+          </view>
+          <view class="stats-page__legend-item">
+            <view class="stats-page__legend-dot stats-page__legend-dot--orange"></view>
+            <text>获得积分: {{chartPoints[chartPoints.length - 1] || 0}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Category Breakdown -->
+    <view class="stats-page__section">
+      <text class="stats-page__section-title">📊 分类统计</text>
+      <view class="stats-page__card">
+        <view class="stats-page__cat-row">
+          <text class="stats-page__cat-icon">⚽</text>
+          <text class="stats-page__cat-name">运动</text>
+          <text class="stats-page__cat-val">{{breakdown.sport || 0}} 次</text>
+          <view class="stats-page__cat-bar">
+            <view class="stats-page__cat-fill stats-page__cat-fill--blue" style="width: {{breakdown.sport > 0 ? (breakdown.sport / maxCat * 100) : 0}}%;"></view>
+          </view>
+        </view>
+        <view class="stats-page__cat-row">
+          <text class="stats-page__cat-icon">🏠</text>
+          <text class="stats-page__cat-name">生活</text>
+          <text class="stats-page__cat-val">{{breakdown.life || 0}} 次</text>
+          <view class="stats-page__cat-bar">
+            <view class="stats-page__cat-fill stats-page__cat-fill--green" style="width: {{breakdown.life > 0 ? (breakdown.life / maxCat * 100) : 0}}%;"></view>
+          </view>
+        </view>
+        <view class="stats-page__cat-row">
+          <text class="stats-page__cat-icon">📚</text>
+          <text class="stats-page__cat-name">学习</text>
+          <text class="stats-page__cat-val">{{breakdown.study || 0}} 次</text>
+          <view class="stats-page__cat-bar">
+            <view class="stats-page__cat-fill stats-page__cat-fill--orange" style="width: {{breakdown.study > 0 ? (breakdown.study / maxCat * 100) : 0}}%;"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Leaderboard -->
+    <view class="stats-page__section" wx:if="{{leaderboard.length > 0}}">
+      <text class="stats-page__section-title">🏆 家庭排行榜（本周）</text>
+      <view class="stats-page__card">
+        <view class="stats-page__rank-item" wx:for="{{leaderboard}}" wx:key="childId">
+          <view class="stats-page__rank-badge">
+            <text wx:if="{{index === 0}}">🥇</text>
+            <text wx:elif="{{index === 1}}">🥈</text>
+            <text wx:elif="{{index === 2}}">🥉</text>
+            <text wx:else class="stats-page__rank-num">{{index + 1}}</text>
+          </view>
+          <text class="stats-page__rank-name">{{item.name}}</text>
+          <view class="stats-page__rank-bar-wrap">
+            <view
+              class="stats-page__rank-bar"
+              style="width: {{leaderboard.length > 0 ? (item.weekPoints / leaderboard[0].weekPoints * 100) : 0}}%;"
+            ></view>
+          </view>
+          <text class="stats-page__rank-pts">⭐ {{item.weekPoints}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height: 40rpx;"></view>
+  </view>
+</view>

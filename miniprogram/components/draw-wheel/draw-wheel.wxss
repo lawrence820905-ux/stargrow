@@ -1,0 +1,27 @@
+.draw-wheel {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+
+.draw-wheel__container { position: relative; }
+
+.draw-wheel__canvas { border-radius: 50%; }
+
+.draw-wheel__pointer {
+  position: absolute; top: -20rpx; left: 50%;
+  transform: translateX(-50%); z-index: 2;
+}
+
+.draw-wheel__pointer-text { font-size: 40rpx; }
+
+.draw-wheel__center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.15);
+  display: flex; align-items: center; justify-content: center; z-index: 1;
+}
+
+.draw-wheel__center-text {
+  font-size: 28rpx; font-weight: 700; color: #007AFF;
+}

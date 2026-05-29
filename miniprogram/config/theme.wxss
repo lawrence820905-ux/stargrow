@@ -1,0 +1,65 @@
+/* iOS 17 Design System */
+:root {
+  --color-blue: #007AFF;
+  --color-green: #34C759;
+  --color-orange: #FF9500;
+  --color-red: #FF3B30;
+  --color-teal: #5AC8FA;
+  --color-purple: #AF52DE;
+  --color-yellow: #FFCC00;
+  --color-pink: #FF2D55;
+
+  --color-background: #F2F2F7;
+  --color-background-white: #FFFFFF;
+  --color-background-card: #FFFFFF;
+
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #8E8E93;
+  --color-text-tertiary: #C7C7CC;
+
+  --color-separator: #C6C6C8;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  --shadow-card: 0 2px 16px rgba(0,0,0,0.04);
+  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.08);
+
+  --spacing-page: 32rpx;
+  --spacing-card: 24rpx;
+  --spacing-element: 16rpx;
+  --spacing-tight: 8rpx;
+
+  --font-large-title: 34rpx;
+  --font-title1: 28rpx;
+  --font-title2: 30rpx;
+  --font-body: 28rpx;
+  --font-caption: 24rpx;
+  --font-small: 20rpx;
+
+  --nav-bar-height: 88rpx;
+
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+.color-sport { color: var(--color-blue); }
+.color-life { color: var(--color-green); }
+.color-study { color: var(--color-orange); }
+
+.bg-sport { background-color: var(--color-blue); }
+.bg-life { background-color: var(--color-green); }
+.bg-study { background-color: var(--color-orange); }
+
+.color-common { color: #8E8E93; }
+.color-rare { color: var(--color-blue); }
+.color-epic { color: var(--color-purple); }
+.color-legendary { color: var(--color-orange); }
+
+.bg-common { background-color: #F2F2F7; }
+.bg-rare { background-color: #E8F2FF; }
+.bg-epic { background-color: #F3E8FF; }
+.bg-legendary { background-color: #FFF3E0; }

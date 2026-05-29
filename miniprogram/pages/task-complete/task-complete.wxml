@@ -1,0 +1,15 @@
+<view class="tc-page">
+  <view class="tc-page__card">
+    <text class="tc-page__title">{{task.title}}</text>
+    <text class="tc-page__base">基础积分: {{task.basePoints}}</text>
+    <text class="tc-page__label">给孩子的表现打分</text>
+    <score-stars score="{{selectedScore}}" bind:change="onScoreChange" />
+    <view class="tc-page__result" wx:if="{{selectedScore > 0}}">
+      <text>{{task.basePoints}} × {{multiplier}} = </text>
+      <text class="tc-page__points">+{{computedPoints}} 积分</text>
+    </view>
+  </view>
+  <button class="tc-page__btn" bindtap="onConfirm" disabled="{{selectedScore < 1}}">
+    确认完成
+  </button>
+</view>

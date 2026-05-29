@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "child-switcher": "../../components/child-switcher/child-switcher",
+    "level-tree": "../../components/level-tree/level-tree",
+    "points-display": "../../components/points-display/points-display",
+    "streak-badge": "../../components/streak-badge/streak-badge",
+    "task-card": "../../components/task-card/task-card",
+    "empty-state": "../../components/empty-state/empty-state",
+    "skeleton-card": "../../components/skeleton-card/skeleton-card"
+  },
+  "navigationStyle": "custom"
+}

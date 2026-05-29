@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/tasks/tasks",
+    "pages/draw/draw",
+    "pages/settings/settings",
+    "pages/login/login",
+    "pages/task-create/task-create",
+    "pages/task-complete/task-complete",
+    "pages/draw-config/draw-config",
+    "pages/draw-result/draw-result",
+    "pages/child-manage/child-manage",
+    "pages/child-detail/child-detail",
+    "pages/stats/stats",
+    "pages/achievements/achievements",
+    "pages/achievement-config/achievement-config",
+    "pages/point-log/point-log"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "成长之星",
+    "navigationBarBackgroundColor": "#F2F2F7",
+    "backgroundColor": "#F2F2F7"
+  },
+  "tabBar": {
+    "color": "#8E8E93",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#F2F2F7",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/tasks/tasks",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/draw/draw",
+        "text": "抽奖"
+      },
+      {
+        "pagePath": "pages/achievements/achievements",
+        "text": "成就"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

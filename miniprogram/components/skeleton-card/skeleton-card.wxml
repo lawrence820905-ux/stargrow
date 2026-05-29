@@ -1,0 +1,13 @@
+<view class="skeleton-card">
+  <view class="skeleton-card__header">
+    <view class="skeleton-card__tag skeleton-pulse"></view>
+    <view class="skeleton-card__status skeleton-pulse" style="width: 80rpx;"></view>
+  </view>
+  <view class="skeleton-card__body">
+    <view class="skeleton-card__title skeleton-pulse" style="width: 80%;"></view>
+    <view class="skeleton-card__desc skeleton-pulse" style="width: 60%;"></view>
+  </view>
+  <view class="skeleton-card__footer">
+    <view class="skeleton-card__pts skeleton-pulse" style="width: 120rpx;"></view>
+  </view>
+</view>

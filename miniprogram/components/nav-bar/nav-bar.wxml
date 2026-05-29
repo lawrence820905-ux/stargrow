@@ -1,0 +1,16 @@
+<view class="nav-bar {{largeTitle ? 'nav-bar--large' : ''}}" style="padding-top: {{statusBarHeight}}px;">
+  <view class="nav-bar__content" style="height: {{navBarHeight}}rpx;">
+    <view class="nav-bar__left" wx:if="{{showBack}}">
+      <view class="nav-bar__back" bindtap="onBack">
+        <text class="nav-bar__back-icon">‹</text>
+      </view>
+    </view>
+    <view class="nav-bar__title" style="font-size: {{largeTitle ? '34rpx' : '28rpx'}}">
+      {{title}}
+    </view>
+    <view class="nav-bar__right">
+      <slot name="right"></slot>
+    </view>
+  </view>
+</view>
+<view class="nav-bar__placeholder" style="height: {{statusBarHeight + navBarHeight}}px;" wx:if="{{fixed}}"></view>

@@ -1,0 +1,26 @@
+<view class="login-page">
+  <view class="login-page__hero">
+    <text class="login-page__logo">🌳</text>
+    <text class="login-page__app-name">成长之星</text>
+    <text class="login-page__slogan">陪伴孩子快乐成长</text>
+  </view>
+
+  <view class="login-page__features">
+    <view class="login-page__feature">
+      <text class="login-page__feature-icon">📝</text>
+      <text class="login-page__feature-text">完成任务获得积分</text>
+    </view>
+    <view class="login-page__feature">
+      <text class="login-page__feature-icon">🎰</text>
+      <text class="login-page__feature-text">趣味抽奖赢取奖励</text>
+    </view>
+    <view class="login-page__feature">
+      <text class="login-page__feature-icon">🌱</text>
+      <text class="login-page__feature-text">见证成长树长大</text>
+    </view>
+  </view>
+
+  <button class="login-page__btn" bindtap="onLogin" loading="{{loading}}">
+    微信一键登录
+  </button>
+</view>

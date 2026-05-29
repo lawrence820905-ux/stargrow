@@ -1,0 +1,29 @@
+<view class="task-card {{task.status === 'completed' ? 'task-card--completed' : ''}}" bindtap="onTap">
+  <view class="task-card__header">
+    <view class="task-card__header-left">
+      <category-tag category="{{task.category}}" />
+      <view class="task-card__type-badge" wx:if="{{showTaskType}}">
+        <text class="task-card__type-text">{{taskTypeLabel}}</text>
+      </view>
+    </view>
+    <view class="task-card__status">
+      <text class="task-card__status-text {{task.status === 'completed' ? 'color-green' : 'color-orange'}}">
+        {{task.status === 'completed' ? '已完成' : '待完成'}}
+      </text>
+    </view>
+  </view>
+
+  <view class="task-card__body">
+    <text class="task-card__title">{{task.title}}</text>
+    <text class="task-card__desc" wx:if="{{task.description}}">{{task.description}}</text>
+  </view>
+
+  <view class="task-card__footer">
+    <view class="task-card__points">
+      <text class="task-card__points-icon">⭐</text>
+      <text class="task-card__points-text">{{task.status === 'completed' ? task.pointsAwarded : task.basePoints}} 积分</text>
+      <text class="task-card__score" wx:if="{{showScore}}">{{scoreLabel}}</text>
+    </view>
+    <text class="task-card__time">{{task.createdAtText}}</text>
+  </view>
+</view>

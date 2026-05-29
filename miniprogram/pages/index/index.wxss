@@ -1,0 +1,124 @@
+/* iOS Home — Garden Dashboard */
+.index-page { min-height: 100vh; background: #F2F2F7; }
+
+/* Nav — backdrop-filter retained here per spec */
+.index-page__nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(242,242,247,0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.index-page__nav-content {
+  height: 88rpx; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32rpx;
+}
+
+.index-page__nav-title {
+  font-size: 34rpx; font-weight: 600;
+  color: #1d1d1f; letter-spacing: -0.3rpx;
+}
+
+.index-page__loading { padding: 32rpx; padding-top: 176rpx; }
+
+/* Stats */
+.index-page__stats-row {
+  display: flex; gap: 12rpx;
+  padding: 16rpx 32rpx;
+}
+
+.index-page__stat-card {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 16rpx; padding: 24rpx 16rpx;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+}
+.index-page__stat-card:active { transform: scale(0.97); }
+
+/* Sections */
+.index-page__section { margin: 0 32rpx 16rpx; }
+
+.index-page__section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12rpx; padding-top: 8rpx;
+}
+
+.index-page__section-title {
+  font-size: 24rpx; font-weight: 600;
+  color: #1d1d1f; letter-spacing: -0.2rpx;
+}
+
+.index-page__section-link {
+  font-size: 24rpx; color: #007AFF; font-weight: 500;
+}
+.index-page__section-link:active { opacity: 0.55; }
+
+/* Progress Card */
+.index-page__progress-card {
+  background: #FFFFFF;
+  border-radius: 16rpx; padding: 24rpx;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  margin-bottom: 12rpx;
+}
+
+.index-page__progress-bar-wrap {
+  width: 100%; height: 20rpx; background: #F2F2F7;
+  border-radius: 10rpx; overflow: hidden; margin-bottom: 16rpx;
+}
+
+.index-page__progress-bar {
+  height: 100%; border-radius: 10rpx;
+  background: linear-gradient(90deg, #34C759, #007AFF);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.index-page__progress-info { display: flex; align-items: baseline; justify-content: space-between; }
+
+.index-page__progress-percent {
+  font-size: 36rpx; font-weight: 800;
+  color: #007AFF; line-height: 1;
+}
+
+.index-page__progress-text {
+  font-size: 24rpx; color: #8E8E93;
+}
+
+/* Badges */
+.index-page__badge-scroll { width: 100%; }
+
+.index-page__badge-list {
+  display: inline-flex; gap: 12rpx; padding: 2rpx 0;
+}
+
+.index-page__badge {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8rpx; padding: 16rpx 24rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx; box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  min-width: 140rpx;
+}
+.index-page__badge:active { transform: scale(0.96); }
+
+.index-page__badge-icon { font-size: 40rpx; }
+
+.index-page__badge-name {
+  font-size: 12rpx; color: #8E8E93; font-weight: 500;
+}
+
+/* Loot */
+.index-page__loot-list { display: flex; gap: 8rpx; flex-wrap: wrap; }
+
+.index-page__loot-item {
+  display: flex; align-items: center; gap: 8rpx;
+  padding: 12rpx 16rpx;
+  background: #FFFFFF;
+  border-radius: 100rpx; box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+}
+.index-page__loot-item:active { transform: scale(0.96); }
+
+.index-page__loot-icon { font-size: 20rpx; }
+
+.index-page__loot-name {
+  font-size: 24rpx; color: #1d1d1f; font-weight: 500;
+}

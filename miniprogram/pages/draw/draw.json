@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "child-switcher": "../../components/child-switcher/child-switcher",
+    "points-display": "../../components/points-display/points-display",
+    "draw-card": "../../components/draw-card/draw-card",
+    "draw-result-sheet": "../../components/draw-result-sheet/draw-result-sheet",
+    "confetti-view": "../../components/confetti-view/confetti-view",
+    "empty-state": "../../components/empty-state/empty-state"
+  }
+}

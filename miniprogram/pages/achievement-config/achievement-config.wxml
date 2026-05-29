@@ -1,0 +1,106 @@
+<view class="ac-page">
+  <nav-bar title="成就墙设置" showBack="{{true}}" />
+
+  <view class="ac-page__content">
+    <!-- Add Button at Top -->
+    <button class="ac-page__add-btn" bindtap="onShowAdd">+ 添加成就</button>
+
+    <!-- Unified Achievement List -->
+    <view class="ac-page__section">
+      <text class="ac-page__section-label">所有成就</text>
+      <view class="ac-page__card">
+        <view class="ac-page__item" wx:for="{{allAchievements}}" wx:key="key">
+          <text class="ac-page__item-icon">{{item.icon}}</text>
+          <view class="ac-page__item-info">
+            <text class="ac-page__item-name">{{item.name}}</text>
+            <text class="ac-page__item-desc">{{item.description}}</text>
+          </view>
+          <view class="ac-page__item-actions">
+            <view class="ac-page__item-edit" bindtap="onEditItem" data-key="{{item.key}}">
+              <text>✎</text>
+            </view>
+            <view class="ac-page__item-delete" wx:if="{{item.isCustom}}" bindtap="onDeleteCustom" data-id="{{item._id}}">
+              <text>✕</text>
+            </view>
+            <view class="ac-page__item-reset" wx:elif="{{item.isOverridden}}" bindtap="onResetBuiltIn" data-key="{{item.key}}">
+              <text>↺</text>
+            </view>
+          </view>
+        </view>
+        <view class="ac-page__empty" wx:if="{{allAchievements.length === 0}}">
+          <text>暂无成就，点击上方按钮添加</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height: 60rpx;"></view>
+  </view>
+
+  <!-- Add/Edit Modal -->
+  <view class="ac-page__overlay" wx:if="{{showModal}}">
+    <view class="ac-page__overlay-bg" bindtap="onCloseModal"></view>
+    <view class="ac-page__modal">
+      <text class="ac-page__modal-title">{{editingKey ? '编辑成就' : '添加成就'}}</text>
+
+      <view class="ac-page__field">
+        <text class="ac-page__label">成就名称</text>
+        <input class="ac-page__input" placeholder="如：运动健将" value="{{form.name}}" bindinput="onFormField" data-field="name" maxlength="20" />
+      </view>
+
+      <view class="ac-page__field">
+        <text class="ac-page__label">描述</text>
+        <input class="ac-page__input" placeholder="如：完成30个运动任务" value="{{form.description}}" bindinput="onFormField" data-field="description" maxlength="50" />
+      </view>
+
+      <view class="ac-page__field">
+        <text class="ac-page__label">图标 Emoji</text>
+        <input class="ac-page__input" value="{{form.icon}}" bindinput="onFormField" data-field="icon" maxlength="10" />
+      </view>
+
+      <view class="ac-page__field">
+        <text class="ac-page__label">统计分类</text>
+        <view class="ac-page__type-row">
+          <view
+            class="ac-page__type-option {{form.category === 'all' ? 'ac-page__type-option--active' : ''}}"
+            bindtap="onCategorySelect"
+            data-category="all"
+          ><text>全部</text></view>
+          <view
+            class="ac-page__type-option {{form.category === 'sport' ? 'ac-page__type-option--active' : ''}}"
+            bindtap="onCategorySelect"
+            data-category="sport"
+          ><text>运动</text></view>
+          <view
+            class="ac-page__type-option {{form.category === 'life' ? 'ac-page__type-option--active' : ''}}"
+            bindtap="onCategorySelect"
+            data-category="life"
+          ><text>生活</text></view>
+          <view
+            class="ac-page__type-option {{form.category === 'study' ? 'ac-page__type-option--active' : ''}}"
+            bindtap="onCategorySelect"
+            data-category="study"
+          ><text>学习</text></view>
+        </view>
+      </view>
+
+      <view class="ac-page__field">
+        <text class="ac-page__label">完成次数: {{form.count}}</text>
+        <view class="ac-page__slider-row">
+          <view class="ac-page__slider-btn" bindtap="onCountDecrease">−</view>
+          <slider
+            class="ac-page__slider"
+            min="1" max="200" value="{{form.count}}"
+            activeColor="#007AFF" backgroundColor="#E5E5EA"
+            block-size="24" bindchange="onFormSlider" data-field="count"
+          />
+          <view class="ac-page__slider-btn" bindtap="onCountIncrease">+</view>
+        </view>
+      </view>
+
+      <view class="ac-page__modal-btns">
+        <button class="ac-page__modal-cancel" bindtap="onCloseModal">取消</button>
+        <button class="ac-page__modal-confirm" bindtap="onConfirmSave">确认{{editingKey ? '更新' : '添加'}}</button>
+      </view>
+    </view>
+  </view>
+</view>

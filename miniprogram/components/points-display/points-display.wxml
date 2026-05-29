@@ -1,0 +1,5 @@
+<view class="points-display">
+  <text class="points-display__icon">⭐</text>
+  <text class="points-display__value {{animate ? 'points-display__value--animate' : ''}}">{{displayValue}}</text>
+  <text class="points-display__label">{{label}}</text>
+</view>
