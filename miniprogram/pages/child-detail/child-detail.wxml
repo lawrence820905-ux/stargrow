@@ -20,5 +20,67 @@
       <view class="cd-page__row"><text>累计获得积分</text><text class="cd-page__val">⭐ {{child.totalPointsEarned || 0}}</text></view>
       <view class="cd-page__row"><text>当前可用积分</text><text class="cd-page__val">⭐ {{child.currentPoints || 0}}</text></view>
     </view>
+
+    <!-- Observation Timeline -->
+    <view class="cd-page__section">
+      <view class="cd-page__section-header">
+        <text class="cd-page__section-title">📝 成长记录</text>
+        <view class="cd-page__add-btn" bindtap="onShowAddObs">
+          <text>+ 记录</text>
+        </view>
+      </view>
+
+      <view class="cd-page__obs-list" wx:if="{{observations.length > 0}}">
+        <view class="cd-page__obs-item" wx:for="{{observations}}" wx:key="_id">
+          <view class="cd-page__obs-header">
+            <text class="cd-page__obs-mood" wx:if="{{item.mood}}">{{item.mood}}</text>
+            <text class="cd-page__obs-time">{{item.timeText}}</text>
+            <view class="cd-page__obs-del" data-id="{{item._id}}" bindtap="onDeleteObs">
+              <text>🗑</text>
+            </view>
+          </view>
+          <text class="cd-page__obs-content">{{item.content}}</text>
+        </view>
+      </view>
+
+      <empty-state wx:else icon="📝" text="记录孩子的进步瞬间吧~" actionText="开始记录" bind:action="onShowAddObs" />
+    </view>
+
+    <!-- Add Observation Modal -->
+    <view class="cd-page__overlay" wx:if="{{showAddObs}}">
+      <view class="cd-page__overlay-bg" bindtap="onCloseAddObs" catchtap="preventBubble"></view>
+      <view class="cd-page__obs-modal">
+        <text class="cd-page__obs-modal-title">记录成长瞬间</text>
+
+        <!-- Mood picker -->
+        <view class="cd-page__mood-row">
+          <text class="cd-page__mood-label">心情:</text>
+          <view
+            class="cd-page__mood-item {{obsMood === item ? 'cd-page__mood-item--active' : ''}}"
+            wx:for="{{obsMoods}}" wx:key="*this"
+            data-mood="{{item}}" bindtap="onSelectMood"
+          >
+            <text>{{item}}</text>
+          </view>
+        </view>
+
+        <textarea
+          class="cd-page__obs-input"
+          placeholder="今天孩子有哪些进步..."
+          value="{{obsContent}}"
+          bindinput="onObsInput"
+          maxlength="500"
+          auto-height
+        />
+        <text class="cd-page__obs-count">{{obsContent.length || 0}}/500</text>
+
+        <view class="cd-page__obs-btns">
+          <button class="cd-page__obs-cancel" bindtap="onCloseAddObs">取消</button>
+          <button class="cd-page__obs-submit" bindtap="onSubmitObs">记录</button>
+        </view>
+      </view>
+    </view>
   </view>
+
+  <view class="safe-area-bottom"></view>
 </view>

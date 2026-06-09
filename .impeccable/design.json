@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-29T00:00:00Z",
+  "title": "Design System: 成长之星",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent Blue",
+        "canonical": "#007AFF",
+        "tonalRamp": [
+          "#001a3d",
+          "#003380",
+          "#004dc4",
+          "#0066ff",
+          "#007AFF",
+          "#4096ff",
+          "#80b3ff",
+          "#bfd6ff"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Life Green",
+        "canonical": "#34C759",
+        "tonalRamp": [
+          "#0a2e14",
+          "#145c28",
+          "#1f8a3c",
+          "#29b850",
+          "#34C759",
+          "#5fd47a",
+          "#8ae19b",
+          "#b5efbd"
+        ]
+      },
+      "orange": {
+        "role": "secondary",
+        "displayName": "Study Orange",
+        "canonical": "#FF9500",
+        "tonalRamp": [
+          "#3d2200",
+          "#804800",
+          "#c46e00",
+          "#ff8c00",
+          "#FF9500",
+          "#ffad33",
+          "#ffc266",
+          "#ffd699"
+        ]
+      },
+      "purple": {
+        "role": "tertiary",
+        "displayName": "Epic Purple",
+        "canonical": "#AF52DE",
+        "tonalRamp": [
+          "#2a0e3d",
+          "#551c7a",
+          "#7f2ab8",
+          "#a938f5",
+          "#AF52DE",
+          "#c47de8",
+          "#d9a8f2",
+          "#edd3fb"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "System Background",
+        "canonical": "#F2F2F7",
+        "tonalRamp": [
+          "#1c1c1e",
+          "#2c2c2e",
+          "#48484a",
+          "#636366",
+          "#8e8e93",
+          "#aeaeb2",
+          "#c7c7cc",
+          "#F2F2F7"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Card Surface",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#1c1c1e",
+          "#2c2c2e",
+          "#48484a",
+          "#636366",
+          "#8e8e93",
+          "#d1d1d6",
+          "#f2f2f7",
+          "#FFFFFF"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Text Ink",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#3a3a3c",
+          "#636366",
+          "#8e8e93",
+          "#aeaeb2",
+          "#c7c7cc",
+          "#d1d1d6",
+          "#f2f2f7"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Text",
+        "canonical": "#8E8E93",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#3a3a3c",
+          "#636366",
+          "#8e8e93",
+          "#aeaeb2",
+          "#c7c7cc",
+          "#d1d1d6",
+          "#f2f2f7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "页面主标题，仅用于页面顶部。"
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "区域标题、卡片标题、列表项主文字。"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "正文、任务描述、积分说明。最大行宽 65–75 字符。"
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "辅助说明、积分流水备注、徽章名称。"
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "最小可读尺寸。标签、分类标记、时间戳。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "rest",
+        "value": "0 2px 16px rgba(0,0,0,0.04)",
+        "purpose": "卡片在背景上轻微浮起。用于任务卡片、统计卡片、徽章项。"
+      },
+      {
+        "name": "raised",
+        "value": "0 8px 32px rgba(0,0,0,0.08)",
+        "purpose": "临时浮层。用于弹出结果表单、下拉菜单、操作选项面板。"
+      },
+      {
+        "name": "hairline",
+        "value": "0 0.5px 0 rgba(0,0,0,0.06)",
+        "purpose": "导航栏底部边界。配合毛玻璃背景使用。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-fast",
+        "value": "0.2s ease",
+        "purpose": "按压反馈和微交互的默认缓动。"
+      },
+      {
+        "name": "ease-normal",
+        "value": "0.3s ease",
+        "purpose": "页面过渡和中等动画。"
+      },
+      {
+        "name": "ease-progress",
+        "value": "0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "进度条填充动画，带轻微弹性。"
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "全圆角胶囊按钮，Accent Blue 底色，用于主操作。",
+      "html": "<button class=\"ds-btn-primary\">完成任务</button>",
+      "css": ".ds-btn-primary { background: #007AFF; color: #FFFFFF; padding: 16px 48px; border: none; border-radius: 999px; font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 28px; font-weight: 500; cursor: pointer; transition: opacity 0.2s ease; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:active { opacity: 0.7; } .ds-btn-primary:disabled { background: #C7C7CC; cursor: not-allowed; opacity: 1; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "透明底色 + Accent Blue 文字，用于次要操作或导航链接。",
+      "html": "<button class=\"ds-btn-ghost\">查看全部 →</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #007AFF; padding: 12px 24px; border: none; border-radius: 999px; font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 24px; font-weight: 500; cursor: pointer; transition: opacity 0.2s ease; } .ds-btn-ghost:active { opacity: 0.55; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "白色圆角卡片，轻度阴影浮起。系统中最基础的容器组件。",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-content\"><span class=\"ds-card-title\">今日任务</span><span class=\"ds-card-desc\">完成了 3/5 项</span></div></div>",
+      "css": ".ds-card { background: #FFFFFF; border-radius: 16px; padding: 24px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); transition: transform 0.2s ease; } .ds-card:active { transform: scale(0.97); } .ds-card-content { display: flex; flex-direction: column; gap: 8px; } .ds-card-title { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 28px; font-weight: 600; color: #1d1d1f; } .ds-card-desc { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 24px; font-weight: 400; color: #8E8E93; }"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "全圆角标签，左侧小圆点 + emoji + 类别名。三种颜色变体对应运动/生活/学习。",
+      "html": "<span class=\"ds-chip ds-chip-sport\"><span class=\"ds-chip-dot\"></span>⚽ 运动</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 24px; font-weight: 500; background: #F2F2F7; color: #1d1d1f; } .ds-chip-dot { width: 8px; height: 8px; border-radius: 50%; } .ds-chip-sport .ds-chip-dot { background: #007AFF; } .ds-chip-life .ds-chip-dot { background: #34C759; } .ds-chip-study .ds-chip-dot { background: #FF9500; }"
+    },
+    {
+      "name": "Progress Bar",
+      "kind": "custom",
+      "refersTo": "progress-bar",
+      "description": "绿到蓝渐变进度条，用于任务完成进度。带轻微弹性动画。",
+      "html": "<div class=\"ds-progress\"><div class=\"ds-progress-track\"><div class=\"ds-progress-fill\" style=\"width: 60%\"></div></div><div class=\"ds-progress-label\"><span class=\"ds-progress-pct\">60%</span><span class=\"ds-progress-text\">3 / 5 已完成</span></div></div>",
+      "css": ".ds-progress { background: #FFFFFF; border-radius: 16px; padding: 24px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); } .ds-progress-track { width: 100%; height: 20px; background: #F2F2F7; border-radius: 10px; overflow: hidden; margin-bottom: 16px; } .ds-progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #34C759, #007AFF); transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); } .ds-progress-label { display: flex; align-items: baseline; justify-content: space-between; } .ds-progress-pct { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 36px; font-weight: 800; color: #007AFF; line-height: 1; } .ds-progress-text { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 24px; color: #8E8E93; }"
+    },
+    {
+      "name": "Score Stars",
+      "kind": "input",
+      "refersTo": "score-stars",
+      "description": "三颗星评分组件。点击第 N 颗选中 1–N 颗，金色填充。",
+      "html": "<div class=\"ds-stars\"><span class=\"ds-star ds-star-filled\">★</span><span class=\"ds-star ds-star-filled\">★</span><span class=\"ds-star\">★</span></div>",
+      "css": ".ds-stars { display: flex; gap: 8px; } .ds-star { font-size: 48px; color: #D1D1D6; cursor: pointer; transition: color 0.15s ease, transform 0.15s ease; user-select: none; } .ds-star:hover { transform: scale(1.15); } .ds-star-filled { color: #FFCC00; }"
+    },
+    {
+      "name": "Points Display",
+      "kind": "custom",
+      "refersTo": "points-display",
+      "description": "积分数字展示。大号 800 字重数字 + 小号标签。积分变化时带跳动动画。",
+      "html": "<div class=\"ds-points\"><span class=\"ds-points-value\">320</span><span class=\"ds-points-label\">当前积分</span></div>",
+      "css": ".ds-points { display: flex; flex-direction: column; align-items: center; gap: 4px; } .ds-points-value { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 48px; font-weight: 800; color: #1d1d1f; line-height: 1; } .ds-points-label { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 24px; font-weight: 400; color: #8E8E93; }"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": "empty-state",
+      "description": "空状态占位。居中大 emoji + 提示文字 + 可选操作按钮。",
+      "html": "<div class=\"ds-empty\"><span class=\"ds-empty-icon\">📋</span><span class=\"ds-empty-text\">今天还没有任务</span><button class=\"ds-btn-primary\">添加任务</button></div>",
+      "css": ".ds-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 64px 32px; } .ds-empty-icon { font-size: 60px; } .ds-empty-text { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 28px; color: #8E8E93; text-align: center; }"
+    },
+    {
+      "name": "Nav Bar",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "固定顶部导航栏。毛玻璃背景 + 底部发丝线 + 居中标题。",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-title\">成长之路</span></nav>",
+      "css": ".ds-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 88px; display: flex; align-items: center; justify-content: center; background: rgba(242,242,247,0.72); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 0.5px solid rgba(0,0,0,0.06); padding: 0 32px; } .ds-nav-title { font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif; font-size: 34px; font-weight: 600; color: #1d1d1f; letter-spacing: -0.3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "家庭游乐场 Family Playground",
+    "overview": "成长之星是一个轻量级的家庭游戏化系统。它不是一个冷冰冰的任务管理器，也不是一个过度装饰的儿童游戏——而是一个让家长和孩子都觉得自然、好用的「家庭游乐场」。家长在这里高效管理任务和积分，孩子在这里感受成长的乐趣和抽奖的惊喜。视觉基调是明快但克制（像 Duolingo：活泼但不幼稚，大人用也不尴尬）。iOS 原生设计语言提供了稳定、可信的骨架；emoji 图标、等级树、宝箱动画和积分反馈注入了游戏化的灵魂。关键原则：有趣来自内容（成就、宝箱、等级），而不是来自装饰。",
+    "keyCharacteristics": [
+      "iOS 17 系统色 + SF Pro 字栈，信任感来自熟悉的原生语言",
+      "白色卡片 + 浅灰背景的经典分层，用轻微阴影和毛玻璃区分深度",
+      "Emoji 作为图标系统（降低设计成本，增加童趣表达）",
+      "功能性色彩编码（蓝=运动、绿=生活、橙=学习），家长无需学习即可理解",
+      "动画服务于反馈（积分变化、等级提升、抽奖结果），不做装饰性动效"
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Accent Blue 出现在 ≤10% 的任何屏幕面积上。它的稀缺就是它的力量。永远不把蓝用作背景色、卡片底色、或装饰色。它只出现在：主按钮、当前选中态、链接、进度填充。",
+        "section": "colors"
+      },
+      {
+        "name": "The Function-Over-Fashion Rule",
+        "body": "颜色选择服务于信息编码，不是审美偏好。蓝/绿/橙三类不是因为它们「好看」，而是因为它们在色盲模拟中保持可区分，并且在 iOS 生态中有既定的语义认知。",
+        "section": "colors"
+      },
+      {
+        "name": "The Single-Family Rule",
+        "body": "全应用使用一个字体家族。标题、正文、按钮、标签、数字——全部 SF Pro / PingFang。不要引入第二套字体来做「设计感」。差异化通过字重（400 / 500 / 600 / 800）和大小来实现。",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Caps Rule",
+        "body": "不做全大写标签。中文不需要，英文场景保留常规大小写。大写在小程序中可读性差且显得生硬。",
+        "section": "typography"
+      },
+      {
+        "name": "The Hierarchy-Is-Light Rule",
+        "body": "三个阴影层级就够了。不要引入更多层级，不要增加阴影颜色浓度。iOS 的深度的感觉来自微妙——如果阴影让人注意到「这是一个有阴影的卡片」，那就太重了。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "使用 emoji 作为图标系统（🎯⚽📚⭐🌟🏅👑🔥🎁🎪🎬🍬🎰💰🌰🌱🌿🌳🌸🌟）",
+      "保持白色卡片 + 浅灰背景的经典 iOS 分层",
+      "用 Accent Blue 作为全局唯一强调色，不超过屏幕面积的 10%",
+      "用绿→蓝渐变进度条表示完成进度",
+      "用三个阴影层级（Rest / Raised / Hairline）区分深度",
+      "积分数字使用 800 字重，让积分成为视觉主角",
+      "卡片按压反馈统一使用 transform: scale(0.97) + 0.2s ease"
+    ],
+    "donts": [
+      "引入第二套字体家族。SF Pro 一套就够了。",
+      "把 Accent Blue 用作背景色、卡片底色或装饰色",
+      "使用渐变色文字（background-clip: text）",
+      "使用 border-left / border-right 作为彩色侧边条纹装饰卡片",
+      "在非抽奖结果页使用全屏动画或弹跳动效",
+      "使用过于幼稚的卡通插图或绘本风格（家长不会信任）",
+      "引入暗色模式。家庭场景日间使用为主，成长主题天然适合明亮氛围",
+      "给每个区域加一个小标签 eyebrow（ABOUT / FEATURES 那种）。中文页面不需要。",
+      "使用 npm 第三方组件库。所有 UI 用微信原生标签实现。"
+    ]
+  }
+}

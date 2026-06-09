@@ -27,10 +27,20 @@ async function getPointHistory(childId, page = 1, pageSize = 20) {
   return await callStats('getPointHistory', { childId, page, pageSize });
 }
 
+async function getMotivationInsight(childId) {
+  return await callStats('getMotivationInsight', { childId });
+}
+
+async function getWeeklyComparison(childId) {
+  return await callStats('getWeeklyComparison', { childId });
+}
+
 module.exports = {
   getChildOverview,
   getWeeklyChart,
   getCategoryBreakdown,
   getLeaderboard,
-  getPointHistory
+  getPointHistory,
+  getMotivationInsight,
+  getWeeklyComparison
 };

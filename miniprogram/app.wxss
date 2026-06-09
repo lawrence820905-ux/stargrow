@@ -4,21 +4,21 @@ page {
   font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', sans-serif;
   font-size: 28rpx;
   font-weight: 400;
-  color: #1d1d1f;
-  background-color: #F2F2F7;
+  color: #3C3C3C;
+  background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Global button — iOS 17 pill style */
+/* Global button — Duolingo pill style */
 button {
   display: flex; align-items: center; justify-content: center;
   text-align: center; box-sizing: border-box;
-  font-weight: 500; letter-spacing: 0;
-  transition: all 0.2s ease;
+  font-weight: 600; letter-spacing: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 button::after { border: none; }
-button:active { opacity: 0.7; }
+button:active { transform: scale(0.96); opacity: 0.85; }
 
 ::-webkit-scrollbar { display: none; width: 0; height: 0; color: transparent; }
 
@@ -30,4 +30,24 @@ button:active { opacity: 0.7; }
 .safe-area-top {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
+}
+
+/* 深色模式 — page 元素适配 */
+@media (prefers-color-scheme: dark) {
+  page {
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+  }
+}
+
+/* Reduced Motion — 动画降级支持 */
+@media (prefers-reduced-motion: reduce) {
+  view, text, button, image, scroll-view, canvas, navigator {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .index-page__progress-bar {
+    transition: none !important;
+  }
 }

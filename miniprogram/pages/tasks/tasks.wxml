@@ -2,8 +2,13 @@
   <!-- Nav -->
   <view class="tasks-page__header">
     <text class="tasks-page__title">任务</text>
-    <view class="tasks-page__add-btn" bindtap="onCreateTask">
-      <text class="tasks-page__add-text">新建任务</text>
+    <view class="tasks-page__header-btns">
+      <view class="tasks-page__add-btn tasks-page__add-btn--random" bindtap="onRandomTasks">
+        <text class="tasks-page__add-text">随机任务</text>
+      </view>
+      <view class="tasks-page__add-btn" bindtap="onCreateTask">
+        <text class="tasks-page__add-text">新建任务</text>
+      </view>
     </view>
   </view>
 
@@ -46,7 +51,7 @@
         bind:tasktap="onTaskTap"
       />
     </block>
-    <empty-state wx:else icon="📋" text="暂无任务" />
+    <empty-state wx:else icon="📋" text="还没有任务" hint="创建每日任务，帮孩子养成好习惯" />
     <view wx:if="{{hasMore}}" class="tasks-page__load-more" bindtap="loadMore">
       <text>加载更多</text>
     </view>
@@ -63,31 +68,36 @@
         <view class="tasks-page__detail-handle-bar"></view>
       </view>
 
-      <text class="tasks-page__detail-title">{{detailTask.title}}</text>
-      <text class="tasks-page__detail-desc" wx:if="{{detailTask.description}}">{{detailTask.description}}</text>
+      <scroll-view class="tasks-page__detail-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <text class="tasks-page__detail-title">{{detailTask.title}}</text>
+        <text class="tasks-page__detail-desc" wx:if="{{detailTask.description}}">{{detailTask.description}}</text>
 
-      <view class="tasks-page__detail-info">
-        <view class="tasks-page__detail-row">
-          <text class="tasks-page__detail-label">分类</text>
-          <text class="tasks-page__detail-val">{{detailTask.category || '未分类'}}</text>
+        <view class="tasks-page__detail-info">
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">分类</text>
+            <text class="tasks-page__detail-val">{{detailTask.category || '未分类'}}</text>
+          </view>
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">积分</text>
+            <text class="tasks-page__detail-val">⭐ {{detailTask.status === 'completed' ? detailTask.pointsAwarded : detailTask.basePoints}}</text>
+          </view>
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">状态</text>
+            <text class="tasks-page__detail-val {{detailTask.status === 'completed' ? 'color-green' : 'color-orange'}}">
+              {{detailTask.status === 'completed' ? '已完成' : '待完成'}}
+            </text>
+          </view>
+          <view class="tasks-page__detail-row" wx:if="{{detailTask.completedAt}}">
+            <text class="tasks-page__detail-label">完成时间</text>
+            <text class="tasks-page__detail-val">{{detailTask.createdAtText}}</text>
+          </view>
         </view>
-        <view class="tasks-page__detail-row">
-          <text class="tasks-page__detail-label">积分</text>
-          <text class="tasks-page__detail-val">⭐ {{detailTask.status === 'completed' ? detailTask.pointsAwarded : detailTask.basePoints}}</text>
-        </view>
-        <view class="tasks-page__detail-row">
-          <text class="tasks-page__detail-label">状态</text>
-          <text class="tasks-page__detail-val {{detailTask.status === 'completed' ? 'color-green' : 'color-orange'}}">
-            {{detailTask.status === 'completed' ? '已完成' : '待完成'}}
-          </text>
-        </view>
-        <view class="tasks-page__detail-row" wx:if="{{detailTask.completedAt}}">
-          <text class="tasks-page__detail-label">完成时间</text>
-          <text class="tasks-page__detail-val">{{detailTask.createdAtText}}</text>
-        </view>
-      </view>
+      </scroll-view>
 
       <view class="tasks-page__detail-actions">
+        <view class="tasks-page__detail-edit" bindtap="onEditTask">
+          <text>编辑任务</text>
+        </view>
         <view class="tasks-page__detail-delete" bindtap="onDeleteTask">
           <text>删除任务</text>
         </view>
@@ -95,5 +105,5 @@
     </view>
   </view>
 
-  <view class="safe-area-bottom" style="height: 120rpx;"></view>
+  <view class="safe-area-bottom" style="height: 160rpx;"></view>
 </view>

@@ -1,0 +1,166 @@
+/* Custom Tab Bar — 统一图标系统 */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  height: calc(98rpx + env(safe-area-inset-bottom));
+  padding-top: 8rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  z-index: 500;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+.tab-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4rpx;
+  padding: 4rpx 0;
+  min-width: 88rpx;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-bar__item:active {
+  transform: scale(0.92);
+  opacity: 0.7;
+}
+
+.tab-bar__icon {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.tab-bar__label {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #8E8E93;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.tab-bar__item--active .tab-bar__label {
+  color: #58CC02;
+  font-weight: 600;
+}
+
+/* === Home icon (house shape) === */
+.tab-bar__icon-home {
+  width: 36rpx;
+  height: 32rpx;
+  border-left: 3rpx solid #8E8E93;
+  border-right: 3rpx solid #8E8E93;
+  border-bottom: 3rpx solid #8E8E93;
+  border-radius: 0 0 4rpx 4rpx;
+  position: relative;
+  margin-top: 6rpx;
+  transition: border-color 0.2s;
+}
+.tab-bar__icon-home::before {
+  content: '';
+  position: absolute;
+  top: -16rpx;
+  left: -4rpx;
+  width: 0;
+  height: 0;
+  border-left: 20rpx solid transparent;
+  border-right: 20rpx solid transparent;
+  border-bottom: 18rpx solid #8E8E93;
+  transition: border-bottom-color 0.2s;
+}
+.tab-bar__icon-home--active {
+  border-color: #58CC02;
+}
+.tab-bar__icon-home--active::before {
+  border-bottom-color: #58CC02;
+}
+
+/* === Tasks icon (checklist) === */
+.tab-bar__icon-shape {
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid #8E8E93;
+  border-radius: 6rpx;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.icn-stroke-active { border-color: #58CC02; }
+
+.icn-check-bg {
+  position: absolute;
+  top: 0; left: 0; right: 50%; bottom: 0;
+  border-radius: 3rpx 0 0 3rpx;
+  transition: background 0.2s;
+}
+.icn-fill { background: transparent; }
+.icn-fill-active { background: rgba(88, 204, 2, 0.15); }
+
+.icn-check-mark {
+  position: absolute;
+  font-size: 24rpx;
+  font-weight: 800;
+  color: #8E8E93;
+  top: 8rpx;
+  left: 6rpx;
+  transition: color 0.2s;
+}
+.tab-bar__item--active .icn-check-mark {
+  color: #58CC02;
+}
+
+.icn-check-lines {
+  position: absolute;
+  right: 5rpx;
+  top: 8rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.icn-check-line {
+  width: 14rpx;
+  height: 2rpx;
+  background: #8E8E93;
+  border-radius: 1rpx;
+  transition: background 0.2s;
+}
+.icn-check-line--short { width: 10rpx; }
+.tab-bar__item--active .icn-check-line {
+  background: #58CC02;
+}
+
+/* === Text-based fallback icons === */
+.tab-bar__icon-text {
+  font-size: 40rpx;
+  font-weight: 300;
+  color: #8E8E93;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.tab-bar__icon-text--active {
+  color: #58CC02;
+}
+.tab-bar__icon-gear-dot {
+  position: absolute;
+  width: 8rpx;
+  height: 8rpx;
+  background: #8E8E93;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s;
+}
+.tab-bar__item--active .tab-bar__icon-gear-dot {
+  background: #58CC02;
+}

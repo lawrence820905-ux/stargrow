@@ -1,21 +1,39 @@
-/* iOS Draw */
-.draw-page { min-height: 100vh; background: #F2F2F7; }
+/* Duolingo Draw */
+.draw-page { min-height: 100vh; background: var(--color-background); }
 
 /* Header */
 .draw-page__header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8rpx 32rpx;
+  padding: 12rpx 32rpx;
   background: #FFFFFF;
   position: sticky; top: 0; z-index: 99;
 }
 
 .draw-page__title {
-  font-size: 34rpx; font-weight: 600;
-  color: #1d1d1f; letter-spacing: -0.3rpx;
+  font-size: 36rpx; font-weight: 700;
+  color: #3C3C3C; letter-spacing: -0.3rpx;
 }
 
 .draw-page__points {
   display: flex; justify-content: center; padding: 24rpx 0;
+}
+
+/* Segment */
+.draw-page__segment {
+  display: flex; margin: 0 32rpx 16rpx;
+  background: #E5E5EA; border-radius: 14rpx; padding: 4rpx;
+}
+
+.draw-page__segment-item {
+  flex: 1; text-align: center; padding: 14rpx;
+  border-radius: 12rpx; font-size: 26rpx; font-weight: 600;
+  color: #3C3C3C;
+  transition: all 0.2s ease;
+}
+.draw-page__segment-item:active { transform: scale(0.96); }
+.draw-page__segment-item--active {
+  background: #FFFFFF; color: #3C3C3C;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
 }
 
 .draw-page__cards { padding: 0 32rpx; }
@@ -23,8 +41,8 @@
 .draw-page__section { padding: 24rpx 32rpx; }
 
 .draw-page__section-title {
-  font-size: 20rpx; font-weight: 600;
-  color: #8E8E93; margin-bottom: 12rpx; display: block;
+  font-size: 24rpx; font-weight: 600;
+  color: #A0A0A0; margin-bottom: 12rpx; display: block;
 }
 
 .draw-page__record {
@@ -32,22 +50,42 @@
   padding: 12rpx;
   background: #FFFFFF;
   border-radius: 12rpx; margin-bottom: 8rpx;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-card);
 }
-.draw-page__record:active { transform: scale(0.98); }
 
 .draw-page__record-icon { font-size: 24rpx; }
 .draw-page__record-info { flex: 1; display: flex; flex-direction: column; }
 
 .draw-page__record-name {
-  font-size: 26rpx; font-weight: 500; color: #1d1d1f;
+  font-size: 26rpx; font-weight: 500; color: #3C3C3C;
 }
 
-.draw-page__record-cost { font-size: 22rpx; color: #8E8E93; }
+.draw-page__record-cost { font-size: 24rpx; color: #A0A0A0; }
 
-.draw-page__record-time { font-size: 22rpx; color: #C7C7CC; }
+.draw-page__record-hint { font-size: 24rpx; color: #CFCFCF; margin-top: 2rpx; }
+
+.draw-page__record-fulfill {
+  padding: 6rpx 20rpx; border-radius: 100rpx;
+  font-size: 24rpx; font-weight: 500;
+  background: linear-gradient(135deg, #E08800, #FF9600); color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(255,150,0,0.25);
+  flex-shrink: 0;
+}
+.draw-page__record-fulfill:active { transform: scale(0.92); opacity: 0.8; }
+
+.draw-page__record-fulfill--done {
+  background: #CFCFCF; color: #A0A0A0;
+}
+
+.draw-page__record-time { font-size: 24rpx; color: #CFCFCF; flex-shrink: 0; }
+
+.draw-page__shop-link {
+  text-align: center; padding: 16rpx;
+  font-size: 26rpx; color: #58CC02; font-weight: 600;
+}
+.draw-page__shop-link:active { opacity: 0.6; }
 
 .draw-page__parent-link {
-  text-align: center; padding: 16rpx;
-  font-size: 22rpx; color: #C7C7CC;
+  text-align: center; padding: 8rpx;
+  font-size: 24rpx; color: #CFCFCF;
 }

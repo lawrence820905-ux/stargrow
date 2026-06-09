@@ -1,0 +1,126 @@
+<view class="sc-page">
+  <nav-bar title="商城管理" showBack="{{true}}" />
+
+  <!-- Item List -->
+  <view class="sc-page__list">
+    <view class="sc-page__item" wx:for="{{items}}" wx:key="_id">
+      <text class="sc-page__item-icon">{{item.icon || '🎁'}}</text>
+      <view class="sc-page__item-info">
+        <text class="sc-page__item-name">{{item.name}}</text>
+        <text class="sc-page__item-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <view class="sc-page__item-meta">
+          <text class="sc-page__item-price">⭐ {{item.price}}分</text>
+          <text class="sc-page__item-cat">{{item.category === 'virtual' ? '📦 抽奖' : '🎁 奖励'}}</text>
+          <text class="sc-page__item-stock" wx:if="{{item.stock >= 0}}">库存: {{item.stock}}</text>
+          <text class="sc-page__item-stock sc-page__item-stock--unlimited" wx:else>无限</text>
+        </view>
+      </view>
+      <view class="sc-page__item-actions">
+        <view class="sc-page__item-action sc-page__item-action--edit" data-item="{{item}}" bindtap="onEdit">
+          <text>编辑</text>
+        </view>
+        <view class="sc-page__item-action sc-page__item-action--del" data-item="{{item}}" bindtap="onDelete">
+          <text>下架</text>
+        </view>
+      </view>
+    </view>
+
+    <empty-state wx:if="{{items.length === 0}}" icon="🏪" text="还没有商品" actionText="添加商品" bind:action="onAdd" />
+  </view>
+
+  <!-- Add Button -->
+  <view class="sc-page__fab" bindtap="onAdd">
+    <text>+</text>
+  </view>
+
+  <!-- Random Generate Button -->
+  <view class="sc-page__fab sc-page__fab--random" bindtap="onShowRandom">
+    <text>🎲</text>
+  </view>
+
+  <!-- Add/Edit Modal -->
+  <view class="sc-page__modal-overlay" wx:if="{{showModal}}">
+    <view class="sc-page__modal-bg" bindtap="onCloseModal" catchtap="preventBubble"></view>
+    <view class="sc-page__modal">
+      <text class="sc-page__modal-title">{{editingId ? '编辑商品' : '新增商品'}}</text>
+
+      <scroll-view class="sc-page__modal-body" scroll-y>
+        <!-- Name -->
+        <view class="sc-page__field">
+          <text class="sc-page__label">名称</text>
+          <input class="sc-page__input" placeholder="商品名称" value="{{form.name}}" data-field="name" bindinput="onFormField" maxlength="30" />
+        </view>
+
+        <!-- Description -->
+        <view class="sc-page__field">
+          <text class="sc-page__label">描述</text>
+          <input class="sc-page__input" placeholder="简要描述（可选）" value="{{form.description}}" data-field="description" bindinput="onFormField" maxlength="50" />
+        </view>
+
+        <!-- Price -->
+        <view class="sc-page__field">
+          <text class="sc-page__label">积分价格</text>
+          <view class="sc-page__slider-row">
+            <text class="sc-page__slider-val">⭐ {{form.price}}</text>
+            <slider min="1" max="500" value="{{form.price}}" bindchange="onPriceChange" activeColor="#58CC02" block-size="20" style="flex:1; margin: 0 16rpx;" />
+          </view>
+        </view>
+
+        <!-- Stock -->
+        <view class="sc-page__field">
+          <text class="sc-page__label">库存限制</text>
+          <view class="sc-page__stock-row" bindtap="onStockToggle">
+            <text class="sc-page__stock-val">{{form.stock === -1 ? '不限制' : '限购 ' + form.stock + ' 份'}}</text>
+            <text class="sc-page__stock-hint">点击切换</text>
+          </view>
+        </view>
+
+        <!-- Icon -->
+        <view class="sc-page__field">
+          <text class="sc-page__label">图标</text>
+          <view class="sc-page__icon-grid">
+            <view
+              class="sc-page__icon-item {{form.icon === item ? 'sc-page__icon-item--active' : ''}}"
+              wx:for="{{iconOptions}}" wx:key="*this"
+              data-icon="{{item}}" bindtap="onSelectIcon"
+            >
+              <text>{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="sc-page__modal-btns">
+        <view class="sc-page__modal-cancel" bindtap="onCloseModal">取消</view>
+        <view class="sc-page__modal-confirm" bindtap="onSave">保存</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Random Age Select Sheet -->
+  <view class="sc-page__modal-overlay" wx:if="{{showRandomSheet}}">
+    <view class="sc-page__modal-bg" bindtap="onCloseRandom" catchtap="preventBubble"></view>
+    <view class="sc-page__modal">
+      <text class="sc-page__modal-title">🎲 随机生成商品</text>
+      <view class="sc-page__modal-body">
+        <text class="sc-page__label">选择孩子年龄段</text>
+        <view class="sc-page__age-grid">
+          <view
+            class="sc-page__age-item {{selectedAge === item.value ? 'sc-page__age-item--active' : ''}}"
+            wx:for="{{ageGroups}}" wx:key="value"
+            data-age="{{item.value}}" bindtap="onSelectAge"
+          >
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+        <text class="sc-page__random-hint">系统将根据年龄段随机生成5个合适的积分兑换商品</text>
+      </view>
+      <view class="sc-page__modal-btns">
+        <view class="sc-page__modal-cancel" bindtap="onCloseRandom">取消</view>
+        <view class="sc-page__modal-confirm" bindtap="onConfirmRandom">开始生成</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe-area-bottom" style="height: 120rpx;"></view>
+</view>

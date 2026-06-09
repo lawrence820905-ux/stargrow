@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "nav-bar": "/components/nav-bar/nav-bar",
+    "child-switcher": "/components/child-switcher/child-switcher",
+    "points-display": "/components/points-display/points-display",
+    "empty-state": "/components/empty-state/empty-state",
+    "confetti-view": "/components/confetti-view/confetti-view"
+  },
+  "navigationStyle": "custom"
+}

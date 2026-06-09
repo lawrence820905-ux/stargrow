@@ -1,7 +1,7 @@
-/* iOS Draw Result — centered celebration */
+/* Duolingo Draw Result 鈥?centered celebration */
 .dr-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, rgba(0,122,255,0.05), #F2F2F7);
+  background: linear-gradient(180deg, var(--color-background), var(--color-background-white));
   display: flex; align-items: center; justify-content: center;
 }
 
@@ -11,30 +11,30 @@
 }
 
 .dr-page__title {
-  font-size: 20rpx; color: #8E8E93; margin-bottom: 16rpx;
+  font-size: 24rpx; color: #A0A0A0; font-weight: 600; margin-bottom: 16rpx;
 }
 
 .dr-page__icon { font-size: 96rpx; margin-bottom: 16rpx; }
 
 .dr-page__prize {
-  font-size: 28rpx; font-weight: 700; margin-bottom: 8rpx;
-  text-align: center; color: #1d1d1f;
+  font-size: 32rpx; font-weight: 800; margin-bottom: 8rpx;
+  text-align: center; color: #3C3C3C;
 }
 
 .dr-page__points {
-  font-size: 22rpx; font-weight: 600; color: #007AFF; margin-bottom: 4rpx;
+  font-size: 24rpx; font-weight: 700; color: #58CC02; margin-bottom: 4rpx;
 }
 
 .dr-page__reward {
-  font-size: 17rpx; color: #FF9500; margin-bottom: 48rpx;
+  font-size: 24rpx; color: #FF9600; font-weight: 600; margin-bottom: 48rpx;
 }
 
 .dr-page__btn {
-  width: 320rpx; height: 52rpx; line-height: 52rpx;
-  background: #007AFF; color: #FFFFFF;
-  border-radius: 12rpx; font-size: 17rpx; font-weight: 600;
-  border: none; box-shadow: 0 4rpx 16rpx rgba(0,122,255,0.3);
-  transition: all 0.2s ease;
+  width: 320rpx; height: 56rpx; line-height: 56rpx;
+  background: linear-gradient(135deg, #46A800, #58CC02); color: #FFFFFF;
+  border-radius: 32rpx; font-size: 30rpx; font-weight: 700;
+  border: none; box-shadow: var(--shadow-glow-green);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .dr-page__btn::after { border: none; }
-.dr-page__btn:active { transform: scale(0.97); }
+.dr-page__btn:active { transform: scale(0.96); }

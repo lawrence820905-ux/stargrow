@@ -1,14 +1,18 @@
 <view class="score-stars">
   <view
-    class="score-stars__option {{item.score === score ? 'score-stars__option--active' : ''}}"
+    class="score-stars__item"
     wx:for="{{options}}"
     wx:key="score"
-    data-score="{{item.score}}"
-    bindtap="onTap"
-    hover-class="score-stars__option--hover"
   >
-    <text class="score-stars__option-icon">{{item.icon}}</text>
-    <text class="score-stars__option-label">{{item.label}}</text>
-    <text class="score-stars__option-subtext">{{item.subtext}}</text>
+    <view
+      class="score-stars__option {{item.score === score ? 'score-stars__option--active' : ''}}"
+      data-score="{{item.score}}"
+      bindtap="onTap"
+      hover-class="score-stars__option--hover"
+    >
+      <text class="score-stars__option-icon">{{item.icon}}</text>
+      <text class="score-stars__option-label">{{item.label}}</text>
+    </view>
+    <text class="score-stars__subtext">{{item.subtext}}</text>
   </view>
 </view>

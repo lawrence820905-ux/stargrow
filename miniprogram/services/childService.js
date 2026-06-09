@@ -10,14 +10,14 @@ async function callChild(action, data = {}) {
   return res.result;
 }
 
-async function createChild(name, avatarUrl) {
-  const result = await callChild('create', { name, avatarUrl });
+async function createChild(name, avatarUrl, age) {
+  const result = await callChild('create', { name, avatarUrl, age });
   await refreshChildren();
   return result.child;
 }
 
-async function updateChild(childId, name, avatarUrl) {
-  const result = await callChild('update', { childId, name, avatarUrl });
+async function updateChild(childId, name, avatarUrl, age) {
+  const result = await callChild('update', { childId, name, avatarUrl, age });
   await refreshChildren();
   return result.child;
 }

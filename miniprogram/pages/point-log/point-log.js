@@ -5,15 +5,12 @@ const app = getApp();
 
 Page({
   data: {
-    navBarTop: 88,
     children: [],
     activeChildId: '',
     records: []
   },
 
   async onLoad() {
-    const sysInfo = wx.getSystemInfoSync();
-    this.setData({ navBarTop: (sysInfo.statusBarHeight || 20) + 88 });
     this.setData({ children: app.globalData.children });
     const activeChild = app.getActiveChild();
     if (activeChild) {

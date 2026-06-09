@@ -21,7 +21,7 @@
     </view>
   </view>
 
-  <empty-state wx:else icon="🏅" text="暂无成就数据" />
+  <empty-state wx:else icon="🏅" text="还没有解锁成就" hint="完成更多任务来解锁成就吧" />
 
   <view class="safe-area-bottom" style="height: 120rpx;"></view>
 </view>

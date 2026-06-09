@@ -12,4 +12,6 @@
   <button class="tc-page__btn" bindtap="onConfirm" disabled="{{selectedScore < 1}}">
     确认完成
   </button>
+
+  <confetti-view id="confetti" />
 </view>

@@ -12,6 +12,11 @@
 | drawRecords | 抽奖记录 |
 | pointRecords | 积分流水 |
 | achievements | 成就记录 |
+| customAchievements | 自定义成就 / 内置成就覆盖 |
+| feedback | 用户反馈 |
+| shop | 积分商城商品 |
+| exchangeRecords | 兑换记录 |
+| observations | 家长观察记录 |
 
 ---
 
@@ -21,11 +26,20 @@
 {
   "_id": "auto",
   "openid": "wx_openid",
+  "members": ["wx_openid_爸爸", "wx_openid_妈妈"],
+  "inviteCode": "A3X9K2",
   "name": "张家",
   "createdAt": "2026-05-27T00:00:00Z",
   "updatedAt": "2026-05-27T00:00:00Z"
 }
 ```
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| openid | string | 创建者的微信 openid（向后兼容） |
+| members | string[] | 所有家庭成员的 openid 列表 |
+| inviteCode | string | 6位邀请码，其他家长凭此加入 |
+| memberProfiles | array | 成员配置 `[{ openid, role, nickname }]`，如 `[{ openid: "xxx", role: "家长", nickname: "爸爸" }]` |
 
 ## children
 
@@ -42,7 +56,8 @@
   "lastActiveDate": "2026-05-27",
   "totalTasksCompleted": 45,
   "totalDraws": 15,
-  "createdAt": "2026-05-01T00:00:00Z"
+  "createdAt": "2026-05-01T00:00:00Z",
+  "updatedAt": "2026-05-27T08:30:00Z"
 }
 ```
 
@@ -55,7 +70,7 @@
   "childId": "child_id",
   "title": "完成数学作业第10页",
   "description": "认真完成，字迹工整",
-  "category": "homework",
+  "category": "sport",
   "basePoints": 10,
   "taskType": "daily",
   "status": "completed",
@@ -65,6 +80,11 @@
   "createdAt": "2026-05-27T08:00:00Z"
 }
 ```
+
+字段说明：
+- `category`: `sport`（运动）、`life`（生活）、`study`（学习）
+- `taskType`: `daily`（日常任务，每天复用）或 `special`（特殊任务，一次性）
+- `status`: `pending` / `completed`
 
 ## familyConfig
 
@@ -94,9 +114,9 @@
   "items": [
     {
       "id": "item_1",
-      "name": "5-15积分",
+      "name": "50积分",
       "type": "points",
-      "pointsValue": { "min": 5, "max": 15 },
+      "pointsValue": 50,
       "rewardTitle": "",
       "rewardDescription": "",
       "weight": 60,
@@ -109,6 +129,12 @@
 }
 ```
 
+字段说明：
+- `items[].type`: `points`（积分）或 `reward`（奖励）
+- `items[].pointsValue`: `number`，积分值（可为负）
+- `items[].rarity`: `common` / `rare` / `epic` / `legendary`
+- `items[].weight`: 按稀有度自动分配（普通 60 / 稀有 25 / 史诗 10 / 传说 5）
+
 ## drawRecords
 
 ```json
@@ -119,9 +145,9 @@
   "poolId": "pool_id",
   "poolType": "small",
   "pointsSpent": 20,
-  "prizeName": "20-30积分",
+  "prizeName": "50积分",
   "prizeType": "points",
-  "pointsAwarded": 25,
+  "pointsAwarded": 50,
   "rewardTitle": null,
   "isFulfilled": false,
   "fulfilledAt": null,
@@ -157,3 +183,101 @@
   "earnedAt": "2026-05-27T08:30:00Z"
 }
 ```
+
+## customAchievements
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "name": "运动健将",
+  "description": "完成30个运动任务",
+  "icon": "⚽",
+  "category": "sport",
+  "count": 30,
+  "enabled": true,
+  "overridesKey": null,
+  "createdAt": "2026-05-27T00:00:00Z",
+  "updatedAt": "2026-05-27T00:00:00Z"
+}
+```
+
+字段说明：
+- `overridesKey`: 不为 `null` 时表示覆盖内置成就，值为对应内置成就的 `key`（如 `"sport_20"`）
+- `category`: `all` / `sport` / `life` / `study`
+- 若 `overridesKey` 为 `null`，则为纯自定义成就
+
+## feedback
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "openid": "wx_openid",
+  "content": "希望增加更多任务分类",
+  "createdAt": "2026-05-27T12:00:00Z"
+}
+```
+
+## shop
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "name": "看动画片15分钟",
+  "description": "可以选择看一集喜欢的动画片",
+  "price": 50,
+  "icon": "📺",
+  "category": "reward",
+  "isActive": true,
+  "stock": -1,
+  "createdAt": "2026-06-01T00:00:00Z",
+  "updatedAt": "2026-06-01T00:00:00Z"
+}
+```
+
+字段说明：
+- `price`: 固定积分价格（区别于抽奖的随机性）
+- `category`: `reward`（实物/活动奖励）或 `virtual`（虚拟物品）
+- `stock`: `-1` 表示不限量，`>=0` 表示限量
+- `isActive`: 软删除标记
+
+## exchangeRecords
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "childId": "child_id",
+  "shopItemId": "shop_item_id",
+  "itemName": "看动画片15分钟",
+  "itemIcon": "📺",
+  "pointsSpent": 50,
+  "isFulfilled": false,
+  "fulfilledAt": null,
+  "createdAt": "2026-06-01T10:00:00Z"
+}
+```
+
+字段说明：
+- `isFulfilled`: 家长是否已兑现（同 drawRecords 的 fulfill 机制）
+- 已兑现记录在每日定时任务中自动清理
+
+## observations
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "childId": "child_id",
+  "content": "今天主动帮妹妹系鞋带，很有耐心！",
+  "mood": "🥰",
+  "tags": ["kindness", "initiative"],
+  "createdAt": "2026-06-01T18:00:00Z"
+}
+```
+
+字段说明：
+- `mood`: 可选的心情 emoji
+- `tags`: 可选的标签数组

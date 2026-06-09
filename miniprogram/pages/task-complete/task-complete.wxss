@@ -1,39 +1,41 @@
-/* iOS Task Complete — centered card */
+/* Duolingo Task Complete 鈥?centered celebration card */
 .tc-page {
-  min-height: 100vh; background: #F2F2F7;
+  min-height: 100vh; background: var(--color-background);
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 48rpx;
+  justify-content: flex-start; padding: 160rpx 48rpx 48rpx;
 }
 
 .tc-page__card {
   background: #FFFFFF;
-  border-radius: 20rpx; padding: 48rpx 32rpx;
+  border-radius: 32rpx; padding: 48rpx 32rpx;
   width: 100%; display: flex; flex-direction: column; align-items: center;
-  gap: 16rpx; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 48rpx;
+  gap: 20rpx;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 48rpx;
 }
 
 .tc-page__title {
-  font-size: 22rpx; font-weight: 700; text-align: center;
-  color: #1d1d1f;
+  font-size: 36rpx; font-weight: 800; text-align: center;
+  color: #3C3C3C;
 }
 
-.tc-page__base { font-size: 14rpx; color: #C7C7CC; }
+.tc-page__base { font-size: 26rpx; color: #A0A0A0; font-weight: 500; }
 
-.tc-page__label { font-size: 17rpx; color: #8E8E93; }
+.tc-page__label { font-size: 28rpx; color: #A0A0A0; font-weight: 500; }
 
-.tc-page__result { font-size: 20rpx; color: #8E8E93; }
+.tc-page__result { font-size: 28rpx; color: #A0A0A0; }
 
-.tc-page__points { font-size: 36rpx; font-weight: 700; color: #007AFF; }
+.tc-page__points { font-size: 48rpx; font-weight: 800; color: #58CC02; }
 
 .tc-page__btn {
-  width: 100%; height: 52rpx; line-height: 52rpx;
-  background: #007AFF; color: #FFFFFF;
-  border-radius: 12rpx; font-size: 17rpx; font-weight: 600;
-  border: none; box-shadow: 0 4rpx 16rpx rgba(0,122,255,0.3);
-  transition: all 0.2s ease;
+  width: 100%; height: 64rpx; line-height: 64rpx;
+  background: linear-gradient(135deg, #46A800, #58CC02); color: #FFFFFF;
+  border-radius: 32rpx; font-size: 30rpx; font-weight: 700;
+  border: none; box-shadow: var(--shadow-glow-green);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .tc-page__btn::after { border: none; }
-.tc-page__btn:active { transform: scale(0.97); }
+.tc-page__btn:active { transform: scale(0.96); }
 .tc-page__btn[disabled] {
-  background: #C7C7CC; box-shadow: none;
+  background: #CFCFCF; box-shadow: none;
 }

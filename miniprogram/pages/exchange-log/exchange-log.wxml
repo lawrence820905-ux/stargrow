@@ -1,0 +1,28 @@
+<view class="el-page">
+  <nav-bar title="兑换记录" showBack="{{true}}" />
+
+  <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+  <view class="el-page__list" wx:if="{{records.length > 0}}">
+    <view class="el-page__record" wx:for="{{records}}" wx:key="_id">
+      <text class="el-page__record-icon">{{item.itemIcon || '🎁'}}</text>
+      <view class="el-page__record-info">
+        <text class="el-page__record-name">{{item.itemName}}</text>
+        <text class="el-page__record-cost">-{{item.pointsSpent}}分</text>
+        <text class="el-page__record-time">{{item.timeText}}</text>
+      </view>
+      <view
+        class="el-page__record-fulfill {{item.isFulfilled ? 'el-page__record-fulfill--done' : ''}}"
+        data-id="{{item._id}}"
+        data-fulfilled="{{item.isFulfilled}}"
+        bindtap="onFulfill"
+      >
+        <text>{{item.isFulfilled ? '已兑现' : '未兑现'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <empty-state wx:else icon="📋" text="还没有兑换记录~" />
+
+  <view class="safe-area-bottom"></view>
+</view>

@@ -1,10 +1,9 @@
-const { getChildOverview, getCategoryBreakdown, getLeaderboard, getWeeklyChart } = require('../../services/statsService');
+const { getChildOverview, getCategoryBreakdown, getLeaderboard, getWeeklyChart, getWeeklyComparison } = require('../../services/statsService');
 const { getChildren, getActiveChild } = require('../../utils/auth');
 const app = getApp();
 
 Page({
   data: {
-    navBarTop: 88,
     children: [],
     activeChildId: '',
     overview: {},
@@ -14,12 +13,11 @@ Page({
     chartCompleted: [],
     chartPoints: [],
     maxCompleted: 0,
-    maxCat: 0
+    maxCat: 0,
+    comparison: null
   },
 
   async onLoad() {
-    const sysInfo = wx.getSystemInfoSync();
-    this.setData({ navBarTop: (sysInfo.statusBarHeight || 20) + 88 });
     this.setData({ children: app.globalData.children });
     const activeChild = app.getActiveChild();
     if (activeChild) {
@@ -31,10 +29,11 @@ Page({
 
   async loadData(childId) {
     try {
-      const [overview, breakdown, chart] = await Promise.all([
+      const [overview, breakdown, chart, comparison] = await Promise.all([
         getChildOverview(childId),
         getCategoryBreakdown(childId),
-        getWeeklyChart(childId, 8)
+        getWeeklyChart(childId, 8),
+        getWeeklyComparison(childId)
       ]);
       const maxCompleted = Math.max(...chart.completedData, 1);
       const b = breakdown.breakdown;
@@ -46,7 +45,8 @@ Page({
         chartCompleted: chart.completedData,
         chartPoints: chart.pointsData,
         maxCompleted,
-        maxCat
+        maxCat,
+        comparison: comparison.comparison || null
       });
     } catch (e) { /* ignore */ }
   },

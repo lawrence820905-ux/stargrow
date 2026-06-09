@@ -18,6 +18,6 @@
       </view>
     </view>
 
-    <empty-state wx:else icon="📋" text="暂无积分记录" />
+    <empty-state wx:else icon="📋" text="还没有积分记录，去完成任务吧~" />
   </view>
 </view>

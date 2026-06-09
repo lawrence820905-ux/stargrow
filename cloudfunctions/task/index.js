@@ -28,7 +28,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 
@@ -106,7 +106,10 @@ async function complete(familyId, event) {
   const newTotal = child.data.totalPointsEarned + pointsAwarded;
   const newCurrent = child.data.currentPoints + pointsAwarded;
   const newLevel = calcLevel(newTotal);
+  const oldLevel = child.data.level || 1;
+  const leveledUp = newLevel > oldLevel;
   const newStreak = calcStreak(child.data, today);
+  const streakMilestone = (newStreak === 7 || newStreak === 30) ? newStreak : 0;
 
   await db.collection('children').doc(task.data.childId).update({
     data: {
@@ -115,7 +118,7 @@ async function complete(familyId, event) {
       level: newLevel,
       streakDays: newStreak,
       lastActiveDate: today,
-      totalTasksCompleted: child.data.totalTasksCompleted + 1
+      totalTasksCompleted: (child.data.totalTasksCompleted || 0) + 1
     }
   });
 
@@ -150,7 +153,10 @@ async function complete(familyId, event) {
     pointsAwarded,
     newTotal,
     newCurrent,
-    newLevel
+    newLevel,
+    oldLevel,
+    leveledUp,
+    streakMilestone
   };
 }
 

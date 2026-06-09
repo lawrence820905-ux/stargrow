@@ -1,6 +1,6 @@
 <view class="draw-page">
   <view class="draw-page__header">
-    <text class="draw-page__title">抽奖中心</text>
+    <text class="draw-page__title">宝箱</text>
   </view>
 
   <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
@@ -10,33 +10,37 @@
     <points-display value="{{activeChild.currentPoints || 0}}" label="当前积分" />
   </view>
 
-  <!-- Draw Cards -->
+  <!-- Segment Control -->
+  <view class="draw-page__segment">
+    <view
+      class="draw-page__segment-item {{poolType === 'small' ? 'draw-page__segment-item--active' : ''}}"
+      bindtap="onSwitchType"
+      data-type="small"
+    >
+      <text>📦 小宝箱</text>
+    </view>
+    <view
+      class="draw-page__segment-item {{poolType === 'big' ? 'draw-page__segment-item--active' : ''}}"
+      bindtap="onSwitchType"
+      data-type="big"
+    >
+      <text>🧰 大宝箱</text>
+    </view>
+  </view>
+
+  <!-- Single Draw Card -->
   <view class="draw-page__cards" wx:if="{{!loading}}">
-    <block wx:if="{{smallPool}}">
+    <block wx:if="{{activePool}}">
       <draw-card
-        poolType="small"
-        cost="{{smallPool.cost}}"
-        items="{{smallPool.items}}"
-        disabled="{{(activeChild.currentPoints || 0) < smallPool.cost}}"
-        loading="{{drawingSmall}}"
-        bind:draw="onSmallDraw"
+        poolType="{{poolType}}"
+        cost="{{activePool.cost}}"
+        items="{{activePool.items}}"
+        disabled="{{(activeChild.currentPoints || 0) < activePool.cost}}"
+        loading="{{drawing}}"
+        bind:draw="onDraw"
       />
     </block>
-
-    <view style="height: 24rpx;"></view>
-
-    <block wx:if="{{bigPool}}">
-      <draw-card
-        poolType="big"
-        cost="{{bigPool.cost}}"
-        items="{{bigPool.items}}"
-        disabled="{{(activeChild.currentPoints || 0) < bigPool.cost}}"
-        loading="{{drawingBig}}"
-        bind:draw="onBigDraw"
-      />
-    </block>
-
-    <empty-state wx:if="{{noPools}}" icon="🎰" text="还没有配置抽奖池" />
+    <empty-state wx:else icon="📦" text="还没有配置宝箱" hint="家长可以前往管理页配置宝箱奖励池" />
   </view>
 
   <!-- Records -->
@@ -47,13 +51,26 @@
       <view class="draw-page__record-info">
         <text class="draw-page__record-name">{{item.prizeName}}</text>
         <text class="draw-page__record-cost">-{{item.pointsSpent}}分</text>
+        <text class="draw-page__record-hint" wx:if="{{item.isFulfilled}}">今日零点清除</text>
+      </view>
+      <view
+        class="draw-page__record-fulfill {{item.isFulfilled ? 'draw-page__record-fulfill--done' : ''}}"
+        data-id="{{item._id}}"
+        data-fulfilled="{{item.isFulfilled}}"
+        bindtap="onFulfill"
+      >
+        <text>{{item.isFulfilled ? '已兑奖' : '未兑奖'}}</text>
       </view>
       <text class="draw-page__record-time">{{item.timeText}}</text>
     </view>
   </view>
 
+  <view class="draw-page__shop-link" bindtap="onGoShop">
+    <text>🏪 去积分商城兑换 →</text>
+  </view>
+
   <view class="draw-page__parent-link" bindtap="onGoConfig">
-    <text>家长入口: 管理奖池 →</text>
+    <text>家长入口: 管理宝箱 →</text>
   </view>
 
   <draw-result-sheet

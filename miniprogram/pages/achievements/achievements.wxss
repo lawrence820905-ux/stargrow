@@ -1,5 +1,5 @@
 /* iOS Achievements */
-.ach-page { min-height: 100vh; background: #F2F2F7; }
+.ach-page { min-height: 100vh; background: var(--color-background); }
 
 /* Header */
 .ach-page__header {
@@ -11,12 +11,12 @@
 
 .ach-page__title {
   font-size: 34rpx; font-weight: 700;
-  color: #1d1d1f; letter-spacing: -0.3rpx;
+  color: #3C3C3C; letter-spacing: -0.3rpx;
 }
 
 .ach-page__count {
   text-align: center; padding: 12rpx;
-  font-size: 24rpx; color: #C7C7CC;
+  font-size: 24rpx; color: #CFCFCF;
 }
 
 .ach-page__grid {
@@ -33,7 +33,7 @@
 
 .ach-page__badge--earned {
   background: #FFFFFF;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-card);
 }
 
 .ach-page__badge--locked {
@@ -44,11 +44,11 @@
 
 .ach-page__badge-name {
   font-size: 24rpx; font-weight: 600; margin-bottom: 4rpx;
-  color: #1d1d1f;
+  color: #3C3C3C;
 }
 
-.ach-page__badge--locked .ach-page__badge-name { color: #C7C7CC; }
+.ach-page__badge--locked .ach-page__badge-name { color: #CFCFCF; }
 
 .ach-page__badge-desc {
-  font-size: 20rpx; color: #C7C7CC;
+  font-size: 24rpx; color: #CFCFCF;
 }

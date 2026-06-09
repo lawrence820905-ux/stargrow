@@ -1,0 +1,46 @@
+<view class="tab-bar safe-area-bottom">
+  <view
+    wx:for="{{list}}"
+    wx:key="index"
+    class="tab-bar__item {{selected === index ? 'tab-bar__item--active' : ''}}"
+    data-path="{{item.pagePath}}"
+    data-index="{{index}}"
+    bindtap="switchTab"
+  >
+    <!-- Home icon -->
+    <view wx:if="{{item.icon === 'home'}}" class="tab-bar__icon">
+      <view class="tab-bar__icon-home {{selected === index ? 'tab-bar__icon-home--active' : ''}}"></view>
+    </view>
+
+    <!-- Tasks icon -->
+    <view wx:elif="{{item.icon === 'tasks'}}" class="tab-bar__icon">
+      <view class="tab-bar__icon-shape {{selected === index ? 'icn-stroke-active' : 'icn-stroke'}}">
+        <view class="icn-check-bg {{selected === index ? 'icn-fill-active' : 'icn-fill'}}"></view>
+        <text class="icn-check-mark">✓</text>
+        <view class="icn-check-lines">
+          <view class="icn-check-line"></view>
+          <view class="icn-check-line icn-check-line--short"></view>
+          <view class="icn-check-line icn-check-line--short"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Shop icon -->
+    <view wx:elif="{{item.icon === 'shop'}}" class="tab-bar__icon">
+      <text class="tab-bar__icon-text {{selected === index ? 'tab-bar__icon-text--active' : ''}}">◎</text>
+    </view>
+
+    <!-- Achievements icon -->
+    <view wx:elif="{{item.icon === 'achievements'}}" class="tab-bar__icon">
+      <text class="tab-bar__icon-text {{selected === index ? 'tab-bar__icon-text--active' : ''}}">★</text>
+    </view>
+
+    <!-- Settings icon -->
+    <view wx:elif="{{item.icon === 'settings'}}" class="tab-bar__icon">
+      <text class="tab-bar__icon-text {{selected === index ? 'tab-bar__icon-text--active' : ''}}">◎</text>
+      <view class="tab-bar__icon-gear-dot"></view>
+    </view>
+
+    <text class="tab-bar__label">{{item.text}}</text>
+  </view>
+</view>

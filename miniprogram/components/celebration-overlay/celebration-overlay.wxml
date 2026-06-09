@@ -1,0 +1,8 @@
+<view class="co {{visible ? 'co--visible' : ''}}" catchtap="onTap">
+  <view class="co__card {{animating ? 'co__card--pop' : ''}}">
+    <text class="co__icon">{{icon}}</text>
+    <text class="co__title">{{title}}</text>
+    <text class="co__subtitle" wx:if="{{subtitle}}">{{subtitle}}</text>
+    <text class="co__hint">点击任意处关闭</text>
+  </view>
+</view>

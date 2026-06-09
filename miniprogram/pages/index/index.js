@@ -1,11 +1,16 @@
 const { getChildren, getActiveChild } = require('../../utils/auth');
-const { relativeTime } = require('../../utils/util');
-const { getChildOverview } = require('../../services/statsService');
+const { relativeTime, getNextLevelInfo } = require('../../utils/util');
+const { getChildOverview, getMotivationInsight } = require('../../services/statsService');
+const { getPools } = require('../../services/drawService');
+const { listItems } = require('../../services/shopService');
 const app = getApp();
 
 Page({
   data: {
     loading: true,
+    loadError: false,
+    isFirstVisit: false,
+    showWelcomeTip: false,
     statusBarHeight: 20,
     children: [],
     activeChildId: '',
@@ -14,8 +19,13 @@ Page({
     todayCompleted: 0,
     todayPercent: 0,
     todayTasksList: [],
+    todayMaxPoints: 0,
+    cheapestDrawCost: 20,
+    cheapestShopPrice: 50,
+    pointsToNextLevel: 0,
     recentAchievements: [],
     recentDraws: [],
+    motivationAlerts: [],
     pointsAnimate: false
   },
 
@@ -25,11 +35,20 @@ Page({
   },
 
   async onShow() {
+    // 设置自定义 Tab Bar 选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 0 });
+    }
+    // 首次访问检测
+    const hasVisited = wx.getStorageSync('idx_visited');
+    if (!hasVisited) {
+      this.setData({ isFirstVisit: true, showWelcomeTip: true });
+    }
     await this.loadData();
   },
 
   async loadData() {
-    this.setData({ loading: true });
+    this.setData({ loading: true, loadError: false });
 
     const children = app.globalData.children;
     if (children.length === 0) {
@@ -76,17 +95,51 @@ Page({
         createdAtText: relativeTime(t.createdAt)
       }));
 
+      // 计算今日最高可得积分
+      const todayMaxPoints = tasksList
+        .filter(t => t.status === 'pending')
+        .reduce((sum, t) => sum + (t.basePoints || 0), 0);
+
+      // 获取目标数据
+      let cheapestDrawCost = 20;
+      let cheapestShopPrice = 50;
+      try {
+        const [poolsResult, shopResult] = await Promise.all([
+          getPools(),
+          listItems()
+        ]);
+        if (poolsResult.smallPool) cheapestDrawCost = poolsResult.smallPool.cost || 20;
+        if (poolsResult.bigPool && poolsResult.bigPool.cost < cheapestDrawCost) cheapestDrawCost = poolsResult.bigPool.cost;
+        const shopItems = shopResult.items || [];
+        if (shopItems.length > 0) {
+          cheapestShopPrice = Math.min(...shopItems.map(i => i.price));
+        }
+      } catch (e) { /* 使用默认值 */ }
+
+      // 距离下一级所需积分
+      const childTotal = overview.child ? overview.child.totalPointsEarned || 0 : 0;
+      const nextInfo = getNextLevelInfo(overview.child ? overview.child.level || 1 : 1);
+      const pointsToNextLevel = nextInfo ? nextInfo.points - childTotal : 0;
+
       this.setData({
         activeChild: overview.child || {},
         todayTasks,
         todayCompleted,
         todayPercent,
         todayTasksList: tasksList,
+        todayMaxPoints,
+        cheapestDrawCost,
+        cheapestShopPrice,
+        pointsToNextLevel,
         recentAchievements: overview.recentAchievements || [],
         recentDraws: overview.recentDraws || []
       });
+
+      // 加载激励提示
+      this.loadMotivationInsight(childId);
     } catch (err) {
       console.error('加载概览失败:', err);
+      this.setData({ loadError: true });
     }
   },
 
@@ -99,6 +152,33 @@ Page({
       activeChild: activeChild || {}
     });
     this.loadOverview(childId);
+  },
+
+  // 左右箭头切换孩子
+  onPrevChild() {
+    const { children, activeChildId } = this.data;
+    if (children.length <= 1) return;
+    const idx = children.findIndex(c => c._id === activeChildId);
+    const prevIdx = idx <= 0 ? children.length - 1 : idx - 1;
+    this.switchToChild(children[prevIdx]);
+  },
+
+  onNextChild() {
+    const { children, activeChildId } = this.data;
+    if (children.length <= 1) return;
+    const idx = children.findIndex(c => c._id === activeChildId);
+    const nextIdx = idx >= children.length - 1 ? 0 : idx + 1;
+    this.switchToChild(children[nextIdx]);
+  },
+
+  switchToChild(child) {
+    if (!child) return;
+    app.setActiveChild(child._id);
+    this.setData({
+      activeChildId: child._id,
+      activeChild: child
+    });
+    this.loadOverview(child._id);
   },
 
   onTaskTap(e) {
@@ -120,5 +200,47 @@ Page({
 
   onAddChild() {
     wx.switchTab({ url: '/pages/settings/settings' });
+  },
+
+  onRetryLoad() {
+    this.loadData();
+  },
+
+  onDismissWelcome() {
+    wx.setStorageSync('idx_visited', true);
+    this.setData({ showWelcomeTip: false, isFirstVisit: false });
+  },
+
+  onGoCreateTask() {
+    const childId = this.data.activeChildId;
+    if (!childId) {
+      wx.showToast({ title: '请先添加孩子', icon: 'none' });
+      return;
+    }
+    wx.navigateTo({ url: `/pages/task-create/task-create?childId=${childId}` });
+  },
+
+  onGoShop() {
+    wx.navigateTo({ url: '/pages/shop/shop' });
+  },
+
+  async loadMotivationInsight(childId) {
+    try {
+      const result = await getMotivationInsight(childId);
+      const alerts = (result.alerts || []).filter(alert => {
+        const key = `alert_dismissed_${alert.type}_${new Date().toDateString()}`;
+        const dismissed = wx.getStorageSync(key);
+        return !dismissed;
+      });
+      this.setData({ motivationAlerts: alerts });
+    } catch (e) { /* 静默失败 */ }
+  },
+
+  onDismissAlert(e) {
+    const { type } = e.currentTarget.dataset;
+    const key = `alert_dismissed_${type}_${new Date().toDateString()}`;
+    wx.setStorageSync(key, true);
+    const alerts = this.data.motivationAlerts.filter(a => a.type !== type);
+    this.setData({ motivationAlerts: alerts });
   }
 });

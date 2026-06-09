@@ -1,27 +1,46 @@
-/* iOS Home — Garden Dashboard */
-.index-page { min-height: 100vh; background: #F2F2F7; }
-
-/* Nav — backdrop-filter retained here per spec */
-.index-page__nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(242,242,247,0.72);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-
-.index-page__nav-content {
-  height: 88rpx; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32rpx;
-}
-
-.index-page__nav-title {
-  font-size: 34rpx; font-weight: 600;
-  color: #1d1d1f; letter-spacing: -0.3rpx;
-}
+/* Duolingo ABC Home 鈥?Garden Dashboard */
+.index-page { min-height: 100vh; background: var(--color-background); }
 
 .index-page__loading { padding: 32rpx; padding-top: 176rpx; }
 
-/* Stats */
+/* Child Area 鈥?鍦嗗舰澶村儚 + 鍒囨崲鎸夐挳 */
+.index-page__child-area {
+  display: flex; align-items: center; justify-content: center;
+  padding: 16rpx 0 0;
+  gap: 8rpx;
+}
+
+.index-page__level-wrap {
+  flex: 0 1 auto;
+}
+
+.index-page__switch-btn {
+  width: 64rpx; height: 64rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.index-page__switch-btn:active {
+  transform: scale(0.88);
+  background: #58CC02;
+}
+.index-page__switch-btn:active .index-page__switch-arrow {
+  color: #FFFFFF;
+}
+.index-page__switch-btn--disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.index-page__switch-arrow {
+  font-size: 44rpx; color: #3C3C3C; font-weight: 300;
+  line-height: 1;
+}
+
+/* Stats Cards 鈥?Duolingo offset shadow */
 .index-page__stats-row {
   display: flex; gap: 12rpx;
   padding: 16rpx 32rpx;
@@ -30,11 +49,14 @@
 .index-page__stat-card {
   flex: 1;
   background: #FFFFFF;
-  border-radius: 16rpx; padding: 24rpx 16rpx;
+  border-radius: 24rpx; padding: 24rpx 16rpx;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
 }
-.index-page__stat-card:active { transform: scale(0.97); }
+.index-page__stat-card:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.04);
+}
 
 /* Sections */
 .index-page__section { margin: 0 32rpx 16rpx; }
@@ -45,43 +67,45 @@
 }
 
 .index-page__section-title {
-  font-size: 24rpx; font-weight: 600;
-  color: #1d1d1f; letter-spacing: -0.2rpx;
+  font-size: 26rpx; font-weight: 700;
+  color: #3C3C3C; letter-spacing: -0.2rpx;
 }
 
 .index-page__section-link {
-  font-size: 24rpx; color: #007AFF; font-weight: 500;
+  font-size: 24rpx; color: #58CC02; font-weight: 600;
 }
 .index-page__section-link:active { opacity: 0.55; }
 
 /* Progress Card */
 .index-page__progress-card {
   background: #FFFFFF;
-  border-radius: 16rpx; padding: 24rpx;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  border-radius: 24rpx; padding: 24rpx;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
   margin-bottom: 12rpx;
 }
 
 .index-page__progress-bar-wrap {
-  width: 100%; height: 20rpx; background: #F2F2F7;
-  border-radius: 10rpx; overflow: hidden; margin-bottom: 16rpx;
+  width: 100%; height: 24rpx; background: #F5F5F5;
+  border-radius: 12rpx; overflow: hidden; margin-bottom: 16rpx;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
 }
 
 .index-page__progress-bar {
-  height: 100%; border-radius: 10rpx;
-  background: linear-gradient(90deg, #34C759, #007AFF);
+  height: 100%; border-radius: 12rpx;
+  background: linear-gradient(90deg, #1CB0F6, #58CC02);
+  box-shadow: 0 0 12px rgba(88,204,2,0.20);
   transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .index-page__progress-info { display: flex; align-items: baseline; justify-content: space-between; }
 
 .index-page__progress-percent {
-  font-size: 36rpx; font-weight: 800;
-  color: #007AFF; line-height: 1;
+  font-size: 48rpx; font-weight: 800;
+  color: #58CC02; line-height: 1;
 }
 
 .index-page__progress-text {
-  font-size: 24rpx; color: #8E8E93;
+  font-size: 24rpx; color: #A0A0A0;
 }
 
 /* Badges */
@@ -95,15 +119,16 @@
   display: flex; flex-direction: column; align-items: center;
   gap: 8rpx; padding: 16rpx 24rpx;
   background: #FFFFFF;
-  border-radius: 16rpx; box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  border-radius: 20rpx;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
   min-width: 140rpx;
 }
-.index-page__badge:active { transform: scale(0.96); }
+.index-page__badge:active { transform: scale(0.96); box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
 
 .index-page__badge-icon { font-size: 40rpx; }
 
 .index-page__badge-name {
-  font-size: 12rpx; color: #8E8E93; font-weight: 500;
+  font-size: 24rpx; color: #A0A0A0; font-weight: 600;
 }
 
 /* Loot */
@@ -111,14 +136,122 @@
 
 .index-page__loot-item {
   display: flex; align-items: center; gap: 8rpx;
-  padding: 12rpx 16rpx;
+  padding: 12rpx 20rpx;
   background: #FFFFFF;
-  border-radius: 100rpx; box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  border-radius: 100rpx;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
 }
-.index-page__loot-item:active { transform: scale(0.96); }
+.index-page__loot-item:active { transform: scale(0.96); box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
 
-.index-page__loot-icon { font-size: 20rpx; }
+.index-page__loot-icon { font-size: 24rpx; }
 
 .index-page__loot-name {
-  font-size: 24rpx; color: #1d1d1f; font-weight: 500;
+  font-size: 24rpx; color: #3C3C3C; font-weight: 600;
 }
+
+/* Welcome Tip */
+.index-page__welcome {
+  padding: 16rpx 32rpx 0;
+}
+
+.index-page__welcome-card {
+  display: flex; align-items: center; gap: 16rpx;
+  background: linear-gradient(135deg, #EEF8FF, #F6EEFF);
+  border-radius: 24rpx; padding: 20rpx 24rpx;
+  position: relative;
+}
+
+.index-page__welcome-emoji { font-size: 52rpx; }
+
+.index-page__welcome-body { flex: 1; min-width: 0; }
+
+.index-page__welcome-title {
+  font-size: 26rpx; font-weight: 700; color: #3C3C3C;
+  display: block; margin-bottom: 4rpx;
+}
+
+.index-page__welcome-desc {
+  font-size: 24rpx; color: #A0A0A0;
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.index-page__welcome-close {
+  width: 44rpx; height: 44rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24rpx; color: #A0A0A0;
+}
+.index-page__welcome-close:active { opacity: 0.5; }
+
+/* Error State */
+.index-page__error {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 120rpx 32rpx; gap: 16rpx;
+}
+
+.index-page__error-icon { font-size: 80rpx; }
+
+.index-page__error-text {
+  font-size: 28rpx; color: #A0A0A0;
+}
+
+.index-page__error-btn {
+  margin-top: 8rpx; padding: 16rpx 48rpx;
+  background: linear-gradient(135deg, #46A800 0%, #58CC02 100%);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(88,204,2,0.25);
+}
+.index-page__error-btn:active { opacity: 0.7; }
+.index-page__error-btn text {
+  font-size: 28rpx; color: #FFFFFF; font-weight: 600;
+}
+
+/* Onboard Steps */
+.index-page__onboard-steps {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12rpx; padding: 0 32rpx; margin-top: 8rpx;
+  flex-wrap: wrap;
+}
+
+.index-page__onboard-step {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8rpx;
+}
+
+.index-page__onboard-step-num {
+  width: 56rpx; height: 56rpx;
+  border-radius: 50%;
+  background: #EEF8FF;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(28,176,246,0.15);
+}
+
+.index-page__onboard-step-num text {
+  font-size: 26rpx; font-weight: 800; color: #58CC02;
+}
+
+.index-page__onboard-step-text {
+  font-size: 24rpx; color: #A0A0A0; font-weight: 600;
+}
+
+.index-page__onboard-arrow {
+  font-size: 24rpx; color: #CFCFCF; margin-top: -16rpx;
+}
+
+/* Quick Actions */
+.index-page__quick-actions {
+  display: flex; gap: 12rpx;
+}
+.index-page__quick-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: 8rpx; padding: 24rpx;
+  background: linear-gradient(135deg, #FFF9E6, #FFF3CD);
+  border-radius: 24rpx;
+  box-shadow: 0 4px 0 rgba(255,150,0,0.12), 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.15s ease;
+}
+.index-page__quick-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 0 rgba(255,150,0,0.08);
+}
+.index-page__quick-btn-icon { font-size: 36rpx; }
+.index-page__quick-btn-text { font-size: 24rpx; font-weight: 700; color: #3C3C3C; }

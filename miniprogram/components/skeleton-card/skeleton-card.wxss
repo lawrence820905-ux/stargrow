@@ -1,12 +1,14 @@
+/* Duolingo Skeleton Card */
 .skeleton-card {
-  background: #FFFFFF; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx;
+  background: #FFFFFF; border-radius: 24rpx; padding: 24rpx; margin-bottom: 16rpx;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
 }
 
 .skeleton-pulse {
-  background: linear-gradient(90deg, #F2F2F7 25%, #C6C6C8 50%, #F2F2F7 75%);
+  background: linear-gradient(90deg, #F5F5F5 25%, #ECECEC 50%, #F5F5F5 75%);
   background-size: 200% 100%;
   animation: skeleton-pulse 1.5s ease-in-out infinite;
-  border-radius: 6rpx;
+  border-radius: 8rpx;
 }
 
 @keyframes skeleton-pulse {

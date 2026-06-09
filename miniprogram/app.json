@@ -14,19 +14,24 @@
     "pages/stats/stats",
     "pages/achievements/achievements",
     "pages/achievement-config/achievement-config",
-    "pages/point-log/point-log"
+    "pages/point-log/point-log",
+    "pages/shop/shop",
+    "pages/shop-config/shop-config",
+    "pages/exchange-log/exchange-log"
   ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "成长之星",
-    "navigationBarBackgroundColor": "#F2F2F7",
-    "backgroundColor": "#F2F2F7"
+    "navigationBarBackgroundColor": "#EAF5FA",
+    "backgroundColor": "#EAF5FA"
   },
+  "darkmode": true,
   "tabBar": {
+    "custom": true,
     "color": "#8E8E93",
-    "selectedColor": "#007AFF",
-    "backgroundColor": "#F2F2F7",
-    "borderStyle": "white",
+    "selectedColor": "#58CC02",
+    "backgroundColor": "#EAF5FA",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -37,8 +42,8 @@
         "text": "任务"
       },
       {
-        "pagePath": "pages/draw/draw",
-        "text": "抽奖"
+        "pagePath": "pages/shop/shop",
+        "text": "商城"
       },
       {
         "pagePath": "pages/achievements/achievements",

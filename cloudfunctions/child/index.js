@@ -1,6 +1,7 @@
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
+const _ = db.command;
 
 exports.main = async (event, context) => {
   const { action } = event;
@@ -25,7 +26,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 
@@ -34,6 +35,7 @@ async function create(familyId, event) {
     familyId,
     name: event.name || '新孩子',
     avatarUrl: event.avatarUrl || '',
+    age: event.age || 0,
     totalPointsEarned: 0,
     currentPoints: 0,
     level: 1,
@@ -49,10 +51,11 @@ async function create(familyId, event) {
 }
 
 async function updateChild(familyId, event) {
-  const { childId, name, avatarUrl } = event;
+  const { childId, name, avatarUrl, age } = event;
   const data = { updatedAt: new Date() };
   if (name !== undefined) data.name = name;
   if (avatarUrl !== undefined) data.avatarUrl = avatarUrl;
+  if (age !== undefined) data.age = age;
 
   await db.collection('children').doc(childId).update({ data });
   const child = await db.collection('children').doc(childId).get();

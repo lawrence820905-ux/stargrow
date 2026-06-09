@@ -1,9 +1,24 @@
 <view class="level-tree">
-  <view class="level-tree__icon">{{levelInfo.icon}}</view>
-  <text class="level-tree__name">Lv{{level}} {{levelInfo.name}}</text>
-  <view class="level-tree__progress-bar">
-    <view class="level-tree__progress-fill" style="width: {{progress.percent}}%;"></view>
+  <!-- 圆形进度环 + 孩子头像 -->
+  <view class="level-tree__ring-wrap">
+    <canvas
+      type="2d"
+      id="progressCanvas"
+      class="level-tree__canvas"
+    />
+    <view class="level-tree__avatar-inner">
+      <image
+        wx:if="{{child.avatarUrl}}"
+        class="level-tree__avatar-img"
+        src="{{child.avatarUrl}}"
+        mode="aspectFill"
+      />
+      <view wx:else class="level-tree__avatar-placeholder">
+        <text>{{child.name ? child.name[0] : '🌰'}}</text>
+      </view>
+    </view>
   </view>
+  <text class="level-tree__name">{{child.name || '孩子'}} · Lv{{level}} {{levelInfo.name}}</text>
   <text class="level-tree__progress-text" wx:if="{{progress.pointsToNext > 0}}">
     距离下一级还需 {{progress.pointsToNext}} 积分
   </text>

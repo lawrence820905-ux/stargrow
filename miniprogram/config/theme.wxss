@@ -1,65 +1,220 @@
-/* iOS 17 Design System */
+/* Duolingo ABC Design System */
 :root {
-  --color-blue: #007AFF;
-  --color-green: #34C759;
-  --color-orange: #FF9500;
-  --color-red: #FF3B30;
-  --color-teal: #5AC8FA;
-  --color-purple: #AF52DE;
-  --color-yellow: #FFCC00;
-  --color-pink: #FF2D55;
+  /* === 主色调 === */
+  --color-primary: #58CC02;
+  --color-primary-dark: #46A800;
 
-  --color-background: #F2F2F7;
+  --color-blue: #1CB0F6;
+  --color-blue-dark: #1498D4;
+  --color-green: #58CC02;
+  --color-green-dark: #46A800;
+  --color-orange: #FF9600;
+  --color-orange-dark: #E08800;
+  --color-purple: #A85CFF;
+  --color-purple-dark: #8A3DE8;
+  --color-yellow: #FFC800;
+  --color-yellow-dark: #E0B000;
+  --color-pink: #FF6BC1;
+  --color-red: #FF4B4B;
+  --color-red-dark: #E03A3A;
+
+  --color-system-blue: #1CB0F6;
+  --color-system-green: #58CC02;
+  --color-system-orange: #FF9600;
+  --color-system-red: #FF4B4B;
+  --color-system-teal: #1CB0F6;
+  --color-system-purple: #A85CFF;
+  --color-system-yellow: #FFC800;
+  --color-system-pink: #FF6BC1;
+
+  --color-background: #EAF5FA;
   --color-background-white: #FFFFFF;
   --color-background-card: #FFFFFF;
+  --color-background-warm: #FFFBF5;
+  --color-background-blue: #F5FAFF;
 
-  --color-text-primary: #1d1d1f;
-  --color-text-secondary: #8E8E93;
-  --color-text-tertiary: #C7C7CC;
+  --color-text-primary: #3C3C3C;
+  --color-text-secondary: #A0A0A0;
+  --color-text-tertiary: #CFCFCF;
 
-  --color-separator: #C6C6C8;
+  --color-separator: #E8E8E8;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-full: 999px;
+  --radius-sm: 12rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 999rpx;
 
-  --shadow-card: 0 2px 16px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-card: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-elevated: 0 6px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-nav: 0 1px 0 rgba(0,0,0,0.06);
+
+  --shadow-glow-green: 0 4px 16px rgba(88,204,2,0.25), 0 2px 4px rgba(88,204,2,0.12);
+  --shadow-glow-blue: 0 4px 16px rgba(28,176,246,0.25), 0 2px 4px rgba(28,176,246,0.12);
+  --shadow-glow-orange: 0 4px 16px rgba(255,150,0,0.25), 0 2px 4px rgba(255,150,0,0.12);
+  --shadow-glow-purple: 0 4px 16px rgba(168,92,255,0.25), 0 2px 4px rgba(168,92,255,0.12);
+  --shadow-glow-yellow: 0 4px 16px rgba(255,200,0,0.25), 0 2px 4px rgba(255,200,0,0.12);
+
+  --gradient-primary: linear-gradient(135deg, #46A800 0%, #58CC02 100%);
+  --gradient-blue: linear-gradient(135deg, #1498D4 0%, #1CB0F6 100%);
+  --gradient-green: linear-gradient(135deg, #46A800 0%, #58CC02 100%);
+  --gradient-orange: linear-gradient(135deg, #E08800 0%, #FF9600 100%);
+  --gradient-purple: linear-gradient(135deg, #8A3DE8 0%, #A85CFF 100%);
+  --gradient-yellow: linear-gradient(135deg, #E0B000 0%, #FFC800 100%);
+  --gradient-progress: linear-gradient(90deg, #58CC02 0%, #1CB0F6 100%);
+  --gradient-progress-gold: linear-gradient(90deg, #FF9600 0%, #FFC800 100%);
+  --gradient-welcome: linear-gradient(135deg, #EEF8FF 0%, #F6EEFF 100%);
+  --gradient-streak: linear-gradient(135deg, #FFF9E8 0%, #FFE8C0 100%);
 
   --spacing-page: 32rpx;
   --spacing-card: 24rpx;
   --spacing-element: 16rpx;
   --spacing-tight: 8rpx;
 
-  --font-large-title: 34rpx;
-  --font-title1: 28rpx;
+  --font-display: 48rpx;
+  --font-large-title: 36rpx;
+  --font-title1: 32rpx;
   --font-title2: 30rpx;
   --font-body: 28rpx;
-  --font-caption: 24rpx;
-  --font-small: 20rpx;
+  --font-callout: 26rpx;
+  --font-caption: 26rpx;
+  --font-small: 24rpx;
+
+  --font-weight-heavy: 800;
+  --font-weight-bold: 700;
+  --font-weight-semibold: 600;
+  --font-weight-medium: 500;
 
   --nav-bar-height: 88rpx;
 
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .color-sport { color: var(--color-blue); }
 .color-life { color: var(--color-green); }
 .color-study { color: var(--color-orange); }
-
 .bg-sport { background-color: var(--color-blue); }
 .bg-life { background-color: var(--color-green); }
 .bg-study { background-color: var(--color-orange); }
-
-.color-common { color: #8E8E93; }
+.color-common { color: #A0A0A0; }
 .color-rare { color: var(--color-blue); }
 .color-epic { color: var(--color-purple); }
-.color-legendary { color: var(--color-orange); }
+.color-legendary { color: var(--color-yellow); }
+.bg-common { background-color: #F5F5F5; }
+.bg-rare { background-color: #EEF8FF; }
+.bg-epic { background-color: #F6EEFF; }
+.bg-legendary { background-color: #FFF9E8; }
 
-.bg-common { background-color: #F2F2F7; }
-.bg-rare { background-color: #E8F2FF; }
-.bg-epic { background-color: #F3E8FF; }
-.bg-legendary { background-color: #FFF3E0; }
+.text-gradient-blue {
+  background: var(--gradient-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-green {
+  background: var(--gradient-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-orange {
+  background: var(--gradient-orange);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-progress {
+  background: var(--gradient-progress);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.shadow-glow-green { box-shadow: var(--shadow-glow-green); }
+.shadow-glow-blue { box-shadow: var(--shadow-glow-blue); }
+.shadow-glow-orange { box-shadow: var(--shadow-glow-orange); }
+.shadow-glow-purple { box-shadow: var(--shadow-glow-purple); }
+.shadow-glow-yellow { box-shadow: var(--shadow-glow-yellow); }
+.bg-gradient-primary { background: var(--gradient-primary); }
+.bg-gradient-blue { background: var(--gradient-blue); }
+.bg-gradient-green { background: var(--gradient-green); }
+.bg-gradient-orange { background: var(--gradient-orange); }
+.bg-gradient-purple { background: var(--gradient-purple); }
+.bg-gradient-welcome { background: var(--gradient-welcome); }
+.bg-gradient-streak { background: var(--gradient-streak); }
+.color-green { color: var(--color-green); }
+.color-orange { color: var(--color-orange); }
+.color-blue { color: var(--color-blue); }
+.color-red { color: var(--color-red); }
+
+/* ========================================
+   深色模式 — Dark Mode
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 主色调 — 暗色模式下略微增亮保持可读性 */
+    --color-primary: #6AD60A;
+    --color-primary-dark: #58CC02;
+
+    --color-blue: #3EC7F8;
+    --color-blue-dark: #1CB0F6;
+    --color-green: #6AD60A;
+    --color-green-dark: #58CC02;
+    --color-orange: #FFA820;
+    --color-orange-dark: #FF9600;
+    --color-purple: #BA7AFF;
+    --color-purple-dark: #A85CFF;
+    --color-yellow: #FFD426;
+    --color-yellow-dark: #FFC800;
+    --color-pink: #FF88CE;
+    --color-red: #FF6B6B;
+    --color-red-dark: #FF4B4B;
+
+    --color-system-blue: #3EC7F8;
+    --color-system-green: #6AD60A;
+    --color-system-orange: #FFA820;
+    --color-system-red: #FF6B6B;
+    --color-system-teal: #3EC7F8;
+    --color-system-purple: #BA7AFF;
+    --color-system-yellow: #FFD426;
+    --color-system-pink: #FF88CE;
+
+    /* 背景系统 — iOS 暗色风格 */
+    --color-background: #1C1C1E;
+    --color-background-white: #2C2C2E;
+    --color-background-card: #2C2C2E;
+    --color-background-warm: #2C2518;
+    --color-background-blue: #1A2130;
+
+    /* 文字 — 暗色模式高对比度 */
+    --color-text-primary: #E5E5E7;
+    --color-text-secondary: #8E8E93;
+    --color-text-tertiary: #636366;
+
+    /* 分割线 — 暗色调 */
+    --color-separator: #38383A;
+
+    /* 阴影 — 暗色模式使用更暗的阴影 */
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.30);
+    --shadow-elevated: 0 4px 16px rgba(0,0,0,0.40);
+    --shadow-nav: 0 1px 0 rgba(255,255,255,0.08);
+
+    --shadow-glow-green: 0 4px 16px rgba(106,214,10,0.30);
+    --shadow-glow-blue: 0 4px 16px rgba(62,199,248,0.30);
+    --shadow-glow-orange: 0 4px 16px rgba(255,168,32,0.30);
+    --shadow-glow-purple: 0 4px 16px rgba(186,122,255,0.30);
+    --shadow-glow-yellow: 0 4px 16px rgba(255,212,38,0.30);
+  }
+
+  /* 暗色模式额外变量 */
+  .bg-common { background-color: #2C2C2E; }
+  .bg-rare { background-color: #1A2835; }
+  .bg-epic { background-color: #281A35; }
+  .bg-legendary { background-color: #2C2818; }
+
+  .color-common { color: #8E8E93; }
+  .color-rare { color: #3EC7F8; }
+  .color-epic { color: #BA7AFF; }
+  .color-legendary { color: #FFD426; }
+}

@@ -1,6 +1,7 @@
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
+const _ = db.command;
 
 exports.main = async (event, context) => {
   const { action } = event;
@@ -22,7 +23,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 

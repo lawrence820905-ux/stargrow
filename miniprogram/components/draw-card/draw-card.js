@@ -30,9 +30,6 @@ Component({
   methods: {
     onDrawOne() {
       this.triggerEvent('draw', { count: 1 });
-    },
-    onDrawFive() {
-      this.triggerEvent('draw', { count: 5 });
     }
   }
 });

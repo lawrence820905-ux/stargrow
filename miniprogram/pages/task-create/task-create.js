@@ -19,14 +19,10 @@ Page({
     selectedChildId: '',
     children: [],
     categories,
-    taskType: 'daily',
-    navBarTop: 88
+    taskType: 'daily'
   },
 
   async onLoad(options) {
-    const sysInfo = wx.getSystemInfoSync();
-    this.setData({ navBarTop: (sysInfo.statusBarHeight || 20) + 88 });
-
     this.setData({ children: app.globalData.children });
 
     if (options.childId) {
@@ -55,7 +51,7 @@ Page({
         selectedChildId: t.childId
       });
     } catch (e) {
-      wx.showToast({ title: '加载任务失败', icon: 'none' });
+      wx.showToast({ title: '加载任务失败，请重试', icon: 'none' });
     }
   },
 
@@ -111,7 +107,7 @@ Page({
       wx.showToast({ title: isEdit ? '已更新' : '已创建', icon: 'success' });
       setTimeout(() => wx.navigateBack(), 1000);
     } catch (err) {
-      wx.showToast({ title: err.message || '操作失败', icon: 'none' });
+      wx.showToast({ title: err.message || '操作失败，请稍后重试', icon: 'none' });
     }
   }
 });

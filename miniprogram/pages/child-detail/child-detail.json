@@ -4,7 +4,8 @@
     "child-switcher": "../../components/child-switcher/child-switcher",
     "level-tree": "../../components/level-tree/level-tree",
     "points-display": "../../components/points-display/points-display",
-    "streak-badge": "../../components/streak-badge/streak-badge"
+    "streak-badge": "../../components/streak-badge/streak-badge",
+    "empty-state": "/components/empty-state/empty-state"
   },
   "navigationStyle": "custom"
 }

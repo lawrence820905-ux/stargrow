@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "nav-bar": "/components/nav-bar/nav-bar",
+    "child-switcher": "/components/child-switcher/child-switcher",
+    "empty-state": "/components/empty-state/empty-state"
+  },
+  "navigationStyle": "custom"
+}

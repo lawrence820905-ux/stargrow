@@ -1,0 +1,117 @@
+<view class="shop-page">
+  <nav-bar title="积分商城" showBack="{{true}}" />
+
+  <!-- Child Switcher -->
+  <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
+
+  <!-- Points -->
+  <view class="shop-page__points">
+    <points-display value="{{activeChild.currentPoints || 0}}" label="可兑换积分" />
+  </view>
+
+  <!-- Tab Switch -->
+  <view class="shop-page__tab-bar">
+    <view
+      class="shop-page__tab {{activeTab === 'shop' ? 'shop-page__tab--active' : ''}}"
+      bindtap="onSwitchTab"
+      data-tab="shop"
+    >
+      <text>🏪 商品</text>
+    </view>
+    <view
+      class="shop-page__tab {{activeTab === 'records' ? 'shop-page__tab--active' : ''}}"
+      bindtap="onSwitchTab"
+      data-tab="records"
+    >
+      <text>📋 记录</text>
+    </view>
+  </view>
+
+  <!-- Shop Grid -->
+  <view class="shop-page__content" wx:if="{{activeTab === 'shop'}}">
+    <!-- Category Filter -->
+    <scroll-view class="shop-page__filters" scroll-x show-scrollbar="{{false}}">
+      <view
+        class="shop-page__filter {{activeCategory === 'all' ? 'shop-page__filter--active' : ''}}"
+        bindtap="onTapCategory" data-cat="all"
+      ><text>全部</text></view>
+      <view
+        class="shop-page__filter {{activeCategory === 'reward' ? 'shop-page__filter--active' : ''}}"
+        bindtap="onTapCategory" data-cat="reward"
+      ><text>🎁 奖励</text></view>
+      <view
+        class="shop-page__filter {{activeCategory === 'virtual' ? 'shop-page__filter--active' : ''}}"
+        bindtap="onTapCategory" data-cat="virtual"
+      ><text>📦 抽奖</text></view>
+    </scroll-view>
+
+    <!-- 抽奖入口 -->
+    <view class="shop-page__draw-entry" wx:if="{{activeCategory === 'virtual'}}" bindtap="onGoDraw">
+      <text>🎰 前往抽奖 →</text>
+    </view>
+
+    <!-- Items Grid -->
+    <view class="shop-page__grid" wx:if="{{items.length > 0}}">
+      <view
+        class="shop-page__item"
+        wx:for="{{items}}"
+        wx:key="_id"
+        data-item="{{item}}"
+        bindtap="onTapItem"
+      >
+        <text class="shop-page__item-icon">{{item.icon || '🎁'}}</text>
+        <text class="shop-page__item-name">{{item.name}}</text>
+        <text class="shop-page__item-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <view class="shop-page__item-bottom">
+          <text class="shop-page__item-price">⭐ {{item.price}}</text>
+          <view class="shop-page__item-btn {{(activeChild.currentPoints || 0) < item.price ? 'shop-page__item-btn--disabled' : ''}}">
+            <text>兑换</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <empty-state wx:else icon="🏪" text="商店还没有商品" hint="家长可以前往配置页添加商城商品" />
+  </view>
+
+  <!-- Records -->
+  <view class="shop-page__content" wx:if="{{activeTab === 'records'}}">
+    <view class="shop-page__record-list" wx:if="{{records.length > 0}}">
+      <view class="shop-page__record" wx:for="{{records}}" wx:key="_id">
+        <text class="shop-page__record-icon">{{item.itemIcon || '🎁'}}</text>
+        <view class="shop-page__record-info">
+          <text class="shop-page__record-name">{{item.itemName}}</text>
+          <text class="shop-page__record-cost">-{{item.pointsSpent}}分</text>
+          <text class="shop-page__record-time">{{item.timeText}}</text>
+        </view>
+        <view
+          class="shop-page__record-fulfill {{item.isFulfilled ? 'shop-page__record-fulfill--done' : ''}}"
+          data-id="{{item._id}}"
+          bindtap="onFulfill"
+        >
+          <text>{{item.isFulfilled ? '已兑现' : '未兑现'}}</text>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:else icon="📋" text="还没有兑换记录" hint="完成积分兑换后，记录会显示在这里" />
+  </view>
+
+  <!-- Confirm Modal -->
+  <view class="shop-page__modal-overlay" wx:if="{{showConfirm}}">
+    <view class="shop-page__modal-bg" bindtap="onCloseConfirm"></view>
+    <view class="shop-page__modal">
+      <text class="shop-page__modal-icon">{{confirmItem.icon || '🎁'}}</text>
+      <text class="shop-page__modal-title">确认兑换</text>
+      <text class="shop-page__modal-name">{{confirmItem.name}}</text>
+      <text class="shop-page__modal-price">花费 ⭐ {{confirmItem.price}} 积分</text>
+      <view class="shop-page__modal-btns">
+        <button class="shop-page__modal-cancel" bindtap="onCloseConfirm">取消</button>
+        <button class="shop-page__modal-confirm" bindtap="onConfirmExchange" loading="{{exchanging}}">确认兑换</button>
+      </view>
+    </view>
+  </view>
+
+  <confetti-view id="confetti" />
+
+  <view class="safe-area-bottom" style="height: 160rpx;"></view>
+</view>

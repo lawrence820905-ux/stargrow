@@ -6,6 +6,6 @@
     <text class="dr-page__prize">{{prizeName}}</text>
     <text class="dr-page__points" wx:if="{{pointsAwarded > 0}}">+{{pointsAwarded}} 积分</text>
     <text class="dr-page__reward" wx:if="{{rewardTitle}}">{{rewardTitle}}</text>
-    <button class="dr-page__btn" bindtap="onDone">太棒了!</button>
+    <button class="dr-page__btn" bindtap="onDone">知道了</button>
   </view>
 </view>

@@ -13,6 +13,9 @@ Page({
   },
 
   async onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 3 });
+    }
     this.setData({ children: app.globalData.children });
     const activeChild = app.getActiveChild();
     if (activeChild) {

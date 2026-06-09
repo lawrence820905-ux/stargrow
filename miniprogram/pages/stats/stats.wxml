@@ -3,6 +3,34 @@
   <view>
     <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
 
+    <!-- Weekly Comparison -->
+    <view class="stats-page__section" wx:if="{{comparison}}">
+      <text class="stats-page__section-title">📊 本周 vs 上周</text>
+      <view class="stats-page__card">
+        <view class="stats-page__comp-row">
+          <text class="stats-page__comp-label">完成任务</text>
+          <text class="stats-page__comp-val">{{comparison.thisWeek.tasksCompleted || 0}} 次</text>
+          <text class="stats-page__comp-change {{comparison.tasksChange > 0 ? 'color-green' : comparison.tasksChange < 0 ? 'color-red' : 'color-gray'}}">
+            {{comparison.tasksChange > 0 ? '↑' : comparison.tasksChange < 0 ? '↓' : '→'}} {{comparison.tasksChange > 0 ? '+' : ''}}{{comparison.tasksChange}}
+          </text>
+        </view>
+        <view class="stats-page__comp-row">
+          <text class="stats-page__comp-label">获得积分</text>
+          <text class="stats-page__comp-val">⭐ {{comparison.thisWeek.pointsEarned || 0}}</text>
+          <text class="stats-page__comp-change {{comparison.pointsChange > 0 ? 'color-green' : comparison.pointsChange < 0 ? 'color-red' : 'color-gray'}}">
+            {{comparison.pointsChange > 0 ? '↑' : comparison.pointsChange < 0 ? '↓' : '→'}} {{comparison.pointsChange > 0 ? '+' : ''}}{{comparison.pointsChange}}
+          </text>
+        </view>
+        <view class="stats-page__comp-row">
+          <text class="stats-page__comp-label">活跃类别</text>
+          <text class="stats-page__comp-val">{{comparison.thisWeek.topCategory || '无'}}</text>
+          <text class="stats-page__comp-trend">
+            {{comparison.trend === 'up' ? '🟢 保持增长' : comparison.trend === 'down' ? '🔴 有所下降' : '🟡 保持稳定'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
     <!-- Overview Cards -->
     <view class="stats-page__section">
       <text class="stats-page__section-title">概览</text>

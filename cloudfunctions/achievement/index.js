@@ -45,7 +45,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 

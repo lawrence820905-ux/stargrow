@@ -1,4 +1,6 @@
-const colors = ['#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#007AFF', '#AF52DE', '#5AC8FA', '#FF2D55'];
+const colors = ['#58CC02', '#1CB0F6', '#FF9600', '#FFC800', '#A85CFF', '#FF6BC1', '#FF4B4B', '#46A800'];
+const levelUpColors = ['#FFC800', '#58CC02', '#FFD700', '#46A800', '#FFE55C', '#7CCD00'];
+const rainbowColors = ['#FF4B4B', '#FF9600', '#FFC800', '#58CC02', '#1CB0F6', '#A85CFF', '#FF6BC1'];
 
 Component({
   data: {
@@ -7,15 +9,36 @@ Component({
   },
 
   methods: {
-    show() {
+    show(options = {}) {
+      const mode = options.mode || 'confetti';
+      let particleCount = 60;
+      let particleColors = colors;
+      let bigParticles = false;
+
+      if (mode === 'levelup') {
+        particleCount = 80;
+        particleColors = levelUpColors;
+        bigParticles = true;
+      } else if (mode === 'milestone') {
+        particleCount = 120;
+        particleColors = rainbowColors;
+        bigParticles = true;
+      } else if (mode === 'exchange') {
+        particleCount = 50;
+        particleColors = ['#FFC800', '#FF9600', '#58CC02'];
+      }
+
       const particles = [];
       const screenWidth = 750;
-      for (let i = 0; i < 60; i++) {
+      const sizeMin = bigParticles ? 12 : 8;
+      const sizeRange = bigParticles ? 18 : 14;
+
+      for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * screenWidth,
           y: -20 - Math.random() * 100,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          size: 8 + Math.random() * 14,
+          color: particleColors[Math.floor(Math.random() * particleColors.length)],
+          size: sizeMin + Math.random() * sizeRange,
           round: Math.random() > 0.5,
           duration: 2 + Math.random() * 2,
           delay: Math.random() * 0.5

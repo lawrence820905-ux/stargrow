@@ -18,7 +18,7 @@ Page({
       const configRes = await getConfig();
       this.setData({ multipliers: configRes.config.scoreMultipliers });
     } catch (e) {
-      wx.showToast({ title: '加载失败', icon: 'none' });
+      wx.showToast({ title: '加载失败，请重试', icon: 'none' });
     }
   },
 
@@ -34,10 +34,34 @@ Page({
 
   async onConfirm() {
     try {
-      await completeTask(this.data.task._id, this.data.selectedScore);
-      checkAndAward(this.data.task.childId).catch(() => {});
+      const result = await completeTask(this.data.task._id, this.data.selectedScore);
+      checkAndAward(this.data.task.childId).catch(err => console.error('成就检查失败:', err));
       wx.showToast({ title: `+${this.data.computedPoints} 积分!`, icon: 'success' });
-      setTimeout(() => wx.navigateBack(), 1000);
+
+      // 检查升级/里程碑庆祝
+      const pages = getCurrentPages();
+      const currentPage = pages[pages.length - 1];
+
+      if (result.leveledUp) {
+        // 升级庆祝
+        setTimeout(() => {
+          const confetti = currentPage.selectComponent('#confetti');
+          if (confetti) confetti.show({ mode: 'levelup' });
+        }, 500);
+      }
+
+      if (result.streakMilestone) {
+        // 连续天数里程碑
+        setTimeout(() => {
+          wx.showToast({
+            title: `🔥 连续${result.streakMilestone}天打卡！`,
+            icon: 'none',
+            duration: 2000
+          });
+        }, 1500);
+      }
+
+      setTimeout(() => wx.navigateBack(), result.leveledUp ? 2500 : 1000);
     } catch (err) {
       wx.showToast({ title: err.message, icon: 'none' });
     }

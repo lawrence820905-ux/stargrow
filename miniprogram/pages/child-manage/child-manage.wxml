@@ -25,6 +25,7 @@
     <view class="cm-page__modal" catchtap="">
       <text class="cm-page__modal-title">{{editingChild ? '编辑' : '添加'}}孩子</text>
       <input class="cm-page__input" placeholder="孩子名称" value="{{childName}}" bindinput="onNameInput" />
+      <input class="cm-page__input" placeholder="年龄（岁）" type="number" value="{{childAge}}" bindinput="onAgeInput" />
       <view class="cm-page__modal-btns">
         <button class="cm-page__modal-cancel" bindtap="onCloseModal">取消</button>
         <button class="cm-page__modal-confirm" bindtap="onConfirmModal">确认</button>

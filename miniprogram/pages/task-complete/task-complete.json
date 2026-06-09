@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "score-stars": "../../components/score-stars/score-stars"
+    "score-stars": "../../components/score-stars/score-stars",
+    "confetti-view": "/components/confetti-view/confetti-view"
   }
 }

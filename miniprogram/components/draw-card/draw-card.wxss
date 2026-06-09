@@ -1,6 +1,6 @@
 .draw-card {
-  background: #FFFFFF; border-radius: 20rpx; padding: 32rpx;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  background: #FFFFFF; border-radius: 32rpx; padding: 32rpx;
+  box-shadow: var(--shadow-card);
 }
 
 .draw-card__header {
@@ -12,34 +12,34 @@
 .draw-card__header-text { display: flex; flex-direction: column; }
 
 .draw-card__title {
-  font-size: 32rpx; font-weight: 700; color: #1d1d1f;
+  font-size: 32rpx; font-weight: 700; color: #3C3C3C;
 }
 
 .draw-card__cost {
-  font-size: 24rpx; color: #8E8E93; margin-top: 4rpx;
+  font-size: 24rpx; color: #A0A0A0; margin-top: 4rpx;
 }
 
 .draw-card__rates {
   display: flex; flex-wrap: wrap; gap: 12rpx; margin-bottom: 28rpx;
-  padding: 20rpx; background: #F2F2F7; border-radius: 12rpx;
+  padding: 20rpx; background: #F5F5F5; border-radius: 16rpx;
 }
 
 .draw-card__rate-item { display: flex; align-items: center; gap: 6rpx; }
 
-.draw-card__rate-name { font-size: 22rpx; font-weight: 500; }
+.draw-card__rate-name { font-size: 24rpx; font-weight: 500; }
 
-.draw-card__rate-pct { font-size: 22rpx; color: #8E8E93; }
+.draw-card__rate-pct { font-size: 24rpx; color: #A0A0A0; }
 
 .draw-card__actions { display: flex; gap: 16rpx; }
 
 .draw-card__btn {
   flex: 1; height: 80rpx; line-height: 80rpx;
-  border-radius: 20rpx; font-size: 28rpx; font-weight: 600;
+  border-radius: 32rpx; font-size: 30rpx; font-weight: 700;
   text-align: center; border: none; padding: 0;
 }
 
 .draw-card__btn::after { border: none; }
 
-.draw-card__btn--primary { background: #007AFF; color: #FFFFFF; }
-
-.draw-card__btn--secondary { background: #F2F2F7; color: #007AFF; }
+.draw-card__btn--primary { background: linear-gradient(135deg, #46A800, #58CC02); color: #FFFFFF; box-shadow: var(--shadow-glow-green); }
+.draw-card__btn--primary:active { opacity: 0.7; }
+.draw-card__btn[disabled] { background: #CFCFCF; color: #FFFFFF; }

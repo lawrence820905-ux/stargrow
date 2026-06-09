@@ -17,6 +17,8 @@ exports.main = async (event, context) => {
       case 'getCategoryBreakdown':  return await getCategoryBreakdown(family._id, event);
       case 'getLeaderboard':        return await getLeaderboard(family._id, event);
       case 'getPointHistory':       return await getPointHistory(family._id, event);
+      case 'getMotivationInsight': return await getMotivationInsight(family._id, event);
+      case 'getWeeklyComparison':  return await getWeeklyComparison(family._id, event);
       default: return { code: 400, message: '未知操作' };
     }
   } catch (err) {
@@ -26,7 +28,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 
@@ -58,14 +60,11 @@ async function getChildOverview(familyId, event) {
     .where(_.and([{ familyId, childId }, _.or([{ taskType: 'daily' }, { taskType: _.exists(false) }])]))
     .count();
 
-  const specialCountRes = await db.collection('tasks')
-    .where(_.and([
-      { familyId, childId, taskType: 'special' },
-      _.or([{ status: 'pending' }, { status: 'completed', completedAt: _.gte(todayStart).and(_.lte(todayEnd)) }])
-    ]))
+  const specialTodayRes = await db.collection('tasks')
+    .where({ familyId, childId, taskType: 'special', createdAt: _.gte(todayStart).and(_.lte(todayEnd)) })
     .count();
 
-  const todayTasksTotal = dailyCountRes.total + specialCountRes.total;
+  const todayTasksTotal = dailyCountRes.total + specialTodayRes.total;
 
   const todayCompletedRes = await db.collection('tasks')
     .where({
@@ -193,6 +192,138 @@ async function getPointHistory(familyId, event) {
     .get();
 
   return { code: 0, records: res.data, total: totalRes.total };
+}
+
+async function getMotivationInsight(familyId, event) {
+  const { childId } = event;
+  if (!childId) return { code: 400, message: '缺少孩子ID' };
+
+  const alerts = [];
+  const today = new Date();
+  const days = [];
+
+  // 统计过去7天每天的任务完成情况
+  for (let i = 6; i >= 0; i--) {
+    const dayStart = new Date(today);
+    dayStart.setDate(today.getDate() - i);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const totalRes = await db.collection('tasks')
+      .where(_.and([
+        { familyId, childId },
+        _.or([{ taskType: 'daily' }, { taskType: _.exists(false) }])
+      ]))
+      .count();
+
+    // 当天完成的日常任务
+    const completedRes = await db.collection('tasks')
+      .where({
+        familyId, childId, status: 'completed',
+        completedAt: _.gte(dayStart).and(_.lte(dayEnd))
+      })
+      .get();
+    const dailyCompleted = completedRes.data.filter(t => t.taskType === 'daily' || !t.taskType).length;
+
+    if (totalRes.total > 0) {
+      days.push({
+        date: formatDate(dayStart),
+        total: totalRes.total,
+        completed: dailyCompleted,
+        rate: dailyCompleted / totalRes.total
+      });
+    }
+  }
+
+  if (days.length >= 7) {
+    const last7 = days.slice(-7);
+    const allFull = last7.every(d => d.rate >= 1.0);
+    if (allFull) {
+      alerts.push({
+        type: 'increase_difficulty',
+        message: '孩子已连续7天完成所有任务！建议适当提高任务难度或增加任务数量。',
+        severity: 'suggestion'
+      });
+    }
+  }
+
+  const last3 = days.slice(-3);
+  if (last3.length >= 3 && last3.every(d => d.rate === 0) && last3.every(d => d.total > 0)) {
+    alerts.push({
+      type: 'decrease_difficulty',
+      message: '孩子已连续3天未完成任何任务，建议降低难度或与孩子沟通原因。',
+      severity: 'warning'
+    });
+  }
+
+  return { code: 0, alerts };
+}
+
+async function getWeeklyComparison(familyId, event) {
+  const { childId } = event;
+  if (!childId) return { code: 400, message: '缺少孩子ID' };
+
+  const today = new Date();
+
+  function getWeekRange(offset) {
+    const dayOfWeek = today.getDay() || 7;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - dayOfWeek + 1 + offset * 7);
+    monday.setHours(0, 0, 0, 0);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+    return { start: monday, end: sunday };
+  }
+
+  const thisWeek = getWeekRange(0);
+  const lastWeek = getWeekRange(-1);
+
+  async function getWeekStats(start, end) {
+    const tasksRes = await db.collection('tasks')
+      .where({
+        familyId, childId, status: 'completed',
+        completedAt: _.gte(start).and(_.lte(end))
+      })
+      .get();
+    const tasksCompleted = tasksRes.data.length;
+    const pointsEarned = tasksRes.data.reduce((sum, t) => sum + (t.pointsAwarded || 0), 0);
+    const categories = {};
+    tasksRes.data.forEach(t => {
+      const cat = t.category || 'other';
+      categories[cat] = (categories[cat] || 0) + 1;
+    });
+    let topCategory = '无';
+    let topCount = 0;
+    Object.entries(categories).forEach(([cat, count]) => {
+      if (count > topCount) { topCategory = cat; topCount = count; }
+    });
+    return { tasksCompleted, pointsEarned, topCategory };
+  }
+
+  const [thisWeekStats, lastWeekStats] = await Promise.all([
+    getWeekStats(thisWeek.start, thisWeek.end),
+    getWeekStats(lastWeek.start, lastWeek.end)
+  ]);
+
+  const tasksChange = thisWeekStats.tasksCompleted - lastWeekStats.tasksCompleted;
+  const pointsChange = thisWeekStats.pointsEarned - lastWeekStats.pointsEarned;
+
+  let trend = 'stable';
+  if (tasksChange > 0) trend = 'up';
+  else if (tasksChange < 0) trend = 'down';
+
+  return {
+    code: 0,
+    comparison: {
+      thisWeek: thisWeekStats,
+      lastWeek: lastWeekStats,
+      tasksChange,
+      pointsChange,
+      trend
+    }
+  };
 }
 
 function formatDate(date) {

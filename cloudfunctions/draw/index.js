@@ -1,6 +1,7 @@
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
+const _ = db.command;
 
 exports.main = async (event, context) => {
   const { action } = event;
@@ -26,7 +27,7 @@ exports.main = async (event, context) => {
 };
 
 async function getFamilyByOpenid(openid) {
-  const res = await db.collection('families').where({ openid }).get();
+  const res = await db.collection('families').where(_.or([{ members: openid }, { openid }])).get();
   return res.data[0] || null;
 }
 
@@ -49,7 +50,7 @@ async function savePool(familyId, event) {
     .get();
 
   const data = {
-    name: name || (type === 'small' ? '小抽奖' : '大抽奖'),
+    name: name || (type === 'small' ? '小宝箱' : '大宝箱'),
     cost: cost || (type === 'small' ? 20 : 80),
     items: items || [],
     updatedAt: new Date()
@@ -93,8 +94,8 @@ async function doDraw(familyId, event) {
   if (child.currentPoints < pool.cost) return { code: 400, message: '积分不足' };
 
   // 加权随机
-  const prize = weightedRandom(pool.items);
-  if (!prize) return { code: 500, message: '抽奖失败' };
+  const prize = twoStepDraw(pool.items);
+  if (!prize) return { code: 500, message: '开箱失败' };
 
   // 计算获得积分
   let pointsAwarded = 0;
@@ -127,7 +128,7 @@ async function doDraw(familyId, event) {
       relatedTaskId: null,
       relatedDrawId: null,
       balanceAfter: child.currentPoints - pool.cost,
-      note: `${poolType === 'small' ? '小' : '大'}抽奖消耗`,
+      note: `${poolType === 'small' ? '小宝箱' : '大宝箱'}消耗`,
       createdAt: new Date()
     }
   });
@@ -228,6 +229,10 @@ async function getRecords(familyId, event) {
 }
 
 async function fulfillReward(familyId, event) {
+  const existing = await db.collection('drawRecords').doc(event.recordId).get();
+  if (!existing.data) return { code: 404, message: '记录不存在' };
+  if (existing.data.isFulfilled) return { code: 400, message: '已兑奖，无法重复操作' };
+
   await db.collection('drawRecords').doc(event.recordId).update({
     data: { isFulfilled: true, fulfilledAt: new Date() }
   });
@@ -235,15 +240,40 @@ async function fulfillReward(familyId, event) {
   return { code: 0, record: record.data };
 }
 
-function weightedRandom(items) {
-  const totalWeight = items.reduce((sum, item) => sum + (item.weight || 0), 0);
-  if (totalWeight <= 0) return items[0];
-  let rand = Math.random() * totalWeight;
-  for (const item of items) {
-    rand -= (item.weight || 0);
-    if (rand <= 0) return item;
+function twoStepDraw(items) {
+  const groups = { common: [], rare: [], epic: [], legendary: [] };
+  items.forEach(item => {
+    const r = item.rarity || 'common';
+    if (groups[r]) groups[r].push(item);
+  });
+
+  // 第一步：按固定概率抽稀有度
+  const rarity = weightedRarity();
+  if (groups[rarity].length > 0) {
+    const pool = groups[rarity];
+    return pool[Math.floor(Math.random() * pool.length)];
   }
-  return items[items.length - 1];
+
+  // 如果该级别无奖品，按稀有度降级
+  const order = ['legendary', 'epic', 'rare', 'common'];
+  for (const r of order) {
+    if (groups[r].length > 0) {
+      const pool = groups[r];
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+  }
+  return items[0];
+}
+
+function weightedRarity() {
+  const rates = { common: 60, rare: 25, epic: 10, legendary: 5 };
+  const rand = Math.random() * 100;
+  let cumulative = 0;
+  for (const [rarity, rate] of Object.entries(rates)) {
+    cumulative += rate;
+    if (rand <= cumulative) return rarity;
+  }
+  return 'common';
 }
 
 function randBetween(min, max) {

@@ -1,18 +1,44 @@
+/* Duolingo ABC Task Card */
 .task-card {
   background: #FFFFFF;
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
-  transition: transform 0.2s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Left colored accent bar */
+.task-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8rpx;
+  border-radius: 0 4rpx 4rpx 0;
+}
+.task-card--sport::before  { background: #1CB0F6; }
+.task-card--life::before   { background: #58CC02; }
+.task-card--study::before  { background: #FF9600; }
 
 .task-card:active {
   transform: scale(0.98);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
 }
 
 .task-card--completed {
-  opacity: 0.7;
+  background: #FAFAFA;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.03), 0 1px 4px rgba(0,0,0,0.02);
+}
+.task-card--completed .task-card__title {
+  color: #A0A0A0;
+}
+.task-card--completed .task-card__points-text {
+  color: #CFCFCF;
+}
+.task-card--completed::before {
+  background: #CFCFCF;
 }
 
 .task-card__header {
@@ -29,25 +55,25 @@
 }
 
 .task-card__type-badge {
-  background: #E8F2FF;
-  border: 1rpx solid #007AFF;
+  background: #EEF8FF;
+  border: 2rpx solid #1CB0F6;
   border-radius: 8rpx;
   padding: 2rpx 12rpx;
 }
 
 .task-card__type-text {
-  font-size: 20rpx;
-  color: #007AFF;
-  font-weight: 500;
+  font-size: 24rpx;
+  color: #1CB0F6;
+  font-weight: 600;
 }
 
 .task-card__status-text {
-  font-size: 22rpx;
-  font-weight: 500;
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
-.color-green { color: #34C759; }
-.color-orange { color: #FF9500; }
+.color-green { color: #58CC02; }
+.color-orange { color: #FF9600; }
 
 .task-card__body {
   margin-bottom: 16rpx;
@@ -55,14 +81,17 @@
 
 .task-card__title {
   font-size: 30rpx;
-  font-weight: 600;
-  color: #1d1d1f;
+  font-weight: 700;
+  color: #3C3C3C;
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .task-card__desc {
   font-size: 24rpx;
-  color: #8E8E93;
+  color: #A0A0A0;
   margin-top: 4rpx;
   line-height: 1.3;
   display: -webkit-box;
@@ -89,17 +118,18 @@
 
 .task-card__points-text {
   font-size: 24rpx;
-  color: #8E8E93;
-  font-weight: 500;
+  color: #A0A0A0;
+  font-weight: 600;
 }
 
 .task-card__score {
-  font-size: 22rpx;
-  color: #007AFF;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #58CC02;
   margin-left: 8rpx;
 }
 
 .task-card__time {
-  font-size: 22rpx;
-  color: #C7C7CC;
+  font-size: 24rpx;
+  color: #CFCFCF;
 }

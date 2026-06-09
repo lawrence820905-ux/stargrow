@@ -1,0 +1,7 @@
+<view class="alert-card {{bgClass}}" wx:if="{{visible}}">
+  <text class="alert-card__icon">{{icon}}</text>
+  <text class="alert-card__msg">{{message}}</text>
+  <view class="alert-card__close" bindtap="onDismiss">
+    <text>✕</text>
+  </view>
+</view>

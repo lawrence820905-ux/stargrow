@@ -1,12 +1,14 @@
+/* Duolingo Streak Badge */
 .streak-badge {
-  display: inline-flex; align-items: center; gap: 4rpx;
+  display: inline-flex; align-items: center; gap: 6rpx;
   padding: 12rpx 24rpx;
-  background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
-  border-radius: 20rpx;
+  background: linear-gradient(135deg, #FFF9E8 0%, #FFE8C0 100%);
+  border-radius: 24rpx;
+  box-shadow: 0 4px 16px rgba(255,200,0,0.20);
 }
 
 .streak-badge__icon { font-size: 32rpx; }
 
-.streak-badge__count { font-size: 36rpx; font-weight: 700; color: #E65100; }
+.streak-badge__count { font-size: 40rpx; font-weight: 800; color: #E08800; }
 
-.streak-badge__label { font-size: 24rpx; color: #BF360C; }
+.streak-badge__label { font-size: 24rpx; color: #E08800; font-weight: 600; }

@@ -3,26 +3,24 @@ const app = getApp();
 
 Page({
   data: {
-    navBarTop: 88,
     children: [],
     showModal: false,
     editingChild: null,
-    childName: ''
+    childName: '',
+    childAge: ''
   },
 
   async onLoad() {
-    const sysInfo = wx.getSystemInfoSync();
-    this.setData({ navBarTop: (sysInfo.statusBarHeight || 20) + 88 });
     this.setData({ children: app.globalData.children });
   },
 
   onAdd() {
-    this.setData({ showModal: true, editingChild: null, childName: '' });
+    this.setData({ showModal: true, editingChild: null, childName: '', childAge: '' });
   },
 
   onEdit(e) {
     const child = e.currentTarget.dataset.child;
-    this.setData({ showModal: true, editingChild: child, childName: child.name });
+    this.setData({ showModal: true, editingChild: child, childName: child.name, childAge: child.age || '' });
   },
 
   async onDelete(e) {
@@ -40,17 +38,19 @@ Page({
   },
 
   onNameInput(e) { this.setData({ childName: e.detail.value }); },
+  onAgeInput(e) { this.setData({ childAge: e.detail.value }); },
 
   onCloseModal() { this.setData({ showModal: false }); },
 
   async onConfirmModal() {
     const name = this.data.childName.trim();
     if (!name) { wx.showToast({ title: '请输入名称', icon: 'none' }); return; }
+    const age = parseInt(this.data.childAge) || 0;
     try {
       if (this.data.editingChild) {
-        await updateChild(this.data.editingChild._id, name);
+        await updateChild(this.data.editingChild._id, name, undefined, age);
       } else {
-        await createChild(name);
+        await createChild(name, undefined, age);
       }
       await refreshChildren();
       this.setData({ children: app.globalData.children, showModal: false });

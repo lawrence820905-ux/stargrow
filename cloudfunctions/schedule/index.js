@@ -23,6 +23,24 @@ exports.main = async (event, context) => {
     }
     console.log(`Reset ${dailyTasksRes.data.length} daily tasks`);
 
+    // 清除已兑奖的抽奖记录
+    const fulfilledRes = await db.collection('drawRecords')
+      .where({ isFulfilled: true })
+      .get();
+    for (const record of fulfilledRes.data) {
+      await db.collection('drawRecords').doc(record._id).remove();
+    }
+    console.log(`Cleared ${fulfilledRes.data.length} fulfilled draw records`);
+
+    // 清除已兑现的兑换记录
+    const fulfilledExchangeRes = await db.collection('exchangeRecords')
+      .where({ isFulfilled: true })
+      .get();
+    for (const record of fulfilledExchangeRes.data) {
+      await db.collection('exchangeRecords').doc(record._id).remove();
+    }
+    console.log(`Cleared ${fulfilledExchangeRes.data.length} fulfilled exchange records`);
+
     // 重置连续天数：最后活跃日期既不是今天也不是昨天的孩子
     const childrenRes = await db.collection('children').get();
 

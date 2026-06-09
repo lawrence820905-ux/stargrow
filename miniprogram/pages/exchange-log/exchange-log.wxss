@@ -1,0 +1,35 @@
+.el-page { min-height: 100vh; background: var(--color-background); }
+
+.el-page__list { padding: 24rpx 32rpx; display: flex; flex-direction: column; gap: 12rpx; }
+
+.el-page__record {
+  display: flex; align-items: center; gap: 16rpx;
+  background: #FFFFFF; border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+}
+.el-page__record:active { transform: scale(0.98); }
+
+.el-page__record-icon { font-size: 40rpx; flex-shrink: 0; }
+
+.el-page__record-info { flex: 1; min-width: 0; }
+.el-page__record-name {
+  font-size: 26rpx; font-weight: 600; color: #3C3C3C;
+  display: block;
+}
+.el-page__record-cost {
+  font-size: 24rpx; color: #FF4B4B; font-weight: 600;
+}
+.el-page__record-time {
+  font-size: 24rpx; color: #A0A0A0; display: block; margin-top: 2rpx;
+}
+
+.el-page__record-fulfill {
+  flex-shrink: 0; padding: 8rpx 16rpx;
+  border-radius: 999px;
+  background: #FFF3CD; color: #FF9600;
+  font-size: 24rpx; font-weight: 600;
+}
+.el-page__record-fulfill--done {
+  background: #E8F8E8; color: #58CC02;
+}

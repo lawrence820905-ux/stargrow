@@ -93,5 +93,5 @@
     </view>
   </block>
 
-  <view class="safe-area-bottom"></view>
+  <view class="safe-area-bottom" style="height: 160rpx;"></view>
 </view>

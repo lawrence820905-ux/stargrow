@@ -1,8 +1,9 @@
 .nav-bar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.82);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
 }
 
 .nav-bar__content {
@@ -24,11 +25,11 @@
 .nav-bar__back:active { opacity: 0.6; }
 
 .nav-bar__back-icon {
-  font-size: 48rpx; color: #007AFF; font-weight: 300; line-height: 1;
+  font-size: 48rpx; color: #58CC02; font-weight: 300; line-height: 1;
 }
 
 .nav-bar__title {
-  font-weight: 600; color: #1d1d1f; text-align: center;
+  font-weight: 600; color: #3C3C3C; text-align: center;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   max-width: 60%;
 }

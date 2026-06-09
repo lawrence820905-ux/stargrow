@@ -68,6 +68,15 @@ async function loadChildren() {
   }
 }
 
+async function joinFamily(inviteCode) {
+  const res = await wx.cloud.callFunction({
+    name: 'user',
+    data: { action: 'joinFamily', inviteCode }
+  });
+  if (res.result.code !== 0) throw new Error(res.result.message);
+  return res.result.family;
+}
+
 module.exports = {
   getUserInfo,
   getFamily,
@@ -77,5 +86,6 @@ module.exports = {
   getActiveChildId,
   isLoggedIn,
   login,
-  loadChildren
+  loadChildren,
+  joinFamily
 };

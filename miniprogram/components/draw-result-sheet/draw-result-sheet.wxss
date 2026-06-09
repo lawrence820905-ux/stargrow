@@ -1,3 +1,4 @@
+/* Duolingo Draw Result Sheet */
 .draw-result-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0); z-index: 200;
@@ -6,22 +7,23 @@
 }
 
 .draw-result-overlay--visible {
-  background: rgba(0,0,0,0.4); pointer-events: auto;
+  background: rgba(0,0,0,0.45); pointer-events: auto;
 }
 
 .draw-result-sheet {
   width: 100%; background: #FFFFFF;
-  border-radius: 20rpx 20rpx 0 0;
+  border-radius: 32rpx 32rpx 0 0;
   padding: 48rpx 32rpx calc(48rpx + env(safe-area-inset-bottom));
   transform: translateY(100%);
   transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
   position: relative; overflow: hidden;
+  box-shadow: 0 -6px 0 rgba(0,0,0,0.04);
 }
 
 .draw-result-sheet--visible { transform: translateY(0); }
 
 .draw-result-sheet__rarity-bg {
-  position: absolute; top: 0; left: 0; right: 0; height: 160rpx; opacity: 0.15;
+  position: absolute; top: 0; left: 0; right: 0; height: 160rpx; opacity: 0.12;
 }
 
 .draw-result-sheet__content {
@@ -32,27 +34,28 @@
 .draw-result-sheet__emoji { font-size: 96rpx; margin-bottom: 16rpx; }
 
 .draw-result-sheet__title {
-  font-size: 28rpx; color: #8E8E93; margin-bottom: 8rpx;
+  font-size: 28rpx; color: #A0A0A0; font-weight: 600; margin-bottom: 8rpx;
 }
 
 .draw-result-sheet__prize {
-  font-size: 40rpx; font-weight: 700; color: #1d1d1f;
+  font-size: 44rpx; font-weight: 800; color: #3C3C3C;
   text-align: center; margin-bottom: 8rpx;
 }
 
 .draw-result-sheet__detail {
-  font-size: 28rpx; color: #007AFF; font-weight: 600;
+  font-size: 28rpx; color: #58CC02; font-weight: 700;
 }
 
 .draw-result-sheet__cost {
-  font-size: 24rpx; color: #C7C7CC; margin-top: 12rpx;
+  font-size: 24rpx; color: #CFCFCF; font-weight: 500; margin-top: 12rpx;
 }
 
 .draw-result-sheet__btn {
   width: 100%; height: 96rpx; line-height: 96rpx;
-  background: #007AFF; color: #FFFFFF;
-  border-radius: 20rpx; font-size: 32rpx; font-weight: 600;
+  background: linear-gradient(135deg, #46A800, #58CC02); color: #FFFFFF;
+  border-radius: 32rpx; font-size: 32rpx; font-weight: 700;
   text-align: center; border: none;
+  box-shadow: var(--shadow-glow-green);
 }
 
 .draw-result-sheet__btn::after { border: none; }

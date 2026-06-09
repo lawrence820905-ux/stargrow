@@ -1,10 +1,11 @@
+/* Duolingo Category Tag */
 .category-tag {
   display: inline-flex; align-items: center; gap: 6rpx;
-  padding: 6rpx 16rpx; border-radius: 20rpx; font-size: 22rpx; font-weight: 500;
+  padding: 6rpx 16rpx; border-radius: 12rpx; font-size: 24rpx; font-weight: 600;
 }
 
-.category-tag--sport { background: #E8F2FF; color: #007AFF; }
-.category-tag--life { background: #E8FFF0; color: #34C759; }
-.category-tag--study { background: #FFF3E0; color: #FF9500; }
+.category-tag--sport { background: #EEF8FF; color: #1CB0F6; }
+.category-tag--life { background: #EEFFE8; color: #58CC02; }
+.category-tag--study { background: #FFF8E8; color: #FF9600; }
 
 .category-tag__icon { font-size: 24rpx; }

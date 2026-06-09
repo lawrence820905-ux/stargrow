@@ -3,7 +3,6 @@ const { achievements: builtInAchievements } = require('../../config/constants');
 
 Page({
   data: {
-    navBarTop: 88,
     builtInAchievements,
     customAchievements: [],
     allAchievements: [],
@@ -19,8 +18,6 @@ Page({
   },
 
   async onLoad() {
-    const sysInfo = wx.getSystemInfoSync();
-    this.setData({ navBarTop: (sysInfo.statusBarHeight || 20) + 88 });
     await this.loadData();
   },
 
@@ -194,50 +191,6 @@ Page({
     }
   },
 
-  async onToggleItem(e) {
-    const key = e.currentTarget.dataset.key;
-    const item = this.data.allAchievements.find(a => a.key === key);
-    if (!item) return;
-
-    const newEnabled = !item.enabled;
-    const isBuiltIn = this.data.builtInAchievements.some(b => b.key === key);
-
-    if (isBuiltIn) {
-      const existing = this.data.customAchievements.find(c => c.overridesKey === key);
-      const saveData = {
-        name: item.name,
-        description: item.description,
-        icon: item.icon,
-        category: item.category,
-        count: item.count,
-        enabled: newEnabled,
-        overridesKey: key
-      };
-      if (existing) saveData.id = existing._id;
-      try {
-        await saveCustomAchievement(saveData);
-        await this.loadData();
-      } catch (err) {
-        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
-      }
-    } else if (item.isCustom) {
-      try {
-        await saveCustomAchievement({
-          id: item._id,
-          name: item.name,
-          description: item.description,
-          icon: item.icon,
-          category: item.category,
-          count: item.count,
-          enabled: newEnabled
-        });
-        await this.loadData();
-      } catch (err) {
-        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
-      }
-    }
-  },
-
   async onResetBuiltIn(e) {
     const key = e.currentTarget.dataset.key;
     const res = await new Promise(resolve => {
@@ -252,7 +205,7 @@ Page({
         wx.showToast({ title: '已恢复', icon: 'success' });
         await this.loadData();
       } catch (err) {
-        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
+        wx.showToast({ title: err.message || '操作失败，请稍后重试', icon: 'none' });
       }
     }
   },
@@ -269,7 +222,7 @@ Page({
       wx.showToast({ title: '已删除', icon: 'success' });
       await this.loadData();
     } catch (err) {
-      wx.showToast({ title: err.message || '删除失败', icon: 'none' });
+      wx.showToast({ title: err.message || '删除失败，请稍后重试', icon: 'none' });
     }
   }
 });
