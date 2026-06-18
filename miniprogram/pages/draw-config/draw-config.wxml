@@ -37,6 +37,24 @@
       </view>
     </view>
 
+    <!-- Daily Limit -->
+    <view class="draw-config-page__field">
+      <text class="draw-config-page__label">每日最多抽奖次数: {{dailyLimit}} 次</text>
+      <view class="draw-config-page__slider-row">
+        <view class="draw-config-page__slider-btn" bindtap="onDailyLimitDecrease">−</view>
+        <text class="draw-config-page__slider-min">1</text>
+        <slider
+          class="draw-config-page__slider"
+          min="1" max="10" value="{{dailyLimit}}"
+          activeColor="#007AFF" backgroundColor="#E5E5EA"
+          block-size="24" bindchange="onDailyLimitChange"
+        />
+        <text class="draw-config-page__slider-max">10</text>
+        <view class="draw-config-page__slider-btn" bindtap="onDailyLimitIncrease">+</view>
+      </view>
+      <text class="draw-config-page__field-hint">防止孩子一次性把所有积分都花光，培养延迟满足能力</text>
+    </view>
+
     <!-- Items -->
     <view class="draw-config-page__section">
       <text class="draw-config-page__section-title">奖品列表</text>
@@ -97,7 +115,7 @@
           <text class="draw-config-page__label">奖励积分: {{newItem.pointsValue}}</text>
           <view class="draw-config-page__slider-row">
             <view class="draw-config-page__slider-btn" bindtap="onModalPointsDecrease">−</view>
-            <slider min="-100" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
+            <slider min="0" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
             <view class="draw-config-page__slider-btn" bindtap="onModalPointsIncrease">+</view>
           </view>
         </view>
@@ -112,7 +130,7 @@
           <text class="draw-config-page__label">附送积分: {{newItem.pointsValue}}</text>
           <view class="draw-config-page__slider-row">
             <view class="draw-config-page__slider-btn" bindtap="onModalPointsDecrease">−</view>
-            <slider min="-100" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
+            <slider min="0" max="100" value="{{newItem.pointsValue}}" bindchange="onNewItemFieldS" data-field="pointsValue" activeColor="#007AFF" backgroundColor="#E5E5EA" block-size="20" />
             <view class="draw-config-page__slider-btn" bindtap="onModalPointsIncrease">+</view>
           </view>
         </view>

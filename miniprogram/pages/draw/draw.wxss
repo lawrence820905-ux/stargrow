@@ -15,7 +15,32 @@
 }
 
 .draw-page__points {
-  display: flex; justify-content: center; padding: 24rpx 0;
+  display: flex; justify-content: center; padding: 24rpx 0 12rpx;
+}
+
+/* Daily Limit Indicator */
+.draw-page__limit {
+  margin: 0 32rpx 16rpx; padding: 16rpx 24rpx;
+  background: #FFFFFF; border-radius: 16rpx;
+  box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column; gap: 10rpx;
+}
+
+.draw-page__limit-text {
+  font-size: 24rpx; color: #8E8E93; text-align: center;
+}
+
+.draw-page__limit-num {
+  font-weight: 700; color: #007AFF;
+}
+
+.draw-page__limit-bar {
+  height: 8rpx; background: #E5E5EA; border-radius: 4rpx; overflow: hidden;
+}
+
+.draw-page__limit-fill {
+  height: 100%; background: linear-gradient(90deg, #007AFF, #5AC8FA);
+  border-radius: 4rpx; transition: width 0.3s ease;
 }
 
 /* Segment */
@@ -63,6 +88,57 @@
 .draw-page__record-cost { font-size: 24rpx; color: #A0A0A0; }
 
 .draw-page__record-hint { font-size: 24rpx; color: #CFCFCF; margin-top: 2rpx; }
+.draw-page__record-hint--overdue { color: #FF9500; }
+
+/* Wish Prompt Modal */
+.draw-page__wish-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.draw-page__wish-bg {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+.draw-page__wish-modal {
+  position: relative; z-index: 1;
+  width: 560rpx; background: #FFFFFF; border-radius: 32rpx;
+  padding: 48rpx 40rpx 32rpx; text-align: center;
+  box-shadow: 0 8rpx 40rpx rgba(0,0,0,0.15);
+}
+
+.draw-page__wish-icon { font-size: 72rpx; display: block; margin-bottom: 16rpx; }
+
+.draw-page__wish-title {
+  font-size: 34rpx; font-weight: 700; color: #3C3C3C;
+  display: block; margin-bottom: 8rpx;
+}
+
+.draw-page__wish-hint {
+  font-size: 26rpx; color: #8E8E93; display: block; margin-bottom: 32rpx;
+}
+
+.draw-page__wish-btns {
+  display: flex; gap: 16rpx;
+}
+
+.draw-page__wish-cancel, .draw-page__wish-confirm {
+  flex: 1; height: 80rpx; line-height: 80rpx;
+  border-radius: 32rpx; font-size: 30rpx; font-weight: 600;
+  text-align: center; border: none; padding: 0;
+}
+
+.draw-page__wish-cancel { background: #F2F2F7; color: #8E8E93; }
+.draw-page__wish-cancel::after { border: none; }
+
+.draw-page__wish-confirm {
+  background: linear-gradient(135deg, #FF9500, #FF6B00); color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(255,149,0,0.3);
+}
+.draw-page__wish-confirm::after { border: none; }
+.draw-page__wish-confirm:active { opacity: 0.8; }
 
 .draw-page__record-fulfill {
   padding: 6rpx 20rpx; border-radius: 100rpx;

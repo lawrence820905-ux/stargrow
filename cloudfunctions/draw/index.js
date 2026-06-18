@@ -12,7 +12,8 @@ exports.main = async (event, context) => {
     if (!family) return { code: 401, message: '未找到家庭' };
 
     switch (action) {
-      case 'getPools':      return await getPools(family._id);
+      case 'getPools':      return await getPools(family._id, event);
+      case 'getTodayDrawCount': return await getTodayDrawCount(family._id, event);
       case 'savePool':      return await savePool(family._id, event);
       case 'draw':          return await doDraw(family._id, event);
       case 'batchDraw':     return await batchDraw(family._id, event);
@@ -31,7 +32,7 @@ async function getFamilyByOpenid(openid) {
   return res.data[0] || null;
 }
 
-async function getPools(familyId) {
+async function getPools(familyId, event) {
   const res = await db.collection('drawPools')
     .where({ familyId, isActive: true })
     .get();
@@ -39,11 +40,54 @@ async function getPools(familyId) {
   const smallPool = res.data.find(p => p.type === 'small') || null;
   const bigPool = res.data.find(p => p.type === 'big') || null;
 
-  return { code: 0, smallPool, bigPool };
+  // 如果有 childId，同时返回今日抽奖次数
+  let todayDrawCount = 0;
+  if (event && event.childId) {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+    const countRes = await db.collection('drawRecords')
+      .where({
+        familyId,
+        childId: event.childId,
+        createdAt: _.gte(todayStart).and(_.lte(todayEnd))
+      })
+      .count();
+    todayDrawCount = countRes.total;
+  }
+
+  return { code: 0, smallPool, bigPool, todayDrawCount };
+}
+
+async function getTodayDrawCount(familyId, event) {
+  const { childId } = event;
+  if (!childId) return { code: 400, message: '缺少孩子ID' };
+
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const countRes = await db.collection('drawRecords')
+    .where({
+      familyId,
+      childId,
+      createdAt: _.gte(todayStart).and(_.lte(todayEnd))
+    })
+    .count();
+
+  // 获取所有活跃池中最小的 dailyLimit
+  const poolsRes = await db.collection('drawPools')
+    .where({ familyId, isActive: true })
+    .get();
+  const dailyLimit = Math.min(...poolsRes.data.map(p => p.dailyLimit || 3), 3) || 3;
+
+  return { code: 0, todayDrawCount: countRes.total, dailyLimit };
 }
 
 async function savePool(familyId, event) {
-  const { type, name, cost, items } = event;
+  const { type, name, cost, items, dailyLimit } = event;
 
   const existing = await db.collection('drawPools')
     .where({ familyId, type })
@@ -53,6 +97,7 @@ async function savePool(familyId, event) {
     name: name || (type === 'small' ? '小宝箱' : '大宝箱'),
     cost: cost || (type === 'small' ? 20 : 80),
     items: items || [],
+    dailyLimit: dailyLimit || 3,
     updatedAt: new Date()
   };
 
@@ -84,6 +129,26 @@ async function doDraw(familyId, event) {
 
   const pool = poolRes.data[0];
   if (!pool.items || pool.items.length === 0) return { code: 400, message: '奖池为空' };
+
+  // 检查每日抽奖上限
+  const dailyLimit = pool.dailyLimit || 3;
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const todayDrawCountRes = await db.collection('drawRecords')
+    .where({
+      familyId,
+      childId,
+      createdAt: _.gte(todayStart).and(_.lte(todayEnd))
+    })
+    .count();
+  const todayDrawCount = todayDrawCountRes.total;
+
+  if (todayDrawCount >= dailyLimit) {
+    return { code: 400, message: `今天已经抽了${todayDrawCount}次啦，明天再来吧！`, todayDrawCount, dailyLimit };
+  }
 
   // 检查孩子
   const childRes = await db.collection('children').doc(childId).get();
@@ -157,6 +222,10 @@ async function doDraw(familyId, event) {
     });
   }
 
+  // 承诺兑现期限（默认3天）
+  const expectedFulfillBy = new Date();
+  expectedFulfillBy.setDate(expectedFulfillBy.getDate() + 3);
+
   // 抽奖记录
   const record = {
     familyId,
@@ -170,6 +239,7 @@ async function doDraw(familyId, event) {
     rewardTitle: prize.rewardTitle || null,
     isFulfilled: false,
     fulfilledAt: null,
+    expectedFulfillBy,
     createdAt: new Date()
   };
   const recRes = await db.collection('drawRecords').add({ data: record });
@@ -185,7 +255,7 @@ async function doDraw(familyId, event) {
     } catch (e) { /* ignore */ }
   }
 
-  return { code: 0, record, newCurrent };
+  return { code: 0, record, newCurrent, todayDrawCount: todayDrawCount + 1, dailyLimit };
 }
 
 async function batchDraw(familyId, event) {

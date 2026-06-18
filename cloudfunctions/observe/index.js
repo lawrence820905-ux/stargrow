@@ -29,11 +29,13 @@ async function getFamilyByOpenid(openid) {
 }
 
 async function addObservation(familyId, event) {
-  const { childId, content, mood, tags } = event;
+  const { childId, content, mood, tags, bonusPoints } = event;
 
   if (!childId || !content || !content.trim()) {
     return { code: 400, message: '孩子和内容不能为空' };
   }
+
+  const bp = Math.max(0, Math.min(20, parseInt(bonusPoints) || 0));
 
   const data = {
     familyId,
@@ -41,11 +43,36 @@ async function addObservation(familyId, event) {
     content: content.trim(),
     mood: mood || '',
     tags: tags || [],
+    bonusPoints: bp,
     createdAt: new Date()
   };
 
   const res = await db.collection('observations').add({ data });
   data._id = res._id;
+
+  // 如果有 bonus 积分，更新孩子积分
+  if (bp > 0) {
+    const child = await db.collection('children').doc(childId).get();
+    const newPoints = (child.data.currentPoints || 0) + bp;
+    const newTotal = (child.data.totalPointsEarned || 0) + bp;
+    await db.collection('children').doc(childId).update({
+      data: { currentPoints: newPoints, totalPointsEarned: newTotal }
+    });
+
+    await db.collection('pointRecords').add({
+      data: {
+        familyId,
+        childId,
+        amount: bp,
+        type: 'observation_bonus',
+        balanceAfter: newPoints,
+        note: `闪亮时刻奖励: ${content.trim().substring(0, 30)}`,
+        createdAt: new Date()
+      }
+    });
+    data.bonusAwarded = bp;
+  }
+
   return { code: 0, observation: data };
 }
 

@@ -1,12 +1,20 @@
-<view class="tc-page">
+<view class="tc-page tc-page--{{ageGroup}}">
   <view class="tc-page__card">
     <text class="tc-page__title">{{task.title}}</text>
     <text class="tc-page__base">基础积分: {{task.basePoints}}</text>
-    <text class="tc-page__label">给孩子的表现打分</text>
+    <text class="tc-page__label">你觉得这次做得怎么样？</text>
+    <text class="tc-page__label-hint">和孩子一起讨论选择最适合的一档</text>
     <score-stars score="{{selectedScore}}" bind:change="onScoreChange" />
     <view class="tc-page__result" wx:if="{{selectedScore > 0}}">
       <text>{{task.basePoints}} × {{multiplier}} = </text>
       <text class="tc-page__points">+{{computedPoints}} 积分</text>
+    </view>
+
+    <!-- 成长心态卡片：低分时出现 -->
+    <view class="tc-page__growth-card" wx:if="{{selectedScore === 1}}">
+      <text class="tc-page__growth-icon">🌱</text>
+      <text class="tc-page__growth-title">每次尝试都在进步</text>
+      <text class="tc-page__growth-text">不是每一次都能完美完成，但只要坚持努力，明天就会更好。和孩子聊聊这次哪里遇到了困难吧~</text>
     </view>
   </view>
   <button class="tc-page__btn" bindtap="onConfirm" disabled="{{selectedScore < 1}}">

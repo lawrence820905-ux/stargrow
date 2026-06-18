@@ -1,5 +1,5 @@
 /* Settings — 改进版：更清晰的条目显示 */
-.settings-page { min-height: 100vh; background: var(--color-background); }
+.settings-page { min-height: 100vh; background: var(--color-background); padding-bottom: 200rpx; }
 
 /* Section */
 .settings-page__section { padding: 20rpx 32rpx; }
@@ -119,7 +119,6 @@
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.4);
 }
-
 .settings-page__feedback-modal {
   position: relative; z-index: 1;
   width: 600rpx;
@@ -132,32 +131,33 @@
 
 .settings-page__feedback-title {
   font-size: 32rpx; font-weight: 700; text-align: center;
-  margin-bottom: 24rpx; display: block; color: #3C3C3C;
+  margin-bottom: 20rpx; display: block; color: #3C3C3C;
+}
+
+.settings-page__feedback-types { display: flex; gap: 12rpx; margin-bottom: 20rpx; }
+.settings-page__feedback-type {
+  flex: 1; padding: 16rpx 0; border-radius: 14rpx;
+  background: #F5F5F5; text-align: center;
+  font-size: 24rpx; color: #8E8E93; font-weight: 600;
+}
+.settings-page__feedback-type--active {
+  background: #EEF8FF; color: #1CB0F6;
 }
 
 .settings-page__feedback-textarea {
   background: #F5F5F5; border-radius: 16rpx;
   padding: 16rpx; font-size: 28rpx; color: #3C3C3C;
-  min-height: 200rpx; width: 100%; box-sizing: border-box;
-}
-
-.settings-page__feedback-count {
-  text-align: right; font-size: 24rpx; color: #CFCFCF;
-  margin-top: 8rpx; display: block;
+  min-height: 160rpx; width: 100%; box-sizing: border-box;
 }
 
 .settings-page__feedback-btns { display: flex; gap: 12rpx; margin-top: 24rpx; }
-
 .settings-page__feedback-cancel {
-  flex: 1; height: 48rpx; line-height: 48rpx;
-  background: #FFFFFF; color: #A0A0A0;
-  border-radius: 12rpx; font-size: 28rpx; border: none;
+  flex: 1; padding: 20rpx 0; border-radius: 14rpx;
+  background: #F5F5F5; font-size: 28rpx; color: #8E8E93;
+  font-weight: 600; text-align: center;
 }
-.settings-page__feedback-cancel::after { border: none; }
-
 .settings-page__feedback-submit {
-  flex: 1; height: 48rpx; line-height: 48rpx;
-  background: #58CC02; color: #FFFFFF;
-  border-radius: 12rpx; font-size: 28rpx; font-weight: 600; border: none;
+  flex: 1; padding: 20rpx 0; border-radius: 14rpx;
+  background: linear-gradient(135deg, #46A800, #58CC02);
+  font-size: 28rpx; color: #FFFFFF; font-weight: 700; text-align: center;
 }
-.settings-page__feedback-submit::after { border: none; }

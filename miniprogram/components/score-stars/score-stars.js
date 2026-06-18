@@ -6,9 +6,9 @@ Component({
 
   data: {
     options: [
-      { score: 1, label: '马马虎虎', subtext: '仅得0.6倍积分', icon: '😐', multiplier: 0.6 },
-      { score: 2, label: '达成目标', subtext: '获得标准积分',   icon: '👍', multiplier: 1.0 },
-      { score: 3, label: '棒极了',   subtext: '获得1.5倍积分', icon: '🎉', multiplier: 1.5 }
+      { score: 1, label: '很努力了', subtext: '在提醒下完成，或真的尽力了', rubric: '努力', icon: '💪', multiplier: 0.6 },
+      { score: 2, label: '做到了',   subtext: '自觉完成，达到目标',       rubric: '结果', icon: '✅', multiplier: 1.0 },
+      { score: 3, label: '超越了',   subtext: '超出预期，让人惊喜',       rubric: '超越', icon: '🌟', multiplier: 1.5 }
     ]
   },
 

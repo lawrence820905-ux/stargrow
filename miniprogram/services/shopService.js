@@ -146,11 +146,26 @@ async function fulfillExchange(recordId) {
   return await callShop('fulfillExchange', { recordId });
 }
 
+async function addToWishlist(childId, shopItemId) {
+  return await callShop('addToWishlist', { childId, shopItemId });
+}
+
+async function removeFromWishlist(childId, shopItemId) {
+  return await callShop('removeFromWishlist', { childId, shopItemId });
+}
+
+async function getWishlist(childId) {
+  return await callShop('getWishlist', { childId });
+}
+
 module.exports = {
   listItems,
   saveItem,
   deleteItem,
   exchange,
   getExchangeRecords,
-  fulfillExchange
+  fulfillExchange,
+  addToWishlist,
+  removeFromWishlist,
+  getWishlist
 };

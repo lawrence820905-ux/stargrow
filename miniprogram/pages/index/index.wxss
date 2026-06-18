@@ -76,6 +76,33 @@
 }
 .index-page__section-link:active { opacity: 0.55; }
 
+/* Promise Card */
+.index-page__promise-card {
+  display: flex; align-items: center; gap: 16rpx;
+  background: linear-gradient(135deg, #FFF9E6, #FFF3E0);
+  border: 2rpx solid #FFE0A0;
+  border-radius: 24rpx; padding: 24rpx;
+  box-shadow: 0 2px 8px rgba(255,150,0,0.08);
+}
+
+.index-page__promise-icon { font-size: 44rpx; flex-shrink: 0; }
+
+.index-page__promise-info { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
+
+.index-page__promise-title {
+  font-size: 26rpx; font-weight: 700; color: #3C3C3C;
+}
+
+.index-page__promise-num { color: #FF9500; font-size: 32rpx; }
+
+.index-page__promise-hint {
+  font-size: 22rpx; color: #A0A0A0;
+}
+
+.index-page__promise-arrow {
+  font-size: 28rpx; color: #FF9500; font-weight: 700; flex-shrink: 0;
+}
+
 /* Progress Card */
 .index-page__progress-card {
   background: #FFFFFF;
@@ -106,29 +133,6 @@
 
 .index-page__progress-text {
   font-size: 24rpx; color: #A0A0A0;
-}
-
-/* Badges */
-.index-page__badge-scroll { width: 100%; }
-
-.index-page__badge-list {
-  display: inline-flex; gap: 12rpx; padding: 2rpx 0;
-}
-
-.index-page__badge {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 8rpx; padding: 16rpx 24rpx;
-  background: #FFFFFF;
-  border-radius: 20rpx;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-  min-width: 140rpx;
-}
-.index-page__badge:active { transform: scale(0.96); box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
-
-.index-page__badge-icon { font-size: 40rpx; }
-
-.index-page__badge-name {
-  font-size: 24rpx; color: #A0A0A0; font-weight: 600;
 }
 
 /* Loot */

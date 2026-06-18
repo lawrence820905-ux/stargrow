@@ -1,17 +1,17 @@
 const { getChildren, getActiveChild } = require('../../utils/auth');
 const { relativeTime, getNextLevelInfo } = require('../../utils/util');
-const { getChildOverview, getMotivationInsight } = require('../../services/statsService');
+const { getChildOverview, getMotivationInsight, getPendingPromises, generateGrowthStory } = require('../../services/statsService');
 const { getPools } = require('../../services/drawService');
 const { listItems } = require('../../services/shopService');
 const app = getApp();
 
 Page({
   data: {
+    statusBarHeight: 20,
     loading: true,
     loadError: false,
     isFirstVisit: false,
     showWelcomeTip: false,
-    statusBarHeight: 20,
     children: [],
     activeChildId: '',
     activeChild: {},
@@ -23,15 +23,17 @@ Page({
     cheapestDrawCost: 20,
     cheapestShopPrice: 50,
     pointsToNextLevel: 0,
-    recentAchievements: [],
     recentDraws: [],
     motivationAlerts: [],
+    pendingPromises: [],
+    growthStory: null,
+    growthStoryLoading: false,
     pointsAnimate: false
   },
 
-  async onLoad() {
+  onLoad() {
     const sysInfo = wx.getSystemInfoSync();
-    this.setData({ statusBarHeight: sysInfo.statusBarHeight || 20 });
+    this.setData({ statusBarHeight: (sysInfo.statusBarHeight || 20) + 10 });
   },
 
   async onShow() {
@@ -131,16 +133,36 @@ Page({
         cheapestDrawCost,
         cheapestShopPrice,
         pointsToNextLevel,
-        recentAchievements: overview.recentAchievements || [],
         recentDraws: overview.recentDraws || []
       });
 
       // 加载激励提示
       this.loadMotivationInsight(childId);
+      // 加载待兑现承诺
+      this.loadPendingPromises();
+      // 加载成长故事
+      this.loadGrowthStory(childId);
     } catch (err) {
       console.error('加载概览失败:', err);
       this.setData({ loadError: true });
     }
+  },
+
+  async loadGrowthStory(childId) {
+    try {
+      this.setData({ growthStoryLoading: true });
+      const result = await generateGrowthStory(childId);
+      this.setData({ growthStory: result.story, growthStoryLoading: false });
+    } catch (e) {
+      this.setData({ growthStoryLoading: false });
+    }
+  },
+
+  async loadPendingPromises() {
+    try {
+      const result = await getPendingPromises();
+      this.setData({ pendingPromises: result.promises || [] });
+    } catch (e) { /* 静默失败 */ }
   },
 
   onChildChange(e) {

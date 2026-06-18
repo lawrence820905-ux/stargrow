@@ -7,7 +7,7 @@
     <view class="login-page__logo-wrap">
       <text class="login-page__logo">🌳</text>
     </view>
-    <text class="login-page__app-name">成长之星</text>
+    <text class="login-page__app-name">成长派克</text>
     <text class="login-page__slogan">陪伴孩子快乐成长</text>
   </view>
 

@@ -1,13 +1,13 @@
 const { getChildren, getActiveChild } = require('../../utils/auth');
 const { relativeTime } = require('../../utils/util');
-const { listTasks, deleteTask, createTask } = require('../../services/taskService');
+const { listTasks, deleteTask, createTask, proposeTask } = require('../../services/taskService');
 const app = getApp();
 
 const categories = [
-  { key: 'all', name: '全部' },
-  { key: 'sport', name: '运动' },
-  { key: 'life', name: '生活' },
-  { key: 'study', name: '学习' }
+  { key: 'all', name: '全部', icon: '📋' },
+  { key: 'sport', name: '运动', icon: '⚽' },
+  { key: 'life', name: '生活', icon: '🏠' },
+  { key: 'study', name: '学习', icon: '📚' }
 ];
 
 // 按年龄分组的任务模板
@@ -161,7 +161,10 @@ Page({
       { key: 'special', name: '特殊' }
     ],
     showDetail: false,
-    detailTask: {}
+    detailTask: {},
+    showPropose: false,
+    proposeTitle: '',
+    proposeCategory: 'study'
   },
 
   async onShow() {
@@ -270,6 +273,46 @@ Page({
       return;
     }
     wx.navigateTo({ url: `/pages/task-create/task-create?childId=${childId}` });
+  },
+
+  // 孩子提议任务
+  onProposeTask() {
+    const childId = this.data.activeChildId;
+    if (!childId) {
+      wx.showToast({ title: '请先添加孩子', icon: 'none' });
+      return;
+    }
+    this.setData({ showPropose: true, proposeTitle: '', proposeCategory: 'study' });
+  },
+
+  onClosePropose() {
+    this.setData({ showPropose: false });
+  },
+
+  onProposeTitleInput(e) {
+    this.setData({ proposeTitle: e.detail.value });
+  },
+
+  onProposeCatChange(e) {
+    this.setData({ proposeCategory: e.currentTarget.dataset.key });
+  },
+
+  async onSubmitPropose() {
+    const childId = this.data.activeChildId;
+    const title = this.data.proposeTitle.trim();
+    const category = this.data.proposeCategory;
+    if (!title) {
+      wx.showToast({ title: '请填写任务名称', icon: 'none' });
+      return;
+    }
+    try {
+      await proposeTask(childId, title, category, '');
+      wx.showToast({ title: '提议成功！等家长批准', icon: 'success' });
+      this.setData({ showPropose: false });
+      this.loadTasks();
+    } catch (err) {
+      wx.showToast({ title: err.message || '提议失败', icon: 'none' });
+    }
   },
 
   async onRandomTasks() {

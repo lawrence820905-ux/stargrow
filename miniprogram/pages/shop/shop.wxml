@@ -38,40 +38,63 @@
       <view
         class="shop-page__filter {{activeCategory === 'reward' ? 'shop-page__filter--active' : ''}}"
         bindtap="onTapCategory" data-cat="reward"
-      ><text>🎁 奖励</text></view>
+      ><text>🎁 商品</text></view>
       <view
-        class="shop-page__filter {{activeCategory === 'virtual' ? 'shop-page__filter--active' : ''}}"
-        bindtap="onTapCategory" data-cat="virtual"
-      ><text>📦 抽奖</text></view>
+        class="shop-page__filter {{activeCategory === 'draw' ? 'shop-page__filter--active' : ''}}"
+        bindtap="onTapCategory" data-cat="draw"
+      ><text>🎰 抽奖</text></view>
     </scroll-view>
 
-    <!-- 抽奖入口 -->
-    <view class="shop-page__draw-entry" wx:if="{{activeCategory === 'virtual'}}" bindtap="onGoDraw">
-      <text>🎰 前往抽奖 →</text>
-    </view>
-
-    <!-- Items Grid -->
-    <view class="shop-page__grid" wx:if="{{items.length > 0}}">
+    <!-- Items Grid (商品 + 抽奖入口) -->
+    <view class="shop-page__grid">
+      <!-- 抽奖卡片：全部和抽奖分类时显示 -->
       <view
-        class="shop-page__item"
-        wx:for="{{items}}"
-        wx:key="_id"
-        data-item="{{item}}"
-        bindtap="onTapItem"
+        class="shop-page__item shop-page__item--draw"
+        wx:if="{{activeCategory === 'all' || activeCategory === 'draw'}}"
+        bindtap="onGoDraw"
       >
-        <text class="shop-page__item-icon">{{item.icon || '🎁'}}</text>
-        <text class="shop-page__item-name">{{item.name}}</text>
-        <text class="shop-page__item-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <text class="shop-page__item-icon">🎰</text>
+        <text class="shop-page__item-name">幸运转盘</text>
+        <text class="shop-page__item-desc">试试手气，抽取惊喜奖励</text>
         <view class="shop-page__item-bottom">
-          <text class="shop-page__item-price">⭐ {{item.price}}</text>
-          <view class="shop-page__item-btn {{(activeChild.currentPoints || 0) < item.price ? 'shop-page__item-btn--disabled' : ''}}">
-            <text>兑换</text>
+          <text class="shop-page__item-price">⭐ {{cheapestDrawCost}}/次</text>
+          <view class="shop-page__item-actions">
+            <view class="shop-page__item-btn">
+              <text>去抽奖</text>
+            </view>
           </view>
         </view>
       </view>
-    </view>
 
-    <empty-state wx:else icon="🏪" text="商店还没有商品" hint="家长可以前往配置页添加商城商品" />
+      <!-- 普通商品：全部和商品分类时显示 -->
+      <block wx:if="{{activeCategory === 'all' || activeCategory === 'reward'}}">
+        <view
+          class="shop-page__item"
+          wx:for="{{displayItems}}"
+          wx:key="_id"
+          data-item="{{item}}"
+          bindtap="onTapItem"
+        >
+          <text class="shop-page__item-icon">{{item.icon || '🎁'}}</text>
+          <text class="shop-page__item-name">{{item.name}}</text>
+          <text class="shop-page__item-desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <view class="shop-page__item-bottom">
+            <text class="shop-page__item-price">⭐ {{item.price}}</text>
+            <view class="shop-page__item-actions">
+              <view class="shop-page__item-wish" data-item="{{item}}" catchtap="onToggleWishlist">
+                <text>{{item.isInWishlist ? '💝' : '🤍'}}</text>
+              </view>
+              <view class="shop-page__item-btn {{(activeChild.currentPoints || 0) < item.price ? 'shop-page__item-btn--disabled' : ''}}" data-item="{{item}}" catchtap="onTapItem">
+                <text>兑换</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 空状态：商品分类下无商品时 -->
+      <empty-state wx:if="{{(activeCategory === 'all' || activeCategory === 'reward') && displayItems.length === 0}}" icon="🏪" text="商店还没有商品" hint="家长可以前往配置页添加商城商品" />
+    </view>
   </view>
 
   <!-- Records -->
@@ -84,12 +107,17 @@
           <text class="shop-page__record-cost">-{{item.pointsSpent}}分</text>
           <text class="shop-page__record-time">{{item.timeText}}</text>
         </view>
-        <view
-          class="shop-page__record-fulfill {{item.isFulfilled ? 'shop-page__record-fulfill--done' : ''}}"
-          data-id="{{item._id}}"
-          bindtap="onFulfill"
-        >
-          <text>{{item.isFulfilled ? '已兑现' : '未兑现'}}</text>
+        <view class="shop-page__record-info-right">
+          <text class="shop-page__record-hint" wx:if="{{item.isFulfilled}}">已兑现 ✓</text>
+          <text class="shop-page__record-hint" wx:elif="{{item.daysLeft > 0}}">⏳ 剩{{item.daysLeft}}天</text>
+          <text class="shop-page__record-hint shop-page__record-hint--overdue" wx:elif="{{item.daysLeft <= 0 && !item.isFulfilled}}">请聊聊~</text>
+          <view
+            class="shop-page__record-fulfill {{item.isFulfilled ? 'shop-page__record-fulfill--done' : ''}}"
+            data-id="{{item._id}}"
+            bindtap="onFulfill"
+          >
+            <text>{{item.isFulfilled ? '已兑现' : '兑现'}}</text>
+          </view>
         </view>
       </view>
     </view>

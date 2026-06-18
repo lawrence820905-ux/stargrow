@@ -1,6 +1,8 @@
 const { getTask, completeTask } = require('../../services/taskService');
 const { checkAndAward } = require('../../services/achievementService');
 const { getConfig } = require('../../services/configService');
+const { getAgeGroup } = require('../../utils/util');
+const app = getApp();
 
 Page({
   data: {
@@ -8,13 +10,22 @@ Page({
     selectedScore: 0,
     multiplier: 1.0,
     computedPoints: 0,
-    multipliers: { '3': 1.5, '2': 1.0, '1': 0.6 }
+    multipliers: { '3': 1.5, '2': 1.0, '1': 0.6 },
+    ageGroup: 'child'
   },
 
   async onLoad(options) {
     try {
       const result = await getTask(options.taskId);
       this.setData({ task: result.task });
+
+      // 获取孩子年龄组
+      const child = app.getActiveChild();
+      if (child && child.birthYear) {
+        const ag = getAgeGroup(child.birthYear);
+        this.setData({ ageGroup: ag.group });
+      }
+
       const configRes = await getConfig();
       this.setData({ multipliers: configRes.config.scoreMultipliers });
     } catch (e) {

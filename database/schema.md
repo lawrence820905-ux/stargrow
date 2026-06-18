@@ -17,6 +17,8 @@
 | shop | 积分商城商品 |
 | exchangeRecords | 兑换记录 |
 | observations | 家长观察记录 |
+| wishlists | 心愿单 |
+| cheers | 加油记录 |
 
 ---
 
@@ -281,3 +283,43 @@
 字段说明：
 - `mood`: 可选的心情 emoji
 - `tags`: 可选的标签数组
+
+## wishlists
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "childId": "child_id",
+  "shopItemId": "shop_item_id",
+  "createdAt": "2026-06-15T10:00:00Z"
+}
+```
+
+## cheers
+
+```json
+{
+  "_id": "auto",
+  "familyId": "family_id",
+  "fromChildId": "child_id",
+  "toChildId": "child_id",
+  "date": "2026-06-15",
+  "createdAt": "2026-06-15T10:00:00Z"
+}
+```
+
+## 2026-06 新增字段
+
+### drawPools
+- `dailyLimit` (number): 每日抽奖上限，默认 3
+
+### drawRecords
+- `expectedFulfillBy` (date): 承诺兑现期限，默认创建后 3 天
+
+### exchangeRecords
+- `expectedFulfillBy` (date): 承诺兑现期限，默认创建后 3 天
+
+### tasks
+- `status: 'proposed'`: 新增"提议中"状态
+- `isSelfChallenge` (boolean): 是否为自主挑战任务（不计积分）

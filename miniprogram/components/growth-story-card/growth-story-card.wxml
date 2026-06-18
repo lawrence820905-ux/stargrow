@@ -1,0 +1,15 @@
+<view class="gsc-card" wx:if="{{story}}">
+  <view class="gsc-card__header">
+    <text class="gsc-card__icon">📖</text>
+    <text class="gsc-card__title">这周的成长故事</text>
+  </view>
+  <text class="gsc-card__date">{{story.weekLabel}}</text>
+  <text class="gsc-card__story">{{story.text}}</text>
+  <view class="gsc-card__stats" wx:if="{{story.totalTasks > 0}}">
+    <text class="gsc-card__stat">📋 {{story.totalTasks}} 个任务</text>
+    <text class="gsc-card__stat" wx:if="{{story.observationCount > 0}}">📝 {{story.observationCount}} 条记录</text>
+  </view>
+</view>
+<view class="gsc-card gsc-card--loading" wx:elif="{{loading}}">
+  <text class="gsc-card__loading-text">正在生成成长故事...</text>
+</view>

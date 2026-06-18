@@ -36,6 +36,7 @@ async function create(familyId, event) {
     name: event.name || '新孩子',
     avatarUrl: event.avatarUrl || '',
     age: event.age || 0,
+    birthYear: event.birthYear || 0,
     totalPointsEarned: 0,
     currentPoints: 0,
     level: 1,
@@ -51,11 +52,12 @@ async function create(familyId, event) {
 }
 
 async function updateChild(familyId, event) {
-  const { childId, name, avatarUrl, age } = event;
+  const { childId, name, avatarUrl, age, birthYear } = event;
   const data = { updatedAt: new Date() };
   if (name !== undefined) data.name = name;
   if (avatarUrl !== undefined) data.avatarUrl = avatarUrl;
   if (age !== undefined) data.age = age;
+  if (birthYear !== undefined) data.birthYear = birthYear;
 
   await db.collection('children').doc(childId).update({ data });
   const child = await db.collection('children').doc(childId).get();

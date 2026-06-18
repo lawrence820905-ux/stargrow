@@ -60,6 +60,8 @@ Page({
     items: [],
     showModal: false,
     showRandomSheet: false,
+    showDetail: false,
+    detailItem: {},
     editingId: null,
     form: {
       name: '', description: '', price: 50, icon: '🎁',
@@ -93,11 +95,25 @@ Page({
     });
   },
 
-  onEdit(e) {
+  // 点击商品 → 打开详情
+  onTapItem(e) {
     const item = e.currentTarget.dataset.item;
     if (!item) return;
+    this.setData({ showDetail: true, detailItem: item });
+  },
+
+  onCloseDetail() {
+    this.setData({ showDetail: false });
+  },
+
+  // 从详情中编辑
+  onEditFromDetail() {
+    const item = this.data.detailItem;
+    if (!item._id) return;
     this.setData({
-      showModal: true, editingId: item._id,
+      showDetail: false,
+      showModal: true,
+      editingId: item._id,
       form: {
         name: item.name || '',
         description: item.description || '',
@@ -105,6 +121,28 @@ Page({
         icon: item.icon || '🎁',
         category: item.category || 'reward',
         stock: item.stock !== undefined ? item.stock : -1
+      }
+    });
+  },
+
+  // 从详情中删除
+  onDeleteFromDetail() {
+    const item = this.data.detailItem;
+    if (!item) return;
+    wx.showModal({
+      title: '确认删除',
+      content: `确定要删除「${item.name}」吗？删除后不可恢复。`,
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await deleteItem(item._id);
+            wx.showToast({ title: '已删除', icon: 'success' });
+            this.setData({ showDetail: false });
+            this.loadItems();
+          } catch (err) {
+            wx.showToast({ title: err.message || '操作失败', icon: 'none' });
+          }
+        }
       }
     });
   },
@@ -135,6 +173,16 @@ Page({
 
   onPriceChange(e) {
     this.setData({ 'form.price': e.detail.value });
+  },
+
+  onPriceDecrease() {
+    const price = Math.max(1, (this.data.form.price || 50) - 5);
+    this.setData({ 'form.price': price });
+  },
+
+  onPriceIncrease() {
+    const price = Math.min(500, (this.data.form.price || 50) + 5);
+    this.setData({ 'form.price': price });
   },
 
   async onSave() {
@@ -233,24 +281,4 @@ Page({
     }
   },
 
-  async onDelete(e) {
-    const item = e.currentTarget.dataset.item;
-    if (!item) return;
-
-    wx.showModal({
-      title: '确认下架',
-      content: `确定要下架「${item.name}」吗？`,
-      success: async (res) => {
-        if (res.confirm) {
-          try {
-            await deleteItem(item._id);
-            wx.showToast({ title: '已下架', icon: 'success' });
-            this.loadItems();
-          } catch (err) {
-            wx.showToast({ title: err.message || '操作失败', icon: 'none' });
-          }
-        }
-      }
-    });
-  }
 });

@@ -23,7 +23,28 @@
 
 .tc-page__label { font-size: 28rpx; color: #A0A0A0; font-weight: 500; }
 
+.tc-page__label-hint { font-size: 22rpx; color: #CFCFCF; margin-top: -12rpx; }
+
 .tc-page__result { font-size: 28rpx; color: #A0A0A0; }
+
+/* Growth Mindset Card */
+.tc-page__growth-card {
+  width: 100%; background: #FFF9E6; border-radius: 20rpx;
+  padding: 28rpx 24rpx; display: flex; flex-direction: column;
+  align-items: center; gap: 8rpx;
+  border: 2rpx solid #FFE8A0;
+}
+
+.tc-page__growth-icon { font-size: 48rpx; }
+
+.tc-page__growth-title {
+  font-size: 28rpx; font-weight: 700; color: #FF9500;
+}
+
+.tc-page__growth-text {
+  font-size: 24rpx; color: #8E8E93; text-align: center;
+  line-height: 1.6;
+}
 
 .tc-page__points { font-size: 48rpx; font-weight: 800; color: #58CC02; }
 
@@ -39,3 +60,14 @@
 .tc-page__btn[disabled] {
   background: #CFCFCF; box-shadow: none;
 }
+
+/* Age-Adaptive: Toddler (3-5岁) — Bigger everything */
+.tc-page--toddler .tc-page__title { font-size: 44rpx; }
+.tc-page--toddler .tc-page__label { font-size: 34rpx; }
+.tc-page--toddler .tc-page__btn { height: 80rpx; line-height: 80rpx; font-size: 36rpx; border-radius: 40rpx; }
+.tc-page--toddler .tc-page__points { font-size: 60rpx; }
+.tc-page--toddler .score-stars__option-icon { font-size: 56rpx; }
+
+/* Age-Adaptive: Teen (10-15岁) — More data-driven */
+.tc-page--teen .tc-page__label { font-size: 28rpx; color: #3C3C3C; }
+.tc-page--teen .tc-page__label-hint { font-size: 24rpx; color: #8E8E93; }

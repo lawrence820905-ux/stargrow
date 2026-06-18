@@ -112,12 +112,12 @@
     <view class="settings-page__card">
       <view class="settings-page__row">
         <text class="settings-page__row-icon">ℹ️</text>
-        <text class="settings-page__row-text">关于成长之星 v1.0</text>
+        <text class="settings-page__row-text">关于成长派克 v1.0</text>
       </view>
       <view class="settings-page__row" bindtap="onShowFeedback">
         <text class="settings-page__row-icon">💬</text>
         <view class="settings-page__row-body">
-          <text class="settings-page__row-text">反馈建议</text>
+          <text class="settings-page__row-text">意见反馈</text>
           <text class="settings-page__row-sub">告诉我们你的想法和问题</text>
         </view>
         <text class="settings-page__row-arrow">›</text>
@@ -129,21 +129,36 @@
   <view class="settings-page__overlay" wx:if="{{showFeedback}}">
     <view class="settings-page__overlay-bg" bindtap="onCloseFeedback"></view>
     <view class="settings-page__feedback-modal">
-      <text class="settings-page__feedback-title">反馈建议</text>
+      <text class="settings-page__feedback-title">意见反馈</text>
+
+      <!-- Category tabs -->
+      <view class="settings-page__feedback-types">
+        <view
+          class="settings-page__feedback-type {{feedbackType === 'bug' ? 'settings-page__feedback-type--active' : ''}}"
+          bindtap="onSelectFeedbackType" data-type="bug"
+        >
+          <text>🐛 功能异常</text>
+        </view>
+        <view
+          class="settings-page__feedback-type {{feedbackType === 'suggest' ? 'settings-page__feedback-type--active' : ''}}"
+          bindtap="onSelectFeedbackType" data-type="suggest"
+        >
+          <text>💡 产品建议</text>
+        </view>
+      </view>
+
       <textarea
         class="settings-page__feedback-textarea"
-        placeholder="请描述您遇到的问题或改进建议..."
+        placeholder="请描述你遇到的问题或建议..."
         value="{{feedbackText}}"
         bindinput="onFeedbackInput"
-        maxlength="500"
       />
-      <text class="settings-page__feedback-count">{{feedbackText.length || 0}}/500</text>
       <view class="settings-page__feedback-btns">
-        <button class="settings-page__feedback-cancel" bindtap="onCloseFeedback">取消</button>
-        <button class="settings-page__feedback-submit" bindtap="onSubmitFeedback">提交</button>
+        <view class="settings-page__feedback-cancel" bindtap="onCloseFeedback">取消</view>
+        <view class="settings-page__feedback-submit" bindtap="onSubmitFeedback">提交</view>
       </view>
     </view>
   </view>
 
-  <view class="safe-area-bottom"></view>
+  <view class="safe-area-bottom" style="height: 120rpx;"></view>
 </view>

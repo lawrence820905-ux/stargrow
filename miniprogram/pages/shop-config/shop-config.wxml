@@ -3,7 +3,7 @@
 
   <!-- Item List -->
   <view class="sc-page__list">
-    <view class="sc-page__item" wx:for="{{items}}" wx:key="_id">
+    <view class="sc-page__item" wx:for="{{items}}" wx:key="_id" data-item="{{item}}" bindtap="onTapItem">
       <text class="sc-page__item-icon">{{item.icon || '🎁'}}</text>
       <view class="sc-page__item-info">
         <text class="sc-page__item-name">{{item.name}}</text>
@@ -15,14 +15,7 @@
           <text class="sc-page__item-stock sc-page__item-stock--unlimited" wx:else>无限</text>
         </view>
       </view>
-      <view class="sc-page__item-actions">
-        <view class="sc-page__item-action sc-page__item-action--edit" data-item="{{item}}" bindtap="onEdit">
-          <text>编辑</text>
-        </view>
-        <view class="sc-page__item-action sc-page__item-action--del" data-item="{{item}}" bindtap="onDelete">
-          <text>下架</text>
-        </view>
-      </view>
+      <text class="sc-page__item-arrow">›</text>
     </view>
 
     <empty-state wx:if="{{items.length === 0}}" icon="🏪" text="还没有商品" actionText="添加商品" bind:action="onAdd" />
@@ -36,6 +29,45 @@
   <!-- Random Generate Button -->
   <view class="sc-page__fab sc-page__fab--random" bindtap="onShowRandom">
     <text>🎲</text>
+  </view>
+
+  <!-- Item Detail Modal -->
+  <view class="sc-page__overlay" wx:if="{{showDetail}}">
+    <view class="sc-page__detail-modal">
+      <view class="sc-page__detail-handle">
+        <view class="sc-page__detail-handle-bar"></view>
+        <text class="sc-page__detail-close" bindtap="onCloseDetail">完成</text>
+      </view>
+      <scroll-view class="sc-page__detail-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <text class="sc-page__detail-icon">{{detailItem.icon || '🎁'}}</text>
+        <text class="sc-page__detail-name">{{detailItem.name}}</text>
+        <text class="sc-page__detail-desc" wx:if="{{detailItem.description}}">{{detailItem.description}}</text>
+
+        <view class="sc-page__detail-info">
+          <view class="sc-page__detail-row">
+            <text class="sc-page__detail-label">积分价格</text>
+            <text class="sc-page__detail-val">⭐ {{detailItem.price}} 分</text>
+          </view>
+          <view class="sc-page__detail-row">
+            <text class="sc-page__detail-label">分类</text>
+            <text class="sc-page__detail-val">{{detailItem.category === 'virtual' ? '📦 抽奖' : '🎁 奖励'}}</text>
+          </view>
+          <view class="sc-page__detail-row">
+            <text class="sc-page__detail-label">库存</text>
+            <text class="sc-page__detail-val">{{detailItem.stock >= 0 ? detailItem.stock + ' 份' : '不限量'}}</text>
+          </view>
+        </view>
+
+        <view class="sc-page__detail-actions">
+          <view class="sc-page__detail-edit" bindtap="onEditFromDetail">
+            <text>编辑商品</text>
+          </view>
+          <view class="sc-page__detail-delete" bindtap="onDeleteFromDetail">
+            <text>删除商品</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
   </view>
 
   <!-- Add/Edit Modal -->
@@ -59,10 +91,13 @@
 
         <!-- Price -->
         <view class="sc-page__field">
-          <text class="sc-page__label">积分价格</text>
+          <text class="sc-page__label">积分价格: {{form.price}} 分</text>
           <view class="sc-page__slider-row">
-            <text class="sc-page__slider-val">⭐ {{form.price}}</text>
-            <slider min="1" max="500" value="{{form.price}}" bindchange="onPriceChange" activeColor="#58CC02" block-size="20" style="flex:1; margin: 0 16rpx;" />
+            <view class="sc-page__slider-btn" bindtap="onPriceDecrease">−</view>
+            <text class="sc-page__slider-min">1</text>
+            <slider min="1" max="500" value="{{form.price}}" bindchange="onPriceChange" activeColor="#58CC02" block-size="20" style="flex:1; margin: 0 8rpx;" />
+            <text class="sc-page__slider-max">500</text>
+            <view class="sc-page__slider-btn" bindtap="onPriceIncrease">+</view>
           </view>
         </view>
 

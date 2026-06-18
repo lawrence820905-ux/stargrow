@@ -39,6 +39,28 @@
       </view>
     </view>
 
+    <!-- Self Challenge -->
+    <view class="task-create-page__field">
+      <view class="task-create-page__self-challenge" bindtap="onToggleSelfChallenge">
+        <view class="task-create-page__sc-left">
+          <text class="task-create-page__sc-icon">🏆</text>
+          <view class="task-create-page__sc-info">
+            <text class="task-create-page__sc-title">自主挑战</text>
+            <text class="task-create-page__sc-desc">不获得积分，纯靠成就感驱动</text>
+          </view>
+        </view>
+        <view class="task-create-page__sc-toggle {{isSelfChallenge ? 'task-create-page__sc-toggle--on' : ''}}">
+          <view class="task-create-page__sc-toggle-knob"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Goal (self-challenge only) -->
+    <view class="task-create-page__field" wx:if="{{isSelfChallenge}}">
+      <text class="task-create-page__label">挑战目标（可选）</text>
+      <textarea class="task-create-page__textarea" placeholder="例如：这周自己读3本书..." value="{{goal}}" bindinput="onGoalInput" maxlength="200" />
+    </view>
+
     <!-- Category -->
     <view class="task-create-page__field">
       <text class="task-create-page__label">分类</text>
@@ -56,8 +78,8 @@
       </view>
     </view>
 
-    <!-- Points -->
-    <view class="task-create-page__field">
+    <!-- Points (hidden for self-challenge) -->
+    <view class="task-create-page__field" wx:if="{{!isSelfChallenge}}">
       <text class="task-create-page__label">基础积分: {{basePoints}} 分</text>
       <view class="task-create-page__slider-row">
         <view class="task-create-page__slider-btn" bindtap="onPointsDecrease">−</view>

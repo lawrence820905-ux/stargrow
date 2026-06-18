@@ -1,0 +1,45 @@
+.gsc-card {
+  background: linear-gradient(135deg, #F0FFE8, #E8FFF0);
+  border: 2rpx solid #C8E8C0;
+  border-radius: 24rpx; padding: 28rpx 24rpx;
+  box-shadow: 0 2px 12px rgba(88,204,2,0.08);
+}
+
+.gsc-card--loading {
+  background: #F9F9FB;
+  border-color: #E5E5EA;
+  text-align: center;
+}
+
+.gsc-card__loading-text {
+  font-size: 26rpx; color: #A0A0A0;
+}
+
+.gsc-card__header {
+  display: flex; align-items: center; gap: 10rpx;
+  margin-bottom: 4rpx;
+}
+
+.gsc-card__icon { font-size: 36rpx; }
+
+.gsc-card__title {
+  font-size: 28rpx; font-weight: 800; color: #3C3C3C;
+}
+
+.gsc-card__date {
+  font-size: 22rpx; color: #A0A0A0; display: block; margin-bottom: 12rpx;
+}
+
+.gsc-card__story {
+  font-size: 26rpx; color: #3C3C3C; line-height: 1.8;
+  display: block; margin-bottom: 12rpx;
+}
+
+.gsc-card__stats {
+  display: flex; gap: 24rpx; padding-top: 12rpx;
+  border-top: 1px solid #D8F0D0;
+}
+
+.gsc-card__stat {
+  font-size: 24rpx; color: #58CC02; font-weight: 600;
+}

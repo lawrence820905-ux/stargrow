@@ -7,8 +7,8 @@ async function callTask(action, data = {}) {
   return res.result;
 }
 
-async function createTask(childId, title, description, category, basePoints, taskType = 'daily') {
-  return await callTask('create', { childId, title, description, category, basePoints, taskType });
+async function createTask(childId, title, description, category, basePoints, taskType = 'daily', isSelfChallenge = false, goal = '') {
+  return await callTask('create', { childId, title, description, category, basePoints, taskType, isSelfChallenge, goal });
 }
 
 async function updateTask(taskId, fields) {
@@ -35,6 +35,18 @@ async function getTask(taskId) {
   return await callTask('get', { taskId });
 }
 
+async function proposeTask(childId, title, category, description) {
+  return await callTask('propose', { childId, title, category, description });
+}
+
+async function approveProposal(taskId, basePoints, title) {
+  return await callTask('approveProposal', { taskId, basePoints, title });
+}
+
+async function getProposals(childId) {
+  return await callTask('getProposals', { childId });
+}
+
 module.exports = {
   createTask,
   updateTask,
@@ -42,5 +54,8 @@ module.exports = {
   completeTask,
   listTasks,
   getTodayTasks,
-  getTask
+  getTask,
+  proposeTask,
+  approveProposal,
+  getProposals
 };

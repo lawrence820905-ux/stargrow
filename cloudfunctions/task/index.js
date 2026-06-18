@@ -19,6 +19,9 @@ exports.main = async (event, context) => {
       case 'list':     return await listTasks(family._id, event);
       case 'getToday': return await getToday(family._id, event);
       case 'get':      return await getTask(family._id, event);
+      case 'propose':          return await propose(family._id, event);
+      case 'approveProposal':  return await approveProposal(family._id, event);
+      case 'getProposals':     return await getProposals(family._id, event);
       default: return { code: 400, message: '未知操作' };
     }
   } catch (err) {
@@ -33,19 +36,21 @@ async function getFamilyByOpenid(openid) {
 }
 
 async function create(familyId, event) {
-  const { childId, title, description, category, basePoints, taskType } = event;
+  const { childId, title, description, category, basePoints, taskType, isSelfChallenge, goal } = event;
   const task = {
     familyId,
     childId,
     title,
     description: description || '',
     category: category || 'sport',
-    basePoints: basePoints || 10,
+    basePoints: isSelfChallenge ? 0 : (basePoints || 10),
     taskType: taskType || 'daily',
     status: 'pending',
     score: null,
     pointsAwarded: null,
     completedAt: null,
+    isSelfChallenge: !!isSelfChallenge,
+    goal: goal || '',
     createdAt: new Date()
   };
   const res = await db.collection('tasks').add({ data: task });
@@ -88,7 +93,8 @@ async function complete(familyId, event) {
   if (!task.data) return { code: 404, message: '任务不存在' };
   if (task.data.status === 'completed') return { code: 400, message: '任务已完成' };
 
-  const pointsAwarded = Math.round(task.data.basePoints * multiplier);
+  const isSelfChallenge = task.data.isSelfChallenge;
+  const pointsAwarded = isSelfChallenge ? 0 : Math.round(task.data.basePoints * multiplier);
   const today = formatDate(new Date());
 
   // 更新任务
@@ -103,8 +109,8 @@ async function complete(familyId, event) {
 
   // 更新孩子数据
   const child = await db.collection('children').doc(task.data.childId).get();
-  const newTotal = child.data.totalPointsEarned + pointsAwarded;
-  const newCurrent = child.data.currentPoints + pointsAwarded;
+  const newTotal = isSelfChallenge ? (child.data.totalPointsEarned || 0) : (child.data.totalPointsEarned + pointsAwarded);
+  const newCurrent = isSelfChallenge ? (child.data.currentPoints || 0) : (child.data.currentPoints + pointsAwarded);
   const newLevel = calcLevel(newTotal);
   const oldLevel = child.data.level || 1;
   const leveledUp = newLevel > oldLevel;
@@ -122,20 +128,35 @@ async function complete(familyId, event) {
     }
   });
 
-  // 积分流水
-  await db.collection('pointRecords').add({
-    data: {
-      familyId,
-      childId: task.data.childId,
-      amount: pointsAwarded,
-      type: 'task_complete',
-      relatedTaskId: taskId,
-      relatedDrawId: null,
-      balanceAfter: newCurrent,
-      note: `完成任务: ${task.data.title}`,
-      createdAt: new Date()
-    }
-  });
+  // 积分流水（自主挑战不产生积分记录，但记录特殊事件）
+  if (isSelfChallenge) {
+    await db.collection('pointRecords').add({
+      data: {
+        familyId,
+        childId: task.data.childId,
+        amount: 0,
+        type: 'self_challenge',
+        relatedTaskId: taskId,
+        balanceAfter: newCurrent,
+        note: `自主挑战完成: ${task.data.title}${task.data.goal ? ' - ' + task.data.goal : ''}`,
+        createdAt: new Date()
+      }
+    });
+  } else {
+    await db.collection('pointRecords').add({
+      data: {
+        familyId,
+        childId: task.data.childId,
+        amount: pointsAwarded,
+        type: 'task_complete',
+        relatedTaskId: taskId,
+        relatedDrawId: null,
+        balanceAfter: newCurrent,
+        note: `完成任务: ${task.data.title}`,
+        createdAt: new Date()
+      }
+    });
+  }
 
   // 检查成就（异步调用，不阻塞返回）
   try {
@@ -247,4 +268,65 @@ function calcStreak(child, today) {
   if (child.lastActiveDate === today) return child.streakDays || 0;
   if (child.lastActiveDate === yesterdayStr) return (child.streakDays || 0) + 1;
   return 1;
+}
+
+// 孩子提议任务
+async function propose(familyId, event) {
+  const { childId, title, category, description } = event;
+  if (!childId || !title || !category) return { code: 400, message: '请填写任务标题和分类' };
+
+  const task = {
+    familyId, childId,
+    title,
+    description: description || '',
+    category,
+    basePoints: 0,
+    taskType: 'special',
+    status: 'proposed',
+    isSelfChallenge: false,
+    createdAt: new Date()
+  };
+  const res = await db.collection('tasks').add({ data: task });
+  return { code: 0, task: { _id: res._id, ...task } };
+}
+
+// 家长批准提议
+async function approveProposal(familyId, event) {
+  const { taskId, basePoints, title } = event;
+  if (!taskId) return { code: 400, message: '缺少任务ID' };
+
+  const existing = await db.collection('tasks').doc(taskId).get();
+  if (!existing.data) return { code: 404, message: '任务不存在' };
+  if (existing.data.status !== 'proposed') return { code: 400, message: '只能批准提议中的任务' };
+
+  const updateData = {
+    status: 'pending',
+    basePoints: basePoints || 5,
+    updatedAt: new Date()
+  };
+  if (title) updateData.title = title;
+
+  await db.collection('tasks').doc(taskId).update({ data: updateData });
+  const updated = await db.collection('tasks').doc(taskId).get();
+  return { code: 0, task: updated.data };
+}
+
+// 获取提议列表
+async function getProposals(familyId, event) {
+  const { childId } = event;
+  const conditions = { familyId, status: 'proposed' };
+  if (childId) conditions.childId = childId;
+
+  const res = await db.collection('tasks')
+    .where(conditions)
+    .orderBy('createdAt', 'desc')
+    .get();
+  return { code: 0, proposals: res.data };
+}
+
+function formatDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }

@@ -35,6 +35,26 @@ async function getWeeklyComparison(childId) {
   return await callStats('getWeeklyComparison', { childId });
 }
 
+async function getFamilyGarden() {
+  return await callStats('getFamilyGarden');
+}
+
+async function getSuperpower(childId) {
+  return await callStats('getSuperpower', { childId });
+}
+
+async function cheerSibling(fromChildId, toChildId) {
+  return await callStats('cheerSibling', { fromChildId, toChildId });
+}
+
+async function getPendingPromises() {
+  return await callStats('getPendingPromises');
+}
+
+async function generateGrowthStory(childId) {
+  return await callStats('generateGrowthStory', { childId });
+}
+
 module.exports = {
   getChildOverview,
   getWeeklyChart,
@@ -42,5 +62,10 @@ module.exports = {
   getLeaderboard,
   getPointHistory,
   getMotivationInsight,
-  getWeeklyComparison
+  getWeeklyComparison,
+  getFamilyGarden,
+  getSuperpower,
+  cheerSibling,
+  getPendingPromises,
+  generateGrowthStory
 };

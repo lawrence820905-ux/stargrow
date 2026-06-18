@@ -43,3 +43,15 @@
 .draw-card__btn--primary { background: linear-gradient(135deg, #46A800, #58CC02); color: #FFFFFF; box-shadow: var(--shadow-glow-green); }
 .draw-card__btn--primary:active { opacity: 0.7; }
 .draw-card__btn[disabled] { background: #CFCFCF; color: #FFFFFF; }
+
+.draw-card__remaining {
+  text-align: center; padding: 12rpx 0 8rpx;
+  font-size: 24rpx; color: #8E8E93;
+}
+
+.draw-card__remaining-num { font-weight: 700; color: #007AFF; font-size: 28rpx; }
+
+.draw-card__limit-hint {
+  text-align: center; padding: 16rpx 0 0;
+  font-size: 24rpx; color: #A0A0A0;
+}

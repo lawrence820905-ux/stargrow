@@ -49,6 +49,7 @@ Page({
   data: {
     poolType: 'small',
     cost: 20,
+    dailyLimit: 3,
     items: [],
     showAddItem: false,
     editingIndex: null,  // null = 新增, number = 编辑第几条
@@ -71,7 +72,7 @@ Page({
       const pool = this.data.poolType === 'small' ? result.smallPool : result.bigPool;
       if (pool) {
         const items = calcProbabilities(pool.items || []);
-        this.setData({ cost: pool.cost, items });
+        this.setData({ cost: pool.cost, dailyLimit: pool.dailyLimit || 3, items });
       }
     } catch (e) { /* ignore */ }
   },
@@ -95,6 +96,22 @@ Page({
 
   onCostChange(e) {
     this.setData({ cost: e.detail.value });
+  },
+
+  onDailyLimitDecrease() {
+    if (this.data.dailyLimit > 1) {
+      this.setData({ dailyLimit: this.data.dailyLimit - 1 });
+    }
+  },
+
+  onDailyLimitIncrease() {
+    if (this.data.dailyLimit < 10) {
+      this.setData({ dailyLimit: this.data.dailyLimit + 1 });
+    }
+  },
+
+  onDailyLimitChange(e) {
+    this.setData({ dailyLimit: e.detail.value });
   },
 
   onAddItem() {
@@ -135,8 +152,8 @@ Page({
   preventBubble() {},
 
   onModalPointsDecrease() {
-    if (this.data.newItem.pointsValue > -100) {
-      this.setData({ 'newItem.pointsValue': this.data.newItem.pointsValue - 5 });
+    if (this.data.newItem.pointsValue > 0) {
+      this.setData({ 'newItem.pointsValue': Math.max(0, this.data.newItem.pointsValue - 5) });
     }
   },
 
@@ -242,11 +259,11 @@ Page({
     try {
       const itemsForSave = this.data.items.map(i => ({
         id: i.id, name: i.name, type: i.type,
-        pointsValue: i.pointsValue, rewardTitle: i.rewardTitle || '',
+        pointsValue: Math.max(0, i.pointsValue || 0), rewardTitle: i.rewardTitle || '',
         rewardDescription: i.rewardDescription || '',
         rarity: i.rarity, icon: i.icon
       }));
-      await savePool(this.data.poolType, this.data.poolType === 'small' ? '小宝箱' : '大宝箱', this.data.cost, itemsForSave);
+      await savePool(this.data.poolType, this.data.poolType === 'small' ? '小宝箱' : '大宝箱', this.data.cost, itemsForSave, this.data.dailyLimit);
       wx.showToast({ title: '保存成功', icon: 'success' });
     } catch (err) {
       wx.showToast({ title: err.message || '保存失败，请稍后重试', icon: 'none' });

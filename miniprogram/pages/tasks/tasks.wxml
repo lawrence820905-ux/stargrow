@@ -3,6 +3,9 @@
   <view class="tasks-page__header">
     <text class="tasks-page__title">任务</text>
     <view class="tasks-page__header-btns">
+      <view class="tasks-page__add-btn tasks-page__add-btn--propose" bindtap="onProposeTask">
+        <text class="tasks-page__add-text">💡 我想试试</text>
+      </view>
       <view class="tasks-page__add-btn tasks-page__add-btn--random" bindtap="onRandomTasks">
         <text class="tasks-page__add-text">随机任务</text>
       </view>
@@ -61,11 +64,12 @@
     <skeleton-card wx:for="{{3}}" wx:key="index" />
   </view>
 
-  <!-- Task Detail Modal -->
-  <view class="tasks-page__overlay" wx:if="{{showDetail}}" bindtap="onCloseDetail">
-    <view class="tasks-page__detail-modal" catchtap="">
+  <!-- Task Detail — 全屏展示 -->
+  <view class="tasks-page__overlay" wx:if="{{showDetail}}">
+    <view class="tasks-page__detail-modal">
       <view class="tasks-page__detail-handle">
         <view class="tasks-page__detail-handle-bar"></view>
+        <text class="tasks-page__detail-close" bindtap="onCloseDetail">完成</text>
       </view>
 
       <scroll-view class="tasks-page__detail-scroll" scroll-y enhanced show-scrollbar="{{false}}">
@@ -92,16 +96,57 @@
             <text class="tasks-page__detail-val">{{detailTask.createdAtText}}</text>
           </view>
         </view>
-      </scroll-view>
 
-      <view class="tasks-page__detail-actions">
-        <view class="tasks-page__detail-edit" bindtap="onEditTask">
-          <text>编辑任务</text>
+        <view class="tasks-page__detail-actions">
+          <view class="tasks-page__detail-edit" bindtap="onEditTask">
+            <text>编辑任务</text>
+          </view>
+          <view class="tasks-page__detail-delete" bindtap="onDeleteTask">
+            <text>删除任务</text>
+          </view>
         </view>
-        <view class="tasks-page__detail-delete" bindtap="onDeleteTask">
-          <text>删除任务</text>
-        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- Propose Task Modal -->
+  <view class="tasks-page__overlay" wx:if="{{showPropose}}">
+    <view class="tasks-page__detail-modal">
+      <view class="tasks-page__detail-handle">
+        <view class="tasks-page__detail-handle-bar"></view>
+        <text class="tasks-page__detail-close" bindtap="onClosePropose">完成</text>
       </view>
+      <scroll-view class="tasks-page__detail-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <text class="tasks-page__detail-title">💡 我想试试...</text>
+        <text class="tasks-page__detail-desc">和孩子一起讨论，孩子想尝试做什么？</text>
+
+        <view class="tasks-page__detail-info">
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">任务名称</text>
+            <input class="tasks-page__detail-input" placeholder="比如：每天读一本书" value="{{proposeTitle}}" bindinput="onProposeTitleInput" />
+          </view>
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">分类</text>
+            <view class="tasks-page__propose-cats">
+              <view
+                class="tasks-page__propose-cat {{proposeCategory === item.key ? 'tasks-page__propose-cat--active' : ''}}"
+                wx:for="{{categories}}"
+                wx:key="key"
+                data-key="{{item.key}}"
+                bindtap="onProposeCatChange"
+              >
+                <text>{{item.icon}} {{item.name}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="tasks-page__detail-actions">
+          <view class="tasks-page__detail-edit" bindtap="onSubmitPropose">
+            <text>提交提议</text>
+          </view>
+        </view>
+      </scroll-view>
     </view>
   </view>
 

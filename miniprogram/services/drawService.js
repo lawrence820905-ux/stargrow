@@ -7,12 +7,12 @@ async function callDraw(action, data = {}) {
   return res.result;
 }
 
-async function getPools() {
-  return await callDraw('getPools');
+async function getPools(childId) {
+  return await callDraw('getPools', { childId });
 }
 
-async function savePool(type, name, cost, items) {
-  return await callDraw('savePool', { type, name, cost, items });
+async function savePool(type, name, cost, items, dailyLimit) {
+  return await callDraw('savePool', { type, name, cost, items, dailyLimit });
 }
 
 async function doDraw(childId, poolType) {
@@ -31,11 +31,16 @@ async function fulfillReward(recordId) {
   return await callDraw('fulfillReward', { recordId });
 }
 
+async function getTodayDrawCount(childId) {
+  return await callDraw('getTodayDrawCount', { childId });
+}
+
 module.exports = {
   getPools,
   savePool,
   doDraw,
   batchDraw,
   getRecords,
-  fulfillReward
+  fulfillReward,
+  getTodayDrawCount
 };

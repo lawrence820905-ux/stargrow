@@ -25,7 +25,8 @@
     <view class="cm-page__modal" catchtap="">
       <text class="cm-page__modal-title">{{editingChild ? '编辑' : '添加'}}孩子</text>
       <input class="cm-page__input" placeholder="孩子名称" value="{{childName}}" bindinput="onNameInput" />
-      <input class="cm-page__input" placeholder="年龄（岁）" type="number" value="{{childAge}}" bindinput="onAgeInput" />
+      <input class="cm-page__input" placeholder="出生年份（如 2020）" type="number" value="{{childBirthYear}}" bindinput="onBirthYearInput" />
+      <text class="cm-page__age-hint">用于推荐适龄任务和调整界面</text>
       <view class="cm-page__modal-btns">
         <button class="cm-page__modal-cancel" bindtap="onCloseModal">取消</button>
         <button class="cm-page__modal-confirm" bindtap="onConfirmModal">确认</button>

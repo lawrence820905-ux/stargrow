@@ -124,6 +124,24 @@
   background: #EEF8FF; box-shadow: 0 0 0 3px #1CB0F6;
 }
 
+.cd-page__bonus-row {
+  display: flex; align-items: center; gap: 12rpx; margin-bottom: 16rpx;
+}
+
+.cd-page__bonus-label {
+  font-size: 24rpx; color: #8E8E93; font-weight: 600; flex-shrink: 0;
+}
+
+.cd-page__bonus-item {
+  padding: 10rpx 20rpx; border-radius: 100rpx;
+  background: #F5F5F5; font-size: 24rpx; color: #A0A0A0; font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.cd-page__bonus-item--active {
+  background: #FF9500; color: #FFFFFF; font-weight: 700;
+}
+
 .cd-page__obs-input {
   width: 100%; min-height: 160rpx;
   padding: 16rpx 20rpx;

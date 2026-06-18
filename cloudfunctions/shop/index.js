@@ -41,6 +41,9 @@ exports.main = async (event, context) => {
       case 'exchange':          return await doExchange(family._id, event);
       case 'getExchangeRecords':return await getExchangeRecords(family._id, event);
       case 'fulfillExchange':   return await fulfillExchange(family._id, event);
+      case 'addToWishlist':      return await addToWishlist(family._id, event);
+      case 'removeFromWishlist': return await removeFromWishlist(family._id, event);
+      case 'getWishlist':        return await getWishlist(family._id, event);
       default: return { code: 400, message: '未知操作' };
     }
   } catch (err) {
@@ -145,6 +148,10 @@ async function doExchange(familyId, event) {
     });
   }
 
+  // 承诺兑现期限（默认3天）
+  const expectedFulfillBy = new Date();
+  expectedFulfillBy.setDate(expectedFulfillBy.getDate() + 3);
+
   // 创建兑换记录
   const record = {
     familyId,
@@ -155,6 +162,7 @@ async function doExchange(familyId, event) {
     pointsSpent: item.price,
     isFulfilled: false,
     fulfilledAt: null,
+    expectedFulfillBy,
     createdAt: new Date()
   };
   const recRes = await db.collection('exchangeRecords').add({ data: record });
@@ -205,4 +213,50 @@ async function fulfillExchange(familyId, event) {
   });
   const record = await db.collection('exchangeRecords').doc(recordId).get();
   return { code: 0, record: record.data };
+}
+
+// 心愿单功能
+async function addToWishlist(familyId, event) {
+  const { childId, shopItemId } = event;
+  if (!childId || !shopItemId) return { code: 400, message: '缺少参数' };
+
+  // 检查是否已存在
+  const existing = await db.collection('wishlists')
+    .where({ familyId, childId, shopItemId })
+    .get();
+  if (existing.data.length > 0) return { code: 400, message: '已经在心愿单里了' };
+
+  await db.collection('wishlists').add({
+    data: { familyId, childId, shopItemId, createdAt: new Date() }
+  });
+  return { code: 0, message: '已加入心愿单' };
+}
+
+async function removeFromWishlist(familyId, event) {
+  const { childId, shopItemId } = event;
+  if (!childId || !shopItemId) return { code: 400, message: '缺少参数' };
+
+  await db.collection('wishlists')
+    .where({ familyId, childId, shopItemId })
+    .remove();
+  return { code: 0, message: '已移出心愿单' };
+}
+
+async function getWishlist(familyId, event) {
+  const { childId } = event;
+  if (!childId) return { code: 400, message: '缺少孩子ID' };
+
+  const wishlistRes = await db.collection('wishlists')
+    .where({ familyId, childId })
+    .get();
+
+  // 填充商品详情
+  const shopItemIds = wishlistRes.data.map(w => w.shopItemId);
+  if (shopItemIds.length > 0) {
+    const itemsRes = await db.collection('shop')
+      .where({ _id: _.in(shopItemIds), isActive: true })
+      .get();
+    return { code: 0, wishlist: itemsRes.data };
+  }
+  return { code: 0, wishlist: [] };
 }

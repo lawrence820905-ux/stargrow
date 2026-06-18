@@ -12,6 +12,9 @@
     >
       <text class="score-stars__option-icon">{{item.icon}}</text>
       <text class="score-stars__option-label">{{item.label}}</text>
+      <view class="score-stars__option-rubric score-stars__option-rubric--s{{item.score}}">
+        <text>{{item.rubric}}</text>
+      </view>
     </view>
     <text class="score-stars__subtext">{{item.subtext}}</text>
   </view>

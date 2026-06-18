@@ -121,25 +121,43 @@
       </view>
     </view>
 
-    <!-- Leaderboard -->
-    <view class="stats-page__section" wx:if="{{leaderboard.length > 0}}">
-      <text class="stats-page__section-title">🏆 家庭排行榜（本周）</text>
+    <!-- Superpower Card -->
+    <view class="stats-page__section" wx:if="{{superpower}}">
+      <text class="stats-page__section-title">✨ 我的超能力</text>
+      <view class="stats-page__card stats-page__superpower-card">
+        <text class="stats-page__superpower-icon">{{superpower.icon}}</text>
+        <view class="stats-page__superpower-info">
+          <text class="stats-page__superpower-title">{{superpower.name}}力</text>
+          <text class="stats-page__superpower-message">{{superpower.message}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Family Garden -->
+    <view class="stats-page__section" wx:if="{{familyGarden.length > 0}}">
+      <text class="stats-page__section-title">🌳 家庭花园</text>
       <view class="stats-page__card">
-        <view class="stats-page__rank-item" wx:for="{{leaderboard}}" wx:key="childId">
-          <view class="stats-page__rank-badge">
-            <text wx:if="{{index === 0}}">🥇</text>
-            <text wx:elif="{{index === 1}}">🥈</text>
-            <text wx:elif="{{index === 2}}">🥉</text>
-            <text wx:else class="stats-page__rank-num">{{index + 1}}</text>
-          </view>
-          <text class="stats-page__rank-name">{{item.name}}</text>
-          <view class="stats-page__rank-bar-wrap">
+        <text class="stats-page__garden-hint">每个孩子都是一棵正在生长的植物，大家都在成长~</text>
+        <view class="stats-page__garden-grid">
+          <view
+            class="stats-page__garden-plant {{item.childId === activeChildId ? 'stats-page__garden-plant--active' : ''}}"
+            wx:for="{{familyGarden}}"
+            wx:key="childId"
+          >
+            <text class="stats-page__garden-emoji">{{item.plantEmoji}}</text>
+            <text class="stats-page__garden-name">{{item.name}}</text>
+            <text class="stats-page__garden-level">Lv{{item.level}}</text>
+            <text class="stats-page__garden-week">本周 {{item.weekPoints}} 分</text>
+            <!-- 加油按钮：不为当前选中的孩子显示 -->
             <view
-              class="stats-page__rank-bar"
-              style="width: {{leaderboard.length > 0 ? (item.weekPoints / leaderboard[0].weekPoints * 100) : 0}}%;"
-            ></view>
+              class="stats-page__cheer-btn"
+              wx:if="{{item.childId !== activeChildId}}"
+              data-to-child-id="{{item.childId}}"
+              bindtap="onCheerSibling"
+            >
+              <text>💪 加油</text>
+            </view>
           </view>
-          <text class="stats-page__rank-pts">⭐ {{item.weekPoints}}</text>
         </view>
       </view>
     </view>

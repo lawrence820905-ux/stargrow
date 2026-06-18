@@ -10,6 +10,14 @@
     <points-display value="{{activeChild.currentPoints || 0}}" label="当前积分" />
   </view>
 
+  <!-- Today Draw Limit Indicator -->
+  <view class="draw-page__limit">
+    <text class="draw-page__limit-text">🎯 今天已经抽了 <text class="draw-page__limit-num">{{todayDrawCount}}</text> / <text class="draw-page__limit-num">{{dailyLimit}}</text> 次</text>
+    <view class="draw-page__limit-bar">
+      <view class="draw-page__limit-fill" style="width: {{dailyLimit > 0 ? todayDrawCount / dailyLimit * 100 : 0}}%;"></view>
+    </view>
+  </view>
+
   <!-- Segment Control -->
   <view class="draw-page__segment">
     <view
@@ -35,12 +43,28 @@
         poolType="{{poolType}}"
         cost="{{activePool.cost}}"
         items="{{activePool.items}}"
-        disabled="{{(activeChild.currentPoints || 0) < activePool.cost}}"
+        disabled="{{(activeChild.currentPoints || 0) < activePool.cost || todayDrawCount >= dailyLimit}}"
         loading="{{drawing}}"
-        bind:draw="onDraw"
+        remainingDraws="{{dailyLimit - todayDrawCount}}"
+        drawLimitReached="{{todayDrawCount >= dailyLimit}}"
+        bind:draw="onDrawTap"
       />
     </block>
     <empty-state wx:else icon="📦" text="还没有配置宝箱" hint="家长可以前往管理页配置宝箱奖励池" />
+  </view>
+
+  <!-- Pre-draw Wish Prompt -->
+  <view class="draw-page__wish-overlay" wx:if="{{showWishPrompt}}">
+    <view class="draw-page__wish-bg" bindtap="onCloseWishPrompt"></view>
+    <view class="draw-page__wish-modal">
+      <text class="draw-page__wish-icon">🎁</text>
+      <text class="draw-page__wish-title">你最想抽到什么？</text>
+      <text class="draw-page__wish-hint">和爸爸妈妈聊聊你的期待吧~</text>
+      <view class="draw-page__wish-btns">
+        <button class="draw-page__wish-cancel" bindtap="onCloseWishPrompt">再想想</button>
+        <button class="draw-page__wish-confirm" bindtap="onDraw">开宝箱！</button>
+      </view>
+    </view>
   </view>
 
   <!-- Records -->
@@ -52,6 +76,8 @@
         <text class="draw-page__record-name">{{item.prizeName}}</text>
         <text class="draw-page__record-cost">-{{item.pointsSpent}}分</text>
         <text class="draw-page__record-hint" wx:if="{{item.isFulfilled}}">今日零点清除</text>
+        <text class="draw-page__record-hint" wx:elif="{{item.daysLeft > 0}}">⏳ 等待兑现中...（剩{{item.daysLeft}}天）</text>
+        <text class="draw-page__record-hint draw-page__record-hint--overdue" wx:elif="{{item.daysLeft <= 0 && !item.isFulfilled}}">请和爸爸妈妈聊一聊这个奖励～</text>
       </view>
       <view
         class="draw-page__record-fulfill {{item.isFulfilled ? 'draw-page__record-fulfill--done' : ''}}"
@@ -59,7 +85,7 @@
         data-fulfilled="{{item.isFulfilled}}"
         bindtap="onFulfill"
       >
-        <text>{{item.isFulfilled ? '已兑奖' : '未兑奖'}}</text>
+        <text>{{item.isFulfilled ? '已兑现' : '兑现'}}</text>
       </view>
       <text class="draw-page__record-time">{{item.timeText}}</text>
     </view>

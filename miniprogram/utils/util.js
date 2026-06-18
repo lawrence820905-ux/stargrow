@@ -99,6 +99,20 @@ function calcStreak(child) {
   return 0;
 }
 
+/**
+ * 根据出生年份计算年龄组
+ * @param {number} birthYear - 出生年份
+ * @returns {{ group: string, label: string, emoji: string }}
+ *   'toddler' (3-5岁), 'child' (6-9岁), 'teen' (10-15岁), 'unknown'
+ */
+function getAgeGroup(birthYear) {
+  if (!birthYear) return { group: 'unknown', label: '未知', emoji: '👶' };
+  const age = new Date().getFullYear() - birthYear;
+  if (age <= 5) return { group: 'toddler', label: '3-5岁', emoji: '🌱', age };
+  if (age <= 9) return { group: 'child', label: '6-9岁', emoji: '🌿', age };
+  return { group: 'teen', label: '10-15岁', emoji: '🌳', age };
+}
+
 module.exports = {
   formatDate,
   today,
@@ -109,5 +123,6 @@ module.exports = {
   getLevelInfo,
   getNextLevelInfo,
   levelProgress,
-  calcStreak
+  calcStreak,
+  getAgeGroup
 };

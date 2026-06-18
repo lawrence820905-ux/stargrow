@@ -11,7 +11,9 @@ Page({
     showAddObs: false,
     obsContent: '',
     obsMood: '',
-    obsMoods: ['😊', '🥰', '😄', '🤩', '😌', '🎉']
+    obsMoods: ['😊', '🥰', '😄', '🤩', '😌', '🎉'],
+    obsBonus: 0,
+    bonusOptions: [0, 5, 10, 20]
   },
 
   onLoad() {
@@ -44,7 +46,7 @@ Page({
   },
 
   onShowAddObs() {
-    this.setData({ showAddObs: true, obsContent: '', obsMood: '' });
+    this.setData({ showAddObs: true, obsContent: '', obsMood: '', obsBonus: 0 });
   },
 
   onCloseAddObs() {
@@ -59,6 +61,10 @@ Page({
     this.setData({ obsMood: e.currentTarget.dataset.mood });
   },
 
+  onSelectBonus(e) {
+    this.setData({ obsBonus: parseInt(e.currentTarget.dataset.val) || 0 });
+  },
+
   preventBubble() {},
 
   async onSubmitObs() {
@@ -68,8 +74,8 @@ Page({
       return;
     }
     try {
-      await addObservation(this.data.activeChildId, content, this.data.obsMood);
-      wx.showToast({ title: '记录成功', icon: 'success' });
+      await addObservation(this.data.activeChildId, content, this.data.obsMood, [], this.data.obsBonus);
+      wx.showToast({ title: this.data.obsBonus > 0 ? `记录成功！+${this.data.obsBonus}分` : '记录成功', icon: 'success' });
       this.setData({ showAddObs: false });
       this.loadObservations(this.data.activeChildId);
     } catch (err) {

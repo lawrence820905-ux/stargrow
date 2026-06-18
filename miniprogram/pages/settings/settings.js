@@ -1,10 +1,11 @@
 Page({
   data: {
-    showFeedback: false,
-    feedbackText: '',
     inviteCode: '',
     members: [],
-    memberCount: 0
+    memberCount: 0,
+    showFeedback: false,
+    feedbackType: 'bug',
+    feedbackText: ''
   },
 
   onShow() {
@@ -126,53 +127,43 @@ Page({
 
   preventBubble() {},
 
+  // 反馈相关
   onShowFeedback() {
-    this.setData({ showFeedback: true, feedbackText: '' });
+    this.setData({ showFeedback: true, feedbackType: 'bug', feedbackText: '' });
   },
-
   onCloseFeedback() {
     this.setData({ showFeedback: false });
   },
-
+  onSelectFeedbackType(e) {
+    this.setData({ feedbackType: e.currentTarget.dataset.type });
+  },
   onFeedbackInput(e) {
     this.setData({ feedbackText: e.detail.value });
   },
-
   async onSubmitFeedback() {
     const text = this.data.feedbackText.trim();
+    const type = this.data.feedbackType;
     if (!text) {
-      wx.showToast({ title: '请输入建议内容', icon: 'none' });
+      wx.showToast({ title: '请输入内容', icon: 'none' });
       return;
     }
     wx.showLoading({ title: '提交中...' });
     try {
-      // 直接写入数据库，不依赖云函数，更可靠
       const db = wx.cloud.database();
       await db.collection('feedback').add({
         data: {
+          type,
+          typeName: type === 'bug' ? '功能异常' : '产品建议',
           content: text,
           createdAt: db.serverDate()
         }
       });
       wx.hideLoading();
-      wx.showToast({ title: '感谢您的建议！', icon: 'success' });
+      wx.showToast({ title: '感谢反馈！', icon: 'success' });
       this.setData({ showFeedback: false, feedbackText: '' });
     } catch (err) {
       wx.hideLoading();
-      console.error('反馈提交失败:', err);
-      // 如果直接写入也失败，尝试云函数兜底
-      try {
-        const res = await wx.cloud.callFunction({
-          name: 'feedback',
-          data: { action: 'submit', content: text }
-        });
-        if (res.result && res.result.code === 0) {
-          wx.showToast({ title: '感谢您的建议！', icon: 'success' });
-          this.setData({ showFeedback: false, feedbackText: '' });
-          return;
-        }
-      } catch (e2) { /* 兜底也失败 */ }
       wx.showToast({ title: '提交失败，请重试', icon: 'none' });
     }
-  }
+  },
 });

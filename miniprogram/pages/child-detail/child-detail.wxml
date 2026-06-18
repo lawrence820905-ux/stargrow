@@ -64,6 +64,20 @@
           </view>
         </view>
 
+        <!-- Bonus points -->
+        <view class="cd-page__bonus-row">
+          <text class="cd-page__bonus-label">奖励积分:</text>
+          <view
+            class="cd-page__bonus-item {{obsBonus === item ? 'cd-page__bonus-item--active' : ''}}"
+            wx:for="{{bonusOptions}}"
+            wx:key="*this"
+            data-val="{{item}}"
+            bindtap="onSelectBonus"
+          >
+            <text>{{item === 0 ? '不加分' : '+' + item}}</text>
+          </view>
+        </view>
+
         <textarea
           class="cd-page__obs-input"
           placeholder="今天孩子有哪些进步..."

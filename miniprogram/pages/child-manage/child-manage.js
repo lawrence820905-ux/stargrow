@@ -7,7 +7,7 @@ Page({
     showModal: false,
     editingChild: null,
     childName: '',
-    childAge: ''
+    childBirthYear: ''
   },
 
   async onLoad() {
@@ -15,12 +15,16 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, editingChild: null, childName: '', childAge: '' });
+    this.setData({ showModal: true, editingChild: null, childName: '', childBirthYear: '' });
   },
 
   onEdit(e) {
     const child = e.currentTarget.dataset.child;
-    this.setData({ showModal: true, editingChild: child, childName: child.name, childAge: child.age || '' });
+    this.setData({
+      showModal: true, editingChild: child,
+      childName: child.name,
+      childBirthYear: child.birthYear || ''
+    });
   },
 
   async onDelete(e) {
@@ -38,19 +42,19 @@ Page({
   },
 
   onNameInput(e) { this.setData({ childName: e.detail.value }); },
-  onAgeInput(e) { this.setData({ childAge: e.detail.value }); },
+  onBirthYearInput(e) { this.setData({ childBirthYear: e.detail.value }); },
 
   onCloseModal() { this.setData({ showModal: false }); },
 
   async onConfirmModal() {
     const name = this.data.childName.trim();
     if (!name) { wx.showToast({ title: '请输入名称', icon: 'none' }); return; }
-    const age = parseInt(this.data.childAge) || 0;
+    const birthYear = parseInt(this.data.childBirthYear) || 0;
     try {
       if (this.data.editingChild) {
-        await updateChild(this.data.editingChild._id, name, undefined, age);
+        await updateChild(this.data.editingChild._id, name, undefined, 0, birthYear);
       } else {
-        await createChild(name, undefined, age);
+        await createChild(name, undefined, 0, birthYear);
       }
       await refreshChildren();
       this.setData({ children: app.globalData.children, showModal: false });

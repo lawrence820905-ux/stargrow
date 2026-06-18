@@ -1,10 +1,6 @@
 <view class="index-page">
-  <!-- Nav Bar -->
-  <view class="index-page__nav" style="padding-top: {{statusBarHeight}}px;">
-    <view class="index-page__nav-content">
-      <text class="index-page__nav-title">成长之路</text>
-    </view>
-  </view>
+  <!-- Status bar spacer -->
+  <view style="height: {{statusBarHeight}}px;"></view>
 
   <!-- Loading -->
   <block wx:if="{{loading}}">
@@ -36,19 +32,37 @@
       </view>
     </view>
 
+    <!-- Growth Story Card -->
+    <view class="index-page__section" wx:if="{{growthStory || growthStoryLoading}}">
+      <growth-story-card story="{{growthStory}}" loading="{{growthStoryLoading}}" />
+    </view>
+
+    <!-- Pending Promises Alert -->
+    <view class="index-page__section" wx:if="{{pendingPromises.length > 0}}">
+      <view class="index-page__promise-card">
+        <text class="index-page__promise-icon">🤝</text>
+        <view class="index-page__promise-info">
+          <text class="index-page__promise-title">你有 <text class="index-page__promise-num">{{pendingPromises.length}}</text> 个承诺等待兑现</text>
+          <text class="index-page__promise-hint" wx:if="{{pendingPromises[0].isOverdue}}">部分已超过承诺期限，和孩子聊一聊吧~</text>
+          <text class="index-page__promise-hint" wx:else>别忘了兑现给孩子的承诺哦~</text>
+        </view>
+        <view class="index-page__promise-arrow">
+          <text>→</text>
+        </view>
+      </view>
+    </view>
+
     <!-- Today Progress -->
     <view class="index-page__section">
       <view class="index-page__section-header">
         <text class="index-page__section-title">今日任务</text>
-        <text class="index-page__section-link" bindtap="onGoTasks">查看全部 →</text>
       </view>
       <view class="index-page__progress-card">
         <view class="index-page__progress-bar-wrap">
           <view class="index-page__progress-bar" style="width: {{todayPercent}}%;"></view>
         </view>
         <view class="index-page__progress-info">
-          <text class="index-page__progress-percent">{{todayPercent}}%</text>
-          <text class="index-page__progress-text">{{todayCompleted}} / {{todayTasks}} 已完成</text>
+          <text class="index-page__progress-text">今天还可以获得{{todayMaxPoints}}分哦 · {{todayCompleted}}/{{todayTasks}}已完成</text>
         </view>
       </view>
       <!-- Today task preview -->
@@ -61,22 +75,6 @@
         />
       </view>
       <empty-state wx:else icon="📋" text="今天还没有任务" />
-    </view>
-
-    <!-- Recent Badges -->
-    <view class="index-page__section" wx:if="{{recentAchievements.length > 0}}">
-      <view class="index-page__section-header">
-        <text class="index-page__section-title">最新徽章</text>
-        <text class="index-page__section-link" bindtap="onGoAchievements">查看全部 →</text>
-      </view>
-      <scroll-view class="index-page__badge-scroll" scroll-x show-scrollbar="{{false}}">
-        <view class="index-page__badge-list">
-          <view class="index-page__badge" wx:for="{{recentAchievements}}" wx:key="_id">
-            <text class="index-page__badge-icon">🏅</text>
-            <text class="index-page__badge-name">{{item.achievementKey}}</text>
-          </view>
-        </view>
-      </scroll-view>
     </view>
 
     <!-- Recent Loot -->

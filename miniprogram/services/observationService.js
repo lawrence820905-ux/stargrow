@@ -7,8 +7,8 @@ async function callObserve(action, data = {}) {
   return res.result;
 }
 
-async function addObservation(childId, content, mood = '') {
-  return await callObserve('add', { childId, content, mood });
+async function addObservation(childId, content, mood = '', tags = [], bonusPoints = 0) {
+  return await callObserve('add', { childId, content, mood, tags, bonusPoints });
 }
 
 async function listObservations(childId, page = 1, pageSize = 20) {

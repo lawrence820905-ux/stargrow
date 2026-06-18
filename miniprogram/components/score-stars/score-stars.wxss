@@ -25,14 +25,28 @@
   box-shadow: 0 4px 16px rgba(88,204,2,0.20);
 }
 
-.score-stars__option-icon { font-size: 44rpx; margin-bottom: 6rpx; }
+.score-stars__option-icon { font-size: 44rpx; margin-bottom: 4rpx; }
 
 .score-stars__option-label {
-  font-size: 24rpx; font-weight: 700; color: #A0A0A0;
-  text-align: center; line-height: 1.3;
+  font-size: 26rpx; font-weight: 700; color: #A0A0A0;
+  text-align: center; line-height: 1.3; margin-bottom: 6rpx;
 }
 
-.score-stars__option--active .score-stars__option-label { color: #58CC02; }
+.score-stars__option--active .score-stars__option-label { color: #3C3C3C; }
+
+/* Rubric Tag */
+.score-stars__option-rubric {
+  padding: 4rpx 16rpx; border-radius: 100rpx;
+  font-size: 20rpx; font-weight: 600;
+}
+
+.score-stars__option-rubric--s1 { background: #FFF3E0; color: #FF9500; }
+.score-stars__option-rubric--s2 { background: #E8F2FF; color: #007AFF; }
+.score-stars__option-rubric--s3 { background: #F0FFE8; color: #58CC02; }
+
+.score-stars__option--active .score-stars__option-rubric--s1 { background: #FF9500; color: #FFFFFF; }
+.score-stars__option--active .score-stars__option-rubric--s2 { background: #007AFF; color: #FFFFFF; }
+.score-stars__option--active .score-stars__option-rubric--s3 { background: #58CC02; color: #FFFFFF; }
 
 .score-stars__subtext {
   font-size: 24rpx; color: #A0A0A0; text-align: center; font-weight: 400;

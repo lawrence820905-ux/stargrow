@@ -15,12 +15,13 @@
 .sc-page__item-name {
   font-size: 28rpx; font-weight: 700; color: #3C3C3C;
   display: block; margin-bottom: 4rpx;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .sc-page__item-desc {
   font-size: 24rpx; color: #A0A0A0; display: block; margin-bottom: 6rpx;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.sc-page__item-meta { display: flex; gap: 12rpx; align-items: center; }
+.sc-page__item-meta { display: flex; gap: 8rpx; align-items: center; flex-wrap: wrap; }
 .sc-page__item-price {
   font-size: 24rpx; font-weight: 700; color: #FF9600;
 }
@@ -35,16 +36,73 @@
   color: #58CC02;
 }
 
-.sc-page__item-actions { display: flex; flex-direction: column; gap: 8rpx; flex-shrink: 0; }
-.sc-page__item-action {
-  padding: 8rpx 20rpx; border-radius: 999px;
-  font-size: 24rpx; font-weight: 600; text-align: center;
+.sc-page__item-arrow {
+  font-size: 36rpx; color: #CFCFCF; flex-shrink: 0; margin-left: 8rpx;
 }
-.sc-page__item-action--edit {
-  background: #EEF8FF; color: #1CB0F6;
+
+/* Detail overlay */
+.sc-page__overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4); z-index: 400;
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: hidden;
 }
-.sc-page__item-action--del {
-  background: #FFF0F0; color: #FF4B4B;
+.sc-page__detail-modal {
+  width: 100%; max-height: 70vh;
+  background: #FFFFFF; border-radius: 32rpx 32rpx 0 0;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: scModalUp 0.3s ease;
+}
+.sc-page__detail-handle {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 16rpx 32rpx 0; flex-shrink: 0;
+}
+.sc-page__detail-handle-bar {
+  width: 64rpx; height: 8rpx; border-radius: 4rpx;
+  background: #CFCFCF; margin-bottom: 16rpx;
+}
+.sc-page__detail-close {
+  align-self: flex-end;
+  font-size: 28rpx; font-weight: 600; color: #58CC02;
+  padding: 8rpx 0;
+}
+.sc-page__detail-scroll {
+  flex: 1; overflow-y: auto; padding: 0 32rpx 40rpx; max-height: 55vh;
+  box-sizing: border-box;
+}
+.sc-page__detail-icon { font-size: 72rpx; display: block; text-align: center; margin-bottom: 12rpx; }
+.sc-page__detail-name {
+  font-size: 36rpx; font-weight: 700; color: #3C3C3C;
+  display: block; text-align: center; margin-bottom: 8rpx;
+  word-break: break-all; padding: 0 16rpx;
+}
+.sc-page__detail-desc {
+  font-size: 26rpx; color: #A0A0A0; display: block; text-align: center; margin-bottom: 20rpx;
+  word-break: break-all; padding: 0 16rpx;
+}
+.sc-page__detail-info {
+  background: #F8F8F8; border-radius: 20rpx; padding: 8rpx 0; margin-bottom: 24rpx;
+  overflow: hidden;
+}
+.sc-page__detail-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20rpx 24rpx;
+  border-bottom: 0.5px solid #E8E8E8;
+}
+.sc-page__detail-row:last-child { border-bottom: none; }
+.sc-page__detail-label { font-size: 28rpx; color: #8E8E93; flex-shrink: 0; margin-right: 16rpx; }
+.sc-page__detail-val { font-size: 28rpx; font-weight: 600; color: #3C3C3C; flex-shrink: 1; min-width: 0; word-break: break-all; text-align: right; }
+.sc-page__detail-actions { display: flex; gap: 16rpx; flex-shrink: 0; }
+.sc-page__detail-edit {
+  flex: 1; padding: 24rpx 0; border-radius: 20rpx;
+  background: #EEF8FF; text-align: center;
+  font-size: 28rpx; font-weight: 700; color: #1CB0F6;
+}
+.sc-page__detail-delete {
+  flex: 1; padding: 24rpx 0; border-radius: 20rpx;
+  background: #FFF0F0; text-align: center;
+  font-size: 28rpx; font-weight: 700; color: #FF4B4B;
 }
 
 /* FAB */
@@ -127,10 +185,25 @@
 }
 .sc-page__slider-row {
   display: flex; align-items: center;
+  padding: 8rpx 0;
+  gap: 4rpx;
 }
 .sc-page__slider-val {
   font-size: 28rpx; font-weight: 700; color: #FF9600;
   min-width: 80rpx;
+}
+
+.sc-page__slider-btn {
+  width: 52rpx; height: 52rpx; border-radius: 50%;
+  background: #F5F5F5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx; font-weight: 600; color: #3C3C3C;
+  flex-shrink: 0;
+}
+.sc-page__slider-btn:active { background: #E0E0E0; transform: scale(0.92); }
+
+.sc-page__slider-min, .sc-page__slider-max {
+  font-size: 22rpx; color: #A0A0A0; min-width: 36rpx; text-align: center;
 }
 .sc-page__seg-row {
   display: flex; gap: 12rpx;

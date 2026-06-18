@@ -7,6 +7,11 @@
     </view>
   </view>
 
+  <!-- Remaining Draws -->
+  <view class="draw-card__remaining" wx:if="{{!drawLimitReached}}">
+    <text>🎯 今天还能抽 <text class="draw-card__remaining-num">{{remainingDraws}}</text> 次</text>
+  </view>
+
   <view class="draw-card__rates" wx:if="{{items.length > 0}}">
     <view
       class="draw-card__rate-item"
@@ -19,8 +24,19 @@
   </view>
 
   <view class="draw-card__actions">
-    <button class="draw-card__btn draw-card__btn--primary" bindtap="onDrawOne" loading="{{loading}}">
-      抽一次 ({{cost}}分)
+    <button
+      class="draw-card__btn draw-card__btn--primary"
+      bindtap="onDrawOne"
+      loading="{{loading}}"
+      disabled="{{disabled}}"
+    >
+      <text wx:if="{{drawLimitReached}}">明天再来吧！🌙</text>
+      <text wx:elif="{{disabled}}">积分不足</text>
+      <text wx:else>抽一次 ({{cost}}分)</text>
     </button>
+  </view>
+
+  <view class="draw-card__limit-hint" wx:if="{{drawLimitReached}}">
+    <text>💬 每天抽奖次数是有限的哦，期待明天的惊喜吧~</text>
   </view>
 </view>

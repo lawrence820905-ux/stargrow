@@ -131,44 +131,69 @@
 .stats-page__cat-fill--green { background: linear-gradient(90deg, #5AB866, #58CC02); }
 .stats-page__cat-fill--orange { background: linear-gradient(90deg, #E08800, #FF9600); }
 
-/* Leaderboard */
-.stats-page__rank-item {
-  display: flex; align-items: center; gap: 10rpx;
-  padding: 14rpx 0;
-  border-bottom: 1px solid #F5F5F5;
-}
-.stats-page__rank-item:last-child { border-bottom: none; }
-
-.stats-page__rank-badge {
-  width: 44rpx; text-align: center; flex-shrink: 0;
+/* Superpower Card */
+.stats-page__superpower-card {
+  display: flex; align-items: center; gap: 20rpx; padding: 32rpx 24rpx;
 }
 
-.stats-page__rank-num {
-  font-size: 26rpx; font-weight: 800; color: #CFCFCF;
+.stats-page__superpower-icon { font-size: 64rpx; flex-shrink: 0; }
+
+.stats-page__superpower-info { flex: 1; display: flex; flex-direction: column; gap: 6rpx; }
+
+.stats-page__superpower-title {
+  font-size: 30rpx; font-weight: 800; color: #3C3C3C;
 }
 
-.stats-page__rank-name {
-  font-size: 26rpx; font-weight: 600; color: #3C3C3C;
-  width: 80rpx; flex-shrink: 0; overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
+.stats-page__superpower-message {
+  font-size: 24rpx; color: #8E8E93; line-height: 1.5;
 }
 
-.stats-page__rank-bar-wrap {
-  flex: 1; height: 16rpx; background: #F5F5F5;
-  border-radius: 8rpx; overflow: hidden;
+/* Family Garden */
+.stats-page__garden-hint {
+  font-size: 24rpx; color: #A0A0A0; text-align: center;
+  display: block; padding-bottom: 16rpx; border-bottom: 1px solid #F5F5F5;
+  margin-bottom: 16rpx;
 }
 
-.stats-page__rank-bar {
-  height: 100%; border-radius: 8rpx;
-  background: linear-gradient(90deg, #FF9600, #FFC800);
-  box-shadow: 0 0 6px rgba(255,150,0,0.15);
-  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+.stats-page__garden-grid {
+  display: flex; gap: 16rpx; flex-wrap: wrap;
 }
 
-.stats-page__rank-pts {
-  font-size: 24rpx; font-weight: 800; color: #FF9600;
-  flex-shrink: 0; width: 96rpx; text-align: right;
+.stats-page__garden-plant {
+  flex: 1; min-width: 140rpx;
+  display: flex; flex-direction: column; align-items: center; gap: 6rpx;
+  padding: 24rpx 16rpx; border-radius: 20rpx;
+  background: #F9F9FB; border: 2rpx solid transparent;
+  transition: all 0.2s ease;
 }
+
+.stats-page__garden-plant--active {
+  background: #F0FFE8; border-color: #58CC02;
+}
+
+.stats-page__garden-emoji { font-size: 56rpx; }
+
+.stats-page__garden-name {
+  font-size: 26rpx; font-weight: 700; color: #3C3C3C;
+}
+
+.stats-page__garden-level {
+  font-size: 22rpx; color: #8E8E93; font-weight: 500;
+}
+
+.stats-page__garden-week {
+  font-size: 22rpx; color: #A0A0A0;
+}
+
+/* Cheer Button */
+.stats-page__cheer-btn {
+  margin-top: 8rpx; padding: 8rpx 24rpx;
+  background: linear-gradient(135deg, #FF9500, #FF6B00);
+  color: #FFFFFF; border-radius: 100rpx;
+  font-size: 24rpx; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255,149,0,0.2);
+}
+.stats-page__cheer-btn:active { opacity: 0.7; transform: scale(0.95); }
 
 /* Weekly Comparison */
 .stats-page__comp-row {

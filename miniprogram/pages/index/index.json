@@ -8,7 +8,8 @@
     "skeleton-card": "../../components/skeleton-card/skeleton-card",
     "target-sight": "../../components/target-sight/target-sight",
     "alert-card": "../../components/alert-card/alert-card",
-    "nav-bar": "../../components/nav-bar/nav-bar"
+    "nav-bar": "../../components/nav-bar/nav-bar",
+    "growth-story-card": "../../components/growth-story-card/growth-story-card"
   },
   "navigationStyle": "custom"
 }

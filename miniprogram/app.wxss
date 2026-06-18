@@ -8,6 +8,8 @@ page {
   background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Global button — Duolingo pill style */
@@ -37,6 +39,8 @@ button:active { transform: scale(0.96); opacity: 0.85; }
   page {
     color: var(--color-text-primary);
     background-color: var(--color-background);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

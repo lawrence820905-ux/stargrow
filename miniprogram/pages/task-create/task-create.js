@@ -19,7 +19,9 @@ Page({
     selectedChildId: '',
     children: [],
     categories,
-    taskType: 'daily'
+    taskType: 'daily',
+    isSelfChallenge: false,
+    goal: ''
   },
 
   async onLoad(options) {
@@ -86,8 +88,21 @@ Page({
     this.setData({ taskType: e.currentTarget.dataset.type });
   },
 
+  onToggleSelfChallenge() {
+    const isSC = !this.data.isSelfChallenge;
+    this.setData({
+      isSelfChallenge: isSC,
+      basePoints: isSC ? 0 : 10,
+      goal: ''
+    });
+  },
+
+  onGoalInput(e) {
+    this.setData({ goal: e.detail.value });
+  },
+
   async onSubmit() {
-    const { isEdit, taskId, title, description, category, basePoints, selectedChildId, taskType } = this.data;
+    const { isEdit, taskId, title, description, category, basePoints, selectedChildId, taskType, isSelfChallenge, goal } = this.data;
 
     if (!title.trim()) {
       wx.showToast({ title: '请输入任务标题', icon: 'none' });
@@ -102,7 +117,7 @@ Page({
       if (isEdit) {
         await updateTask(taskId, { title, description, category, basePoints, taskType });
       } else {
-        await createTask(selectedChildId, title, description, category, basePoints, taskType);
+        await createTask(selectedChildId, title, description, category, isSelfChallenge ? 0 : basePoints, taskType, isSelfChallenge, goal);
       }
       wx.showToast({ title: isEdit ? '已更新' : '已创建', icon: 'success' });
       setTimeout(() => wx.navigateBack(), 1000);

@@ -6,7 +6,9 @@ Component({
     cost: { type: Number, value: 20 },
     items: { type: Array, value: [] },
     disabled: { type: Boolean, value: false },
-    loading: { type: Boolean, value: false }
+    loading: { type: Boolean, value: false },
+    remainingDraws: { type: Number, value: 3 },
+    drawLimitReached: { type: Boolean, value: false }
   },
 
   data: {
