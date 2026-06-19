@@ -1,24 +1,64 @@
 <view class="tc-page tc-page--{{ageGroup}}">
   <view class="tc-page__card">
     <text class="tc-page__title">{{task.title}}</text>
-    <text class="tc-page__base">基础积分: {{task.basePoints}}</text>
-    <text class="tc-page__label">你觉得这次做得怎么样？</text>
-    <text class="tc-page__label-hint">和孩子一起讨论选择最适合的一档</text>
+    <!-- 已被另一位家长完成 -->
+    <view class="tc-page__completed-notice" wx:if="{{isAlreadyCompleted}}">
+      <text class="tc-page__completed-icon">✅</text>
+      <text class="tc-page__completed-text">{{alreadyCompletedMsg}}</text>
+    </view>
+    <block wx:else>
+      <text class="tc-page__base">基础积分: {{task.basePoints}}</text>
+      <text class="tc-page__label">你觉得这次做得怎么样？</text>
+      <text class="tc-page__label-hint">和孩子一起讨论选择最适合的一档</text>
+    </block>
     <score-stars score="{{selectedScore}}" bind:change="onScoreChange" />
     <view class="tc-page__result" wx:if="{{selectedScore > 0}}">
       <text>{{task.basePoints}} × {{multiplier}} = </text>
       <text class="tc-page__points">+{{computedPoints}} 积分</text>
     </view>
 
-    <!-- 成长心态卡片：低分时出现 -->
-    <view class="tc-page__growth-card" wx:if="{{selectedScore === 1}}">
+    <!-- 成长心态卡片：每个评分等级都传递成长型思维 -->
+    <view class="tc-page__growth-card tc-page__growth-card--{{selectedScore}}" wx:if="{{selectedScore === 1}}">
       <text class="tc-page__growth-icon">🌱</text>
       <text class="tc-page__growth-title">每次尝试都在进步</text>
       <text class="tc-page__growth-text">不是每一次都能完美完成，但只要坚持努力，明天就会更好。和孩子聊聊这次哪里遇到了困难吧~</text>
     </view>
+    <view class="tc-page__growth-card tc-page__growth-card--{{selectedScore}}" wx:if="{{selectedScore === 2}}">
+      <text class="tc-page__growth-icon">🌿</text>
+      <text class="tc-page__growth-title">你正在稳步成长</text>
+      <text class="tc-page__growth-text">这次完成得不错！稳定发挥本身就是一种实力。问问孩子觉得自己哪里做得最棒？</text>
+    </view>
+    <view class="tc-page__growth-card tc-page__growth-card--{{selectedScore}}" wx:if="{{selectedScore === 3}}">
+      <text class="tc-page__growth-icon">🌸</text>
+      <text class="tc-page__growth-title">你的努力绽放了！</text>
+      <text class="tc-page__growth-text">太棒了！这次表现超出预期。记得让孩子知道：是努力和坚持带来了好结果，而不只是"聪明"哦~</text>
+    </view>
+    <!-- 过程导向反思（可选） -->
+    <view class="tc-page__reflection-card" wx:if="{{showReflection}}">
+      <text class="tc-page__reflection-q">{{reflectionQuestion}}</text>
+      <view class="tc-page__reflection-opts">
+        <view
+          class="tc-page__reflection-opt {{selectedReflection === item ? 'tc-page__reflection-opt--active' : ''}}"
+          wx:for="{{reflectionOptions}}"
+          wx:key="*this"
+          data-option="{{item}}"
+          bindtap="onSelectReflection"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+      <view class="tc-page__reflection-skip" bindtap="onSkipReflection">
+        <text>跳过 ›</text>
+      </view>
+    </view>
+
+    <!-- 亲子对话引导 -->
+    <view class="tc-page__convo-card" wx:if="{{selectedScore > 0}}">
+      <text class="tc-page__convo-text">{{conversationPrompt}}</text>
+    </view>
   </view>
-  <button class="tc-page__btn" bindtap="onConfirm" disabled="{{selectedScore < 1}}">
-    确认完成
+  <button class="tc-page__btn" bindtap="onConfirm" disabled="{{isAlreadyCompleted || selectedScore < 1}}">
+    {{isAlreadyCompleted ? '已完成' : '确认完成'}}
   </button>
 
   <confetti-view id="confetti" />

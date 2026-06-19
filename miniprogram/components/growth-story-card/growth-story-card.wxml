@@ -5,9 +5,33 @@
   </view>
   <text class="gsc-card__date">{{story.weekLabel}}</text>
   <text class="gsc-card__story">{{story.text}}</text>
+
+  <!-- 亮点列表 -->
+  <view class="gsc-card__highlights" wx:if="{{story.highlights && story.highlights.length > 0}}">
+    <view class="gsc-card__highlight" wx:for="{{story.highlights}}" wx:key="*this">
+      <text class="gsc-card__highlight-dot">✨</text>
+      <text class="gsc-card__highlight-text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 新尝试任务 -->
+  <view class="gsc-card__new-tasks" wx:if="{{story.newTasksTried && story.newTasksTried.length > 0}}">
+    <text class="gsc-card__new-label">🆕 本周新尝试</text>
+    <view class="gsc-card__new-tags">
+      <text class="gsc-card__new-tag" wx:for="{{story.newTasksTried}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 鼓励语 -->
+  <view class="gsc-card__encouragement" wx:if="{{story.encouragement}}">
+    <text>{{story.encouragement}}</text>
+  </view>
+
+  <!-- 统计 -->
   <view class="gsc-card__stats" wx:if="{{story.totalTasks > 0}}">
     <text class="gsc-card__stat">📋 {{story.totalTasks}} 个任务</text>
-    <text class="gsc-card__stat" wx:if="{{story.observationCount > 0}}">📝 {{story.observationCount}} 条记录</text>
+    <text class="gsc-card__stat" wx:if="{{story.weekPoints > 0}}">⭐ {{story.weekPoints}} 积分</text>
+    <text class="gsc-card__stat" wx:if="{{story.topScoreCount > 0}}">🏆 {{story.topScoreCount}} 次棒极了</text>
   </view>
 </view>
 <view class="gsc-card gsc-card--loading" wx:elif="{{loading}}">

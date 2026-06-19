@@ -1,5 +1,5 @@
 <view class="shop-page">
-  <nav-bar title="积分商城" showBack="{{true}}" />
+  <nav-bar title="积分商城" />
 
   <!-- Child Switcher -->
   <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />

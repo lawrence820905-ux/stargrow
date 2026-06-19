@@ -158,7 +158,7 @@ Page({
   },
 
   onModalPointsIncrease() {
-    if (this.data.newItem.pointsValue < 100) {
+    if (this.data.newItem.pointsValue < 500) {
       this.setData({ 'newItem.pointsValue': this.data.newItem.pointsValue + 5 });
     }
   },
@@ -179,6 +179,32 @@ Page({
 
   onNewItemRarity(e) {
     this.setData({ 'newItem.rarity': e.currentTarget.dataset.rarity });
+  },
+
+  onUseDefaultItems() {
+    const defaults = [
+      { id: 'def_1', name: '5积分', type: 'points', pointsValue: 5, rewardTitle: '', rewardDescription: '', rarity: 'common', icon: '⭐' },
+      { id: 'def_2', name: '10积分', type: 'points', pointsValue: 10, rewardTitle: '', rewardDescription: '', rarity: 'common', icon: '⭐' },
+      { id: 'def_3', name: '15积分', type: 'points', pointsValue: 15, rewardTitle: '', rewardDescription: '', rarity: 'common', icon: '💫' },
+      { id: 'def_4', name: '8积分', type: 'points', pointsValue: 8, rewardTitle: '', rewardDescription: '', rarity: 'common', icon: '✨' },
+      { id: 'def_5', name: '12积分', type: 'points', pointsValue: 12, rewardTitle: '', rewardDescription: '', rarity: 'common', icon: '🌟' },
+      { id: 'def_6', name: '贴纸一张', type: 'reward', pointsValue: 0, rewardTitle: '贴纸一张', rewardDescription: '可爱的贴纸奖励', rarity: 'common', icon: '🌟' },
+      { id: 'def_7', name: '25积分', type: 'points', pointsValue: 25, rewardTitle: '', rewardDescription: '', rarity: 'rare', icon: '💎' },
+      { id: 'def_8', name: '30积分', type: 'points', pointsValue: 30, rewardTitle: '', rewardDescription: '', rarity: 'rare', icon: '🌟' },
+      { id: 'def_9', name: '80积分', type: 'points', pointsValue: 80, rewardTitle: '', rewardDescription: '', rarity: 'epic', icon: '🔥' },
+      { id: 'def_10', name: '300积分', type: 'points', pointsValue: 300, rewardTitle: '', rewardDescription: '', rarity: 'legendary', icon: '👑' }
+    ];
+
+    wx.showModal({
+      title: '使用推荐配置',
+      content: '将使用系统推荐的默认奖品配置（6普通+2稀有+1史诗+1传说），覆盖当前奖品列表。确定继续？',
+      success: (res) => {
+        if (!res.confirm) return;
+        const probs = calcProbabilities(defaults);
+        this.setData({ items: probs });
+        wx.showToast({ title: '已应用推荐配置', icon: 'success' });
+      }
+    });
   },
 
   onRandomItems() {

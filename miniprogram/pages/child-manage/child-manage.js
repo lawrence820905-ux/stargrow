@@ -1,4 +1,4 @@
-const { createChild, updateChild, removeChild, refreshChildren } = require('../../services/childService');
+const { createChild, updateChild, removeChild, refreshChildren, seedChildData } = require('../../services/childService');
 const app = getApp();
 
 Page({
@@ -7,7 +7,13 @@ Page({
     showModal: false,
     editingChild: null,
     childName: '',
-    childBirthYear: ''
+    childBirthYear: '',
+    // 引导弹窗
+    showGuideModal: false,
+    seededTasks: [],
+    seededItems: [],
+    seedError: false,
+    seeding: false
   },
 
   async onLoad() {
@@ -53,14 +59,57 @@ Page({
     try {
       if (this.data.editingChild) {
         await updateChild(this.data.editingChild._id, name, undefined, 0, birthYear);
+        await refreshChildren();
+        this.setData({ children: app.globalData.children, showModal: false });
+        wx.showToast({ title: '已更新', icon: 'success' });
       } else {
-        await createChild(name, undefined, 0, birthYear);
+        // 新建孩子
+        const result = await createChild(name, undefined, 0, birthYear);
+        const childId = result._id;
+
+        // 关闭添加弹窗，显示加载状态
+        this.setData({ showModal: false, seeding: true });
+        wx.showLoading({ title: '正在生成任务和奖励…', mask: true });
+
+        try {
+          const seedResult = await seedChildData(childId, birthYear);
+          await refreshChildren();
+          this.setData({
+            children: app.globalData.children,
+            showGuideModal: true,
+            seededTasks: seedResult.tasks || [],
+            seededItems: seedResult.items || [],
+            seedError: false,
+            seeding: false
+          });
+        } catch (seedErr) {
+          console.error('种子数据生成失败:', seedErr);
+          await refreshChildren();
+          this.setData({
+            children: app.globalData.children,
+            showGuideModal: true,
+            seededTasks: [],
+            seededItems: [],
+            seedError: true,
+            seeding: false
+          });
+        }
+        wx.hideLoading();
       }
-      await refreshChildren();
-      this.setData({ children: app.globalData.children, showModal: false });
-      wx.showToast({ title: '成功', icon: 'success' });
     } catch (err) {
       wx.showToast({ title: err.message, icon: 'none' });
     }
+  },
+
+  onCloseGuide() {
+    this.setData({ showGuideModal: false });
+  },
+
+  onGoTasks() {
+    wx.switchTab({ url: '/pages/tasks/tasks' });
+  },
+
+  onGoShopConfig() {
+    wx.navigateTo({ url: '/pages/shop-config/shop-config' });
   }
 });

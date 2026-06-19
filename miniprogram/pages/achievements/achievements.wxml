@@ -1,8 +1,5 @@
 <view class="ach-page">
-  <view class="ach-page__header">
-    <text class="ach-page__title">成就墙</text>
-  </view>
-
+  <nav-bar title="成就墙" />
   <child-switcher children="{{children}}" activeId="{{activeChildId}}" bind:change="onChildChange" />
 
   <view class="ach-page__count">

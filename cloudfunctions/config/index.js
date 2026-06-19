@@ -32,7 +32,7 @@ async function getConfig(familyId) {
   if (res.data.length === 0) {
     const defaults = {
       familyId,
-      scoreMultipliers: { '3': 1.5, '2': 1.0, '1': 0.6 },
+      scoreMultipliers: { '3': 1.5, '2': 1.2, '1': 1.0 },
       updatedAt: new Date()
     };
     const addRes = await db.collection('familyConfig').add({ data: defaults });
@@ -41,7 +41,7 @@ async function getConfig(familyId) {
   }
   const config = res.data[0];
   if (config.scoreMultipliers && config.scoreMultipliers['5'] !== undefined) {
-    config.scoreMultipliers = { '3': 1.5, '2': 1.0, '1': 0.6 };
+    config.scoreMultipliers = { '3': 1.5, '2': 1.2, '1': 1.0 };
     await db.collection('familyConfig').doc(config._id).update({
       data: { scoreMultipliers: config.scoreMultipliers, updatedAt: new Date() }
     });

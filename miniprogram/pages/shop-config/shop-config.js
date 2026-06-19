@@ -222,6 +222,52 @@ Page({
     }
   },
 
+  // 使用推荐默认商品
+  async onUseDefault() {
+    const defaults = [
+      { name: '看动画片15分钟', description: '选一集喜欢的动画片', icon: '📺', price: 20, category: 'reward' },
+      { name: '小零食一份', description: '饼干或糖果', icon: '🍬', price: 15, category: 'reward' },
+      { name: '贴纸一张', description: '挑选一张可爱贴纸', icon: '🌟', price: 10, category: 'reward' },
+      { name: '去公园玩', description: '周末去公园玩半天', icon: '🌳', price: 60, category: 'reward' },
+      { name: '买一本新书', description: '挑选喜欢的课外书', icon: '📚', price: 50, category: 'reward' },
+      { name: '多看10分钟iPad', description: '限时延长屏幕时间', icon: '📱', price: 25, category: 'reward' },
+      { name: '玩桌游30分钟', description: '选一款桌游和家人玩', icon: '🎲', price: 20, category: 'reward' },
+      { name: '选周末去哪玩', description: '周末出行由你决定', icon: '🎪', price: 40, category: 'reward' }
+    ];
+
+    wx.showModal({
+      title: '使用推荐商品',
+      content: `将导入${defaults.length}个系统推荐的默认商品（覆盖现有列表）。确定继续？`,
+      success: async (res) => {
+        if (!res.confirm) return;
+        wx.showLoading({ title: '生成中...' });
+        let successCount = 0;
+        for (const item of defaults) {
+          try {
+            await saveItem({
+              name: item.name,
+              description: item.description,
+              price: item.price,
+              icon: item.icon,
+              category: item.category,
+              stock: -1
+            });
+            successCount++;
+          } catch (e) {
+            console.error('生成商品失败:', item.name, e);
+          }
+        }
+        wx.hideLoading();
+        if (successCount > 0) {
+          wx.showToast({ title: `已添加${successCount}个商品`, icon: 'success' });
+          this.loadItems();
+        } else {
+          wx.showToast({ title: '添加失败，请检查数据库权限', icon: 'none', duration: 3000 });
+        }
+      }
+    });
+  },
+
   // 随机生成
   onShowRandom() {
     this.setData({ showRandomSheet: true });

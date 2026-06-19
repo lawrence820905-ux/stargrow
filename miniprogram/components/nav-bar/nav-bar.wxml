@@ -13,4 +13,7 @@
     </view>
   </view>
 </view>
-<view class="nav-bar__placeholder" style="height: {{statusBarHeight + navBarHeight}}px;" wx:if="{{fixed}}"></view>
+<view wx:if="{{fixed}}">
+  <view style="height: {{statusBarHeight}}px;"></view>
+  <view style="height: {{navBarHeight}}rpx;"></view>
+</view>

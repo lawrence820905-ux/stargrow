@@ -36,6 +36,10 @@ async function getChildren() {
   return await callChild('list');
 }
 
+async function seedChildData(childId, birthYear) {
+  return await callChild('seed', { childId, birthYear });
+}
+
 async function refreshChildren() {
   const result = await getChildren();
   app.setChildren(result.children);
@@ -47,5 +51,6 @@ module.exports = {
   updateChild,
   removeChild,
   getChildren,
-  refreshChildren
+  refreshChildren,
+  seedChildData
 };

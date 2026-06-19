@@ -44,24 +44,30 @@
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 .cm-page__modal {
-  width: 540rpx;
+  width: 560rpx;
   background: #FFFFFF;
-  border-radius: 20rpx; padding: 32rpx;
+  border-radius: 20rpx; padding: 40rpx 36rpx;
   animation: modal-pop 0.2s ease forwards;
 }
 @keyframes modal-pop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 .cm-page__modal-title {
-  font-size: 28rpx; font-weight: 600; text-align: center;
-  display: block; margin-bottom: 16rpx; color: #3C3C3C;
+  font-size: 30rpx; font-weight: 700; text-align: center;
+  display: block; margin-bottom: 28rpx; color: #3C3C3C;
 }
 
 .cm-page__input {
-  background: #FFFFFF; border-radius: 10rpx;
-  padding: 12rpx; font-size: 28rpx; margin-bottom: 16rpx;
+  background: #F8F8F8; border-radius: 12rpx;
+  padding: 16rpx 20rpx; font-size: 28rpx; margin-bottom: 20rpx;
 }
 
-.cm-page__modal-btns { display: flex; gap: 12rpx; }
+.cm-page__age-hint {
+  display: block; text-align: center;
+  font-size: 22rpx; color: #A0A0A0;
+  margin-bottom: 28rpx;
+}
+
+.cm-page__modal-btns { display: flex; gap: 16rpx; }
 
 .cm-page__modal-cancel, .cm-page__modal-confirm {
   flex: 1; height: 48rpx; line-height: 48rpx;
@@ -76,4 +82,199 @@
 }
 .cm-page__modal-confirm {
   background: #58CC02; color: #FFFFFF;
+}
+
+/* ============ 引导弹窗 ============ */
+.cm-page__guide-modal {
+  width: 640rpx;
+  max-height: 85vh;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 0;
+  overflow-y: auto;
+  animation: modal-pop 0.3s ease forwards;
+}
+
+/* 头部 */
+.cm-page__guide-header {
+  text-align: center;
+  padding: 48rpx 36rpx 32rpx;
+  background: linear-gradient(180deg, #E8F8E0 0%, #FFFFFF 100%);
+  border-radius: 24rpx 24rpx 0 0;
+}
+.cm-page__guide-emoji {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+.cm-page__guide-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #3C3C3C;
+  display: block;
+  margin-bottom: 12rpx;
+}
+.cm-page__guide-subtitle {
+  font-size: 24rpx;
+  color: #909090;
+  line-height: 1.6;
+}
+.cm-page__guide-highlight {
+  color: #58CC02;
+  font-weight: 600;
+}
+
+/* 分区 */
+.cm-page__guide-section {
+  padding: 16rpx 36rpx 8rpx;
+}
+.cm-page__guide-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 12rpx;
+}
+.cm-page__guide-section-icon {
+  font-size: 30rpx;
+}
+.cm-page__guide-section-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #3C3C3C;
+}
+
+/* 预生成列表 */
+.cm-page__guide-item-list {
+  background: #F9F9F9;
+  border-radius: 14rpx;
+  padding: 8rpx 16rpx;
+  margin-bottom: 8rpx;
+}
+.cm-page__guide-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+.cm-page__guide-item:last-child {
+  border-bottom: none;
+}
+.cm-page__guide-item-icon {
+  font-size: 30rpx;
+  width: 40rpx;
+  text-align: center;
+}
+.cm-page__guide-item-name {
+  flex: 1;
+  font-size: 26rpx;
+  color: #3C3C3C;
+}
+.cm-page__guide-item-points,
+.cm-page__guide-item-price {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #58CC02;
+}
+.cm-page__guide-item-price {
+  color: #FF9500;
+}
+
+/* 引导提示 */
+.cm-page__guide-tip {
+  display: flex;
+  gap: 12rpx;
+  padding: 20rpx 36rpx;
+  margin: 8rpx 36rpx;
+  background: #FFF9E6;
+  border-radius: 14rpx;
+  border-left: 6rpx solid #FFD60A;
+}
+.cm-page__guide-tip-icon {
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+.cm-page__guide-tip-text {
+  font-size: 24rpx;
+  color: #8B6914;
+  line-height: 1.6;
+}
+
+/* 快捷入口 */
+.cm-page__guide-actions {
+  padding: 16rpx 36rpx 8rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.cm-page__guide-btn {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  width: 100%;
+  padding: 20rpx 20rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  border: none;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+.cm-page__guide-btn::after {
+  border: none;
+}
+.cm-page__guide-btn:active {
+  transform: scale(0.97);
+}
+.cm-page__guide-btn--task {
+  background: #F0F9FF;
+  border: 2rpx solid #D6EDFF;
+}
+.cm-page__guide-btn--shop {
+  background: #FFF5F0;
+  border: 2rpx solid #FFE4D6;
+}
+.cm-page__guide-btn-icon {
+  font-size: 36rpx;
+  width: 56rpx;
+  text-align: center;
+}
+.cm-page__guide-btn-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.cm-page__guide-btn-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3C3C3C;
+}
+.cm-page__guide-btn-desc {
+  font-size: 22rpx;
+  color: #A0A0A0;
+}
+.cm-page__guide-btn-arrow {
+  font-size: 28rpx;
+  color: #CFCFCF;
+}
+
+/* 关闭按钮 */
+.cm-page__guide-close {
+  margin: 20rpx 36rpx 36rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  text-align: center;
+  background: #58CC02;
+  color: #FFFFFF;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+}
+.cm-page__guide-close::after {
+  border: none;
+}
+.cm-page__guide-close:active {
+  transform: scale(0.96);
+  opacity: 0.85;
 }

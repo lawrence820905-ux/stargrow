@@ -24,6 +24,8 @@ exports.main = async (event, context) => {
       case 'getWeeklyComparison':  return await getWeeklyComparison(family._id, event);
       case 'getPendingPromises':  return await getPendingPromises(family._id, event);
       case 'generateGrowthStory': return await generateGrowthStory(family._id, event);
+      case 'getFamilyGoal':       return await getFamilyGoal(family._id, event);
+      case 'setFamilyGoal':       return await setFamilyGoal(family._id, event);
       default: return { code: 400, message: '未知操作' };
     }
   } catch (err) {
@@ -550,14 +552,24 @@ async function cheerSibling(familyId, event) {
     .get();
   if (existing.data.length > 0) return { code: 400, message: '今天已经为TA加油过了！' };
 
+  // 获取双方孩子信息（先查询，确保都存在）
+  const [fromChildRes, toChildRes] = await Promise.all([
+    db.collection('children').doc(fromChildId).get(),
+    db.collection('children').doc(toChildId).get()
+  ]);
+  if (!fromChildRes.data) return { code: 404, message: '未找到你的孩子信息' };
+  if (!toChildRes.data) return { code: 404, message: '未找到对方孩子信息' };
+
+  const fromChild = fromChildRes.data;
+  const toChild = toChildRes.data;
+
   // 创建加油记录
   await db.collection('cheers').add({
     data: { familyId, fromChildId, toChildId, date: todayStr, createdAt: new Date() }
   });
 
   // 给被加油的孩子 +1 积分
-  const toChild = await db.collection('children').doc(toChildId).get();
-  const newPoints = (toChild.data.currentPoints || 0) + 1;
+  const newPoints = (toChild.currentPoints || 0) + 1;
   await db.collection('children').doc(toChildId).update({
     data: { currentPoints: newPoints }
   });
@@ -570,17 +582,14 @@ async function cheerSibling(familyId, event) {
       amount: 1,
       type: 'cheer',
       balanceAfter: newPoints,
-      note: '来自家人的加油',
+      note: `${fromChild.name}为${toChild.name}加油`,
       createdAt: new Date()
     }
   });
 
-  // 获取加油者名字
-  const fromChild = await db.collection('children').doc(fromChildId).get();
-
   return {
     code: 0,
-    message: `为${toChild.data.name}加油成功！+1积分`,
+    message: `${fromChild.name}为${toChild.name}加油成功！+1积分`,
     cheerCount: 1
   };
 }
@@ -595,11 +604,25 @@ async function generateGrowthStory(familyId, event) {
   weekStart.setDate(today.getDate() - 6);
   weekStart.setHours(0, 0, 0, 0);
 
+  // 上周（用于对比进步）
+  const lastWeekStart = new Date(weekStart);
+  lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+  const lastWeekEnd = new Date(weekStart);
+  lastWeekEnd.setSeconds(lastWeekEnd.getSeconds() - 1);
+
   // 本周完成的任务
   const tasksRes = await db.collection('tasks')
     .where({
       familyId, childId, status: 'completed',
       completedAt: _.gte(weekStart)
+    })
+    .get();
+
+  // 上周完成的任务（用于对比）
+  const lastWeekTasksRes = await db.collection('tasks')
+    .where({
+      familyId, childId, status: 'completed',
+      completedAt: _.gte(lastWeekStart).and(_.lte(lastWeekEnd))
     })
     .get();
 
@@ -611,47 +634,120 @@ async function generateGrowthStory(familyId, event) {
     })
     .get();
 
+  // 全部历史任务（检测首次尝试）
+  const allTasksRes = await db.collection('tasks')
+    .where({ familyId, childId, status: 'completed' })
+    .get();
+
   // 按分类统计任务
   const catCounts = { sport: 0, life: 0, study: 0 };
+  const lastWeekCatCounts = { sport: 0, life: 0, study: 0 };
   tasksRes.data.forEach(t => {
     const cat = t.category || 'study';
     if (catCounts.hasOwnProperty(cat)) catCounts[cat]++;
   });
+  lastWeekTasksRes.data.forEach(t => {
+    const cat = t.category || 'study';
+    if (lastWeekCatCounts.hasOwnProperty(cat)) lastWeekCatCounts[cat]++;
+  });
   const totalTasks = tasksRes.data.length;
 
-  // 生成叙事
+  // 检测本周首次完成的任务类型（全新尝试）
+  const allTaskTitles = new Set(allTasksRes.data.map(t => t.title));
+  const thisWeekTitles = new Set(tasksRes.data.map(t => t.title));
+  const prevTitles = new Set(allTasksRes.data.filter(t => !thisWeekTitles.has(t.title)).map(t => t.title));
+  // 在全部历史中只出现过1次且是本周的 → 首次尝试
+  const titleCounts = {};
+  allTasksRes.data.forEach(t => { titleCounts[t.title] = (titleCounts[t.title] || 0) + 1; });
+  const newTitles = tasksRes.data.filter(t => titleCounts[t.title] === 1).map(t => t.title);
+  const uniqueNewTitles = [...new Set(newTitles)];
+
+  // 本周总积分
+  const weekPoints = tasksRes.data.reduce((sum, t) => sum + (t.pointsAwarded || 0), 0);
+  const lastWeekPoints = lastWeekTasksRes.data.reduce((sum, t) => sum + (t.pointsAwarded || 0), 0);
+
+  // 检测进步最大的类别
+  let bestImprovementCat = null;
+  let bestImprovement = -Infinity;
+  for (const cat of ['sport', 'life', 'study']) {
+    const improvement = catCounts[cat] - lastWeekCatCounts[cat];
+    if (improvement > bestImprovement) {
+      bestImprovement = improvement;
+      bestImprovementCat = cat;
+    }
+  }
   const catNames = { sport: '运动⚽', life: '生活🏠', study: '学习📚' };
+
+  // 获得最高评价次数
+  const topScoreCount = tasksRes.data.filter(t => t.score >= 3).length;
+
+  // 生成叙事
   const parts = [];
   for (const [cat, name] of Object.entries(catNames)) {
-    if (catCounts[cat] > 0) parts.push(`完成了${catCounts[cat]}次${name}任务`);
+    if (catCounts[cat] > 0) parts.push(`${catCounts[cat]}次${name}`);
   }
 
-  let story = '';
+  let storyText = '';
+  let highlights = [];
+  let encouragement = '';
+
   if (totalTasks === 0) {
-    story = '新的一周开始了，每个小小的努力都在让成长之树生根发芽。一起加油吧！🌱';
+    storyText = '新的一周开始了，每个小小的努力都在让成长之树生根发芽。一起加油吧！🌱';
+    encouragement = '每一次开始都是勇敢的一步';
   } else {
-    story = `这周你${parts.join('，')}。`;
-    // 添加观察记录中的亮点
-    const moods = obsRes.data.filter(o => o.mood === '🥰' || o.mood === '😊');
-    if (moods.length > 0) {
-      story += `还有${moods.length}个闪亮时刻被记录下来✨。`;
+    storyText = parts.length > 0 ? `这周完成了${parts.join('、')}任务` : `这周完成了${totalTasks}个任务`;
+
+    // 进步亮点
+    if (bestImprovementCat && bestImprovement > 0) {
+      highlights.push(`在${catNames[bestImprovementCat]}方面进步最大（+${bestImprovement}次）`);
     }
-    // 给鼓励
-    if (totalTasks >= 10) {
-      story += '你在坚持中不断进步，这份毅力比任何积分都珍贵！🌟';
+
+    // 首次尝试
+    if (uniqueNewTitles.length > 0) {
+      highlights.push(`勇敢尝试了${uniqueNewTitles.length}个新任务：${uniqueNewTitles.slice(0, 3).join('、')}${uniqueNewTitles.length > 3 ? '等' : ''}`);
+    }
+
+    // 棒极了次数
+    if (topScoreCount > 0) {
+      highlights.push(`获得${topScoreCount}次"棒极了"评价`);
+    }
+
+    // 观察亮点
+    const positiveObs = obsRes.data.filter(o => o.mood === '🥰' || o.mood === '😊');
+    if (positiveObs.length > 0) {
+      highlights.push(`记录了${positiveObs.length}个闪亮时刻`);
+    }
+
+    // 积分变化
+    if (weekPoints > lastWeekPoints && lastWeekPoints > 0) {
+      highlights.push(`积分比上周增长了${Math.round((weekPoints - lastWeekPoints) / lastWeekPoints * 100)}%`);
+    }
+
+    // 鼓励语
+    if (totalTasks >= 15) {
+      encouragement = '你在坚持中不断进步，这份毅力比任何积分都珍贵！🌟';
+    } else if (totalTasks >= 10) {
+      encouragement = '非常充实的一周，每个任务都在让你变得更强！🚀';
     } else if (totalTasks >= 5) {
-      story += '稳扎稳打的一周，继续保持这个节奏！💪';
+      encouragement = '稳扎稳打的一周，继续保持这个节奏！💪';
     } else {
-      story += '每一步都在成长，继续向前走吧！🌿';
+      encouragement = '每一步都在成长，继续向前走吧！🌿';
     }
   }
 
   return {
     code: 0,
     story: {
-      text: story,
+      text: storyText,
+      highlights,
+      encouragement,
       totalTasks,
+      weekPoints,
+      lastWeekPoints,
       catCounts,
+      bestImprovementCat: bestImprovementCat || '',
+      newTasksTried: uniqueNewTitles,
+      topScoreCount,
       observationCount: obsRes.data.length,
       weekLabel: `${weekStart.getMonth() + 1}/${weekStart.getDate()} - ${today.getMonth() + 1}/${today.getDate()}`
     }
@@ -718,6 +814,81 @@ async function getPendingPromises(familyId, event) {
   const totalCount = promises.length;
 
   return { code: 0, promises, totalCount, overdueCount };
+}
+
+// 家庭合作目标
+async function getFamilyGoal(familyId, event) {
+  const configRes = await db.collection('familyConfig').where({ familyId }).get();
+  const config = configRes.data[0] || {};
+  const goal = config.familyGoal || null;
+
+  if (!goal) {
+    return {
+      code: 0,
+      goal: null,
+      suggestions: [
+        { title: '一起完成50个任务', target: 50, reward: '家庭电影之夜 🎬' },
+        { title: '一起攒够500积分', target: 500, reward: '周末去公园 🌳' },
+        { title: '全家人连续7天打卡', target: 7, reward: '一顿特别大餐 🍕' }
+      ]
+    };
+  }
+
+  // 计算进度
+  const today = new Date();
+  const startDate = new Date(goal.startDate || today);
+
+  let progress = { current: 0, target: goal.target, percent: 0 };
+
+  if (goal.type === 'tasks') {
+    const tasksRes = await db.collection('tasks')
+      .where({ familyId, status: 'completed', completedAt: _.gte(startDate) })
+      .count();
+    progress.current = tasksRes.total;
+  } else if (goal.type === 'points') {
+    const childrenRes = await db.collection('children').where({ familyId }).get();
+    let totalSince = 0;
+    for (const child of childrenRes.data) {
+      const recordsRes = await db.collection('pointRecords')
+        .where({ familyId, childId: child._id, type: 'task_complete', createdAt: _.gte(startDate) })
+        .get();
+      totalSince += recordsRes.data.reduce((sum, r) => sum + (r.amount || 0), 0);
+    }
+    progress.current = totalSince;
+  } else if (goal.type === 'streak') {
+    const childrenRes = await db.collection('children').where({ familyId }).get();
+    const maxStreak = Math.max(...childrenRes.data.map(c => c.streakDays || 0));
+    progress.current = maxStreak;
+  }
+
+  progress.percent = Math.min(100, Math.round((progress.current / goal.target) * 100));
+  const isCompleted = progress.current >= goal.target;
+
+  return { code: 0, goal: { ...goal, progress, isCompleted, startDate: goal.startDate } };
+}
+
+async function setFamilyGoal(familyId, event) {
+  const { type, target, reward, title } = event;
+  if (!type || !target || !reward) return { code: 400, message: '缺少参数' };
+
+  const goal = {
+    type, target, reward, title: title || `${type === 'tasks' ? '一起完成' + target + '个任务' : type === 'points' ? '一起攒够' + target + '积分' : '全家人连续' + target + '天打卡'}`,
+    startDate: new Date(),
+    createdAt: new Date()
+  };
+
+  const configRes = await db.collection('familyConfig').where({ familyId }).get();
+  if (configRes.data.length > 0) {
+    await db.collection('familyConfig').doc(configRes.data[0]._id).update({
+      data: { familyGoal: goal, updatedAt: new Date() }
+    });
+  } else {
+    await db.collection('familyConfig').add({
+      data: { familyId, familyGoal: goal, updatedAt: new Date() }
+    });
+  }
+
+  return { code: 0, goal };
 }
 
 function formatDate(date) {

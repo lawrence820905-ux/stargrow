@@ -26,6 +26,11 @@
     <text>+</text>
   </view>
 
+  <!-- Recommended Defaults Button -->
+  <view class="sc-page__fab sc-page__fab--default" bindtap="onUseDefault">
+    <text>✨</text>
+  </view>
+
   <!-- Random Generate Button -->
   <view class="sc-page__fab sc-page__fab--random" bindtap="onShowRandom">
     <text>🎲</text>

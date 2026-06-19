@@ -36,24 +36,32 @@
       <text class="stats-page__section-title">概览</text>
       <view class="stats-page__overview-grid">
         <view class="stats-page__overview-card">
-          <text class="stats-page__overview-icon">📋</text>
-          <text class="stats-page__overview-value">{{overview.thisWeekTasks || 0}}</text>
-          <text class="stats-page__overview-label">本周任务</text>
+          <view class="stats-page__overview-card-inner">
+            <text class="stats-page__overview-icon">📋</text>
+            <text class="stats-page__overview-value">{{overview.thisWeekTasks || 0}}</text>
+            <text class="stats-page__overview-label">本周任务</text>
+          </view>
         </view>
         <view class="stats-page__overview-card">
-          <text class="stats-page__overview-icon">⭐</text>
-          <text class="stats-page__overview-value">{{overview.child ? overview.child.totalPointsEarned : 0}}</text>
-          <text class="stats-page__overview-label">累计积分</text>
+          <view class="stats-page__overview-card-inner">
+            <text class="stats-page__overview-icon">⭐</text>
+            <text class="stats-page__overview-value">{{overview.child ? overview.child.totalPointsEarned : 0}}</text>
+            <text class="stats-page__overview-label">累计积分</text>
+          </view>
         </view>
         <view class="stats-page__overview-card">
-          <text class="stats-page__overview-icon">🔥</text>
-          <text class="stats-page__overview-value">{{overview.child ? overview.child.streakDays : 0}}<text class="stats-page__overview-unit">天</text></text>
-          <text class="stats-page__overview-label">连续天数</text>
+          <view class="stats-page__overview-card-inner">
+            <text class="stats-page__overview-icon">🔥</text>
+            <text class="stats-page__overview-value">{{overview.child ? overview.child.streakDays : 0}}<text class="stats-page__overview-unit">天</text></text>
+            <text class="stats-page__overview-label">连续天数</text>
+          </view>
         </view>
         <view class="stats-page__overview-card">
-          <text class="stats-page__overview-icon">🌳</text>
-          <text class="stats-page__overview-value">Lv{{overview.child ? overview.child.level : 1}}</text>
-          <text class="stats-page__overview-label">当前等级</text>
+          <view class="stats-page__overview-card-inner">
+            <text class="stats-page__overview-icon">🌳</text>
+            <text class="stats-page__overview-value">Lv{{overview.child ? overview.child.level : 1}}</text>
+            <text class="stats-page__overview-label">当前等级</text>
+          </view>
         </view>
       </view>
     </view>
@@ -133,30 +141,38 @@
       </view>
     </view>
 
-    <!-- Family Garden -->
-    <view class="stats-page__section" wx:if="{{familyGarden.length > 0}}">
-      <text class="stats-page__section-title">🌳 家庭花园</text>
-      <view class="stats-page__card">
-        <text class="stats-page__garden-hint">每个孩子都是一棵正在生长的植物，大家都在成长~</text>
-        <view class="stats-page__garden-grid">
+    <!-- 家庭合作目标 -->
+    <view class="stats-page__section">
+      <text class="stats-page__section-title">🎯 家庭合作目标</text>
+      <view class="stats-page__card" wx:if="{{familyGoal}}">
+        <text class="stats-page__goal-title">{{familyGoal.title}}</text>
+        <text class="stats-page__goal-reward">🏆 奖励: {{familyGoal.reward}}</text>
+        <view class="stats-page__goal-bar-wrap">
+          <view class="stats-page__goal-bar" style="width: {{familyGoal.progress.percent}}%;"></view>
+        </view>
+        <view class="stats-page__goal-progress">
+          <text>{{familyGoal.progress.current}} / {{familyGoal.target}}</text>
+          <text class="stats-page__goal-percent">{{familyGoal.progress.percent}}%</text>
+        </view>
+        <view class="stats-page__goal-completed" wx:if="{{familyGoal.isCompleted}}">
+          <text>🎉 目标达成！快去兑现奖励吧！</text>
+        </view>
+      </view>
+      <view class="stats-page__card" wx:else>
+        <text class="stats-page__goal-hint">设定一个全家人一起努力的目标吧~</text>
+        <view class="stats-page__goal-suggestions">
           <view
-            class="stats-page__garden-plant {{item.childId === activeChildId ? 'stats-page__garden-plant--active' : ''}}"
-            wx:for="{{familyGarden}}"
-            wx:key="childId"
+            class="stats-page__goal-suggestion"
+            wx:for="{{familyGoal ? [] : [{type:'tasks',target:50,reward:'家庭电影之夜 🎬',title:'一起完成50个任务'},{type:'points',target:500,reward:'周末去公园 🌳',title:'一起攒够500积分'},{type:'streak',target:7,reward:'一顿特别大餐 🍕',title:'全家人连续7天打卡'}]}}"
+            wx:key="title"
+            data-type="{{item.type}}"
+            data-target="{{item.target}}"
+            data-reward="{{item.reward}}"
+            data-title="{{item.title}}"
+            bindtap="onSetFamilyGoal"
           >
-            <text class="stats-page__garden-emoji">{{item.plantEmoji}}</text>
-            <text class="stats-page__garden-name">{{item.name}}</text>
-            <text class="stats-page__garden-level">Lv{{item.level}}</text>
-            <text class="stats-page__garden-week">本周 {{item.weekPoints}} 分</text>
-            <!-- 加油按钮：不为当前选中的孩子显示 -->
-            <view
-              class="stats-page__cheer-btn"
-              wx:if="{{item.childId !== activeChildId}}"
-              data-to-child-id="{{item.childId}}"
-              bindtap="onCheerSibling"
-            >
-              <text>💪 加油</text>
-            </view>
+            <text class="stats-page__goal-sug-text">{{item.title}} → {{item.reward}}</text>
+            <text class="stats-page__goal-sug-btn">选这个</text>
           </view>
         </view>
       </view>

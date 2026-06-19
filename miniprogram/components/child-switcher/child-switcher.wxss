@@ -1,7 +1,7 @@
 .child-switcher { width: 100%; white-space: nowrap; }
 
 .child-switcher__list {
-  display: inline-flex; padding: 16rpx 32rpx; gap: 24rpx;
+  display: inline-flex; padding: 8rpx 32rpx 12rpx; gap: 24rpx;
 }
 
 .child-switcher__item {

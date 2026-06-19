@@ -220,8 +220,8 @@ Page({
     wx.navigateTo({ url: `/pages/achievements/achievements?childId=${childId}` });
   },
 
-  onAddChild() {
-    wx.switchTab({ url: '/pages/settings/settings' });
+  onStartOnboarding() {
+    wx.navigateTo({ url: '/pages/child-manage/child-manage' });
   },
 
   onRetryLoad() {
@@ -244,6 +244,10 @@ Page({
 
   onGoShop() {
     wx.navigateTo({ url: '/pages/shop/shop' });
+  },
+
+  onGoPromises() {
+    wx.navigateTo({ url: '/pages/draw/draw' });
   },
 
   async loadMotivationInsight(childId) {

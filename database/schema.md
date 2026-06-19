@@ -79,6 +79,7 @@
   "score": 3,
   "pointsAwarded": 15,
   "completedAt": "2026-05-27T08:30:00Z",
+  "completedBy": "wx_openid_parent",
   "createdAt": "2026-05-27T08:00:00Z"
 }
 ```
@@ -87,6 +88,7 @@
 - `category`: `sport`（运动）、`life`（生活）、`study`（学习）
 - `taskType`: `daily`（日常任务，每天复用）或 `special`（特殊任务，一次性）
 - `status`: `pending` / `completed`
+- `completedBy`: 完成该任务的家长的 openid
 
 ## familyConfig
 
@@ -169,6 +171,7 @@
   "relatedTaskId": "task_id",
   "relatedDrawId": null,
   "balanceAfter": 320,
+  "completedBy": "wx_openid_parent",
   "note": "完成任务: 完成数学作业第10页",
   "createdAt": "2026-05-27T08:30:00Z"
 }

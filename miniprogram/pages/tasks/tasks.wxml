@@ -1,17 +1,12 @@
 <view class="tasks-page">
-  <!-- Nav -->
-  <view class="tasks-page__header">
-    <text class="tasks-page__title">任务</text>
-    <view class="tasks-page__header-btns">
-      <view class="tasks-page__add-btn tasks-page__add-btn--propose" bindtap="onProposeTask">
-        <text class="tasks-page__add-text">💡 我想试试</text>
-      </view>
-      <view class="tasks-page__add-btn tasks-page__add-btn--random" bindtap="onRandomTasks">
-        <text class="tasks-page__add-text">随机任务</text>
-      </view>
-      <view class="tasks-page__add-btn" bindtap="onCreateTask">
-        <text class="tasks-page__add-text">新建任务</text>
-      </view>
+  <nav-bar title="任务" />
+  <!-- Toolbar -->
+  <view class="tasks-page__toolbar">
+    <view class="tasks-page__add-btn tasks-page__add-btn--random" bindtap="onRandomTasks">
+      <text class="tasks-page__add-text">随机任务</text>
+    </view>
+    <view class="tasks-page__add-btn" bindtap="onCreateTask">
+      <text class="tasks-page__add-text">新建任务</text>
     </view>
   </view>
 
@@ -118,12 +113,28 @@
       </view>
       <scroll-view class="tasks-page__detail-scroll" scroll-y enhanced show-scrollbar="{{false}}">
         <text class="tasks-page__detail-title">💡 我想试试...</text>
-        <text class="tasks-page__detail-desc">和孩子一起讨论，孩子想尝试做什么？</text>
+        <text class="tasks-page__detail-desc">💬 {{proposeGuidance}}</text>
 
         <view class="tasks-page__detail-info">
           <view class="tasks-page__detail-row">
             <text class="tasks-page__detail-label">任务名称</text>
-            <input class="tasks-page__detail-input" placeholder="比如：每天读一本书" value="{{proposeTitle}}" bindinput="onProposeTitleInput" />
+            <input class="tasks-page__detail-input" placeholder="输入你想做的事情..." value="{{proposeTitle}}" bindinput="onProposeTitleInput" />
+          </view>
+          <!-- 快捷建议 -->
+          <view class="tasks-page__detail-row">
+            <text class="tasks-page__detail-label">💡 快速选择</text>
+            <view class="tasks-page__propose-suggestions">
+              <view
+                class="tasks-page__propose-suggestion {{proposeTitle === item.title ? 'tasks-page__propose-suggestion--active' : ''}}"
+                wx:for="{{proposeSuggestions}}"
+                wx:key="title"
+                data-title="{{item.title}}"
+                data-category="{{item.category}}"
+                bindtap="onSelectSuggestion"
+              >
+                <text>{{item.title}}</text>
+              </view>
+            </view>
           </view>
           <view class="tasks-page__detail-row">
             <text class="tasks-page__detail-label">分类</text>

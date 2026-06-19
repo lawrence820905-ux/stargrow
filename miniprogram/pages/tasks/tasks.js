@@ -164,7 +164,22 @@ Page({
     detailTask: {},
     showPropose: false,
     proposeTitle: '',
-    proposeCategory: 'study'
+    proposeCategory: 'study',
+    proposeGuidance: '你想学什么新本领？',
+    proposeGuidances: [
+      '你想学什么新本领？',
+      '什么事情让你觉得有挑战但想去尝试？',
+      '今天有什么想做的事？',
+      '你想在哪些方面变得更厉害？'
+    ],
+    proposeSuggestions: [
+      { title: '每天读一本书', category: 'study' },
+      { title: '学会骑自行车', category: 'sport' },
+      { title: '整理自己的房间', category: 'life' },
+      { title: '学做一道菜', category: 'life' },
+      { title: '练习写毛笔字', category: 'study' },
+      { title: '绕小区跑一圈', category: 'sport' }
+    ]
   },
 
   async onShow() {
@@ -282,7 +297,14 @@ Page({
       wx.showToast({ title: '请先添加孩子', icon: 'none' });
       return;
     }
-    this.setData({ showPropose: true, proposeTitle: '', proposeCategory: 'study' });
+    const guidances = this.data.proposeGuidances;
+    const randomGuidance = guidances[Math.floor(Math.random() * guidances.length)];
+    this.setData({ showPropose: true, proposeTitle: '', proposeCategory: 'study', proposeGuidance: randomGuidance });
+  },
+
+  onSelectSuggestion(e) {
+    const { title, category } = e.currentTarget.dataset;
+    this.setData({ proposeTitle: title, proposeCategory: category });
   },
 
   onClosePropose() {
@@ -307,7 +329,7 @@ Page({
     }
     try {
       await proposeTask(childId, title, category, '');
-      wx.showToast({ title: '提议成功！等家长批准', icon: 'success' });
+      wx.showToast({ title: '已添加为孩子想尝试的任务！', icon: 'success' });
       this.setData({ showPropose: false });
       this.loadTasks();
     } catch (err) {

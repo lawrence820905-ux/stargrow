@@ -1,4 +1,4 @@
-const { getChildOverview, getCategoryBreakdown, getWeeklyChart, getWeeklyComparison, getFamilyGarden, getSuperpower, cheerSibling } = require('../../services/statsService');
+const { getChildOverview, getCategoryBreakdown, getWeeklyChart, getWeeklyComparison, getSuperpower, getFamilyGoal, setFamilyGoal } = require('../../services/statsService');
 const { getChildren, getActiveChild } = require('../../utils/auth');
 const app = getApp();
 
@@ -8,7 +8,7 @@ Page({
     activeChildId: '',
     overview: {},
     breakdown: {},
-    familyGarden: [],
+    familyGoal: null,
     superpower: null,
     chartLabels: [],
     chartCompleted: [],
@@ -25,7 +25,7 @@ Page({
       this.setData({ activeChildId: activeChild._id });
       await this.loadData(activeChild._id);
     }
-    await this.loadGardenAndSuperpower();
+    await this.loadGoal();
   },
 
   async loadData(childId) {
@@ -52,17 +52,25 @@ Page({
     } catch (e) { /* ignore */ }
   },
 
-  async loadGardenAndSuperpower() {
+  async loadGoal() {
     try {
-      const [gardenRes, superpowerRes] = await Promise.all([
-        getFamilyGarden(),
-        this.data.activeChildId ? getSuperpower(this.data.activeChildId) : Promise.resolve(null)
-      ]);
-      this.setData({
-        familyGarden: gardenRes.garden || [],
-        superpower: superpowerRes ? superpowerRes.superpower : null
-      });
+      const goalRes = await getFamilyGoal();
+      this.setData({ familyGoal: goalRes.goal || null });
     } catch (e) { /* ignore */ }
+    if (this.data.activeChildId) {
+      this.loadSuperpower(this.data.activeChildId);
+    }
+  },
+
+  async onSetFamilyGoal(e) {
+    const { type, target, reward, title } = e.currentTarget.dataset;
+    try {
+      const result = await setFamilyGoal(type, target, reward, title);
+      wx.showToast({ title: '家庭目标已设定！', icon: 'success' });
+      this.setData({ familyGoal: result.goal });
+    } catch (err) {
+      wx.showToast({ title: err.message || '设定失败', icon: 'none' });
+    }
   },
 
   onChildChange(e) {
@@ -81,18 +89,4 @@ Page({
     } catch (e) { /* ignore */ }
   },
 
-  // 为孩子加油
-  async onCheerSibling(e) {
-    const { toChildId } = e.currentTarget.dataset;
-    const fromChildId = this.data.activeChildId;
-    if (!fromChildId || !toChildId) return;
-    try {
-      const result = await cheerSibling(fromChildId, toChildId);
-      wx.showToast({ title: result.message || '加油成功！', icon: 'success' });
-      // 刷新花园数据
-      this.loadGardenAndSuperpower();
-    } catch (err) {
-      wx.showToast({ title: err.message || '加油失败', icon: 'none' });
-    }
-  }
 });

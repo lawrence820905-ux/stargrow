@@ -33,4 +33,84 @@
       </view>
     </view>
   </view>
+
+  <!-- 种子数据生成引导弹窗 -->
+  <view class="cm-page__overlay" wx:if="{{showGuideModal}}">
+    <view class="cm-page__guide-modal" catchtap="">
+      <!-- 头部庆祝 -->
+      <view class="cm-page__guide-header">
+        <text class="cm-page__guide-emoji">🎉</text>
+        <text class="cm-page__guide-title">孩子添加成功！</text>
+        <text class="cm-page__guide-subtitle" wx:if="{{!seedError}}">
+          我们已根据孩子的年龄，自动生成了 <text class="cm-page__guide-highlight">5个适龄任务</text> 和 <text class="cm-page__guide-highlight">5个积分奖励</text>
+        </text>
+        <text class="cm-page__guide-subtitle" wx:else>
+          孩子已添加成功，但自动生成任务和商品时遇到了问题，您可以手动添加。
+        </text>
+      </view>
+
+      <!-- 任务预览 -->
+      <view class="cm-page__guide-section" wx:if="{{seededTasks.length > 0}}">
+        <view class="cm-page__guide-section-header">
+          <text class="cm-page__guide-section-icon">📋</text>
+          <text class="cm-page__guide-section-title">已生成的任务</text>
+        </view>
+        <view class="cm-page__guide-item-list">
+          <view class="cm-page__guide-item" wx:for="{{seededTasks}}" wx:key="_id">
+            <text class="cm-page__guide-item-icon">{{item.category === 'sport' ? '⚽' : item.category === 'study' ? '📖' : '🏠'}}</text>
+            <text class="cm-page__guide-item-name">{{item.title}}</text>
+            <text class="cm-page__guide-item-points">+{{item.basePoints}}分</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 商品预览 -->
+      <view class="cm-page__guide-section" wx:if="{{seededItems.length > 0}}">
+        <view class="cm-page__guide-section-header">
+          <text class="cm-page__guide-section-icon">🎁</text>
+          <text class="cm-page__guide-section-title">已生成的奖励</text>
+        </view>
+        <view class="cm-page__guide-item-list">
+          <view class="cm-page__guide-item" wx:for="{{seededItems}}" wx:key="_id">
+            <text class="cm-page__guide-item-icon">{{item.icon}}</text>
+            <text class="cm-page__guide-item-name">{{item.name}}</text>
+            <text class="cm-page__guide-item-price">{{item.price}}分</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 引导操作提示 -->
+      <view class="cm-page__guide-tip">
+        <text class="cm-page__guide-tip-icon">💡</text>
+        <text class="cm-page__guide-tip-text">
+          您可以在下方页面中随时<text class="cm-page__guide-highlight">编辑、删除或新建</text>任务和奖励，为孩子定制专属成长计划
+        </text>
+      </view>
+
+      <!-- 快捷入口 -->
+      <view class="cm-page__guide-actions">
+        <button class="cm-page__guide-btn cm-page__guide-btn--task" bindtap="onGoTasks">
+          <text class="cm-page__guide-btn-icon">📋</text>
+          <view class="cm-page__guide-btn-body">
+            <text class="cm-page__guide-btn-title">管理任务</text>
+            <text class="cm-page__guide-btn-desc">编辑 / 新建 / 删除任务</text>
+          </view>
+          <text class="cm-page__guide-btn-arrow">→</text>
+        </button>
+        <button class="cm-page__guide-btn cm-page__guide-btn--shop" bindtap="onGoShopConfig">
+          <text class="cm-page__guide-btn-icon">🎁</text>
+          <view class="cm-page__guide-btn-body">
+            <text class="cm-page__guide-btn-title">管理奖励</text>
+            <text class="cm-page__guide-btn-desc">编辑 / 新建 / 删除奖励商品</text>
+          </view>
+          <text class="cm-page__guide-btn-arrow">→</text>
+        </button>
+      </view>
+
+      <!-- 关闭按钮 -->
+      <button class="cm-page__guide-close" bindtap="onCloseGuide">
+        <text>开始使用 🚀</text>
+      </button>
+    </view>
+  </view>
 </view>

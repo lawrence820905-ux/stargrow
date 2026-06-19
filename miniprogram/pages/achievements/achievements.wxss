@@ -1,19 +1,6 @@
 /* iOS Achievements */
 .ach-page { min-height: 100vh; background: var(--color-background); }
 
-/* Header */
-.ach-page__header {
-  display: flex; align-items: center;
-  padding: 8rpx 32rpx;
-  background: #FFFFFF;
-  position: sticky; top: 0; z-index: 99;
-}
-
-.ach-page__title {
-  font-size: 34rpx; font-weight: 700;
-  color: #3C3C3C; letter-spacing: -0.3rpx;
-}
-
 .ach-page__count {
   text-align: center; padding: 12rpx;
   font-size: 24rpx; color: #CFCFCF;

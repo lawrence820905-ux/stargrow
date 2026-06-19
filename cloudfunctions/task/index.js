@@ -82,16 +82,18 @@ async function complete(familyId, event) {
 
   // 获取家庭配置
   const configRes = await db.collection('familyConfig').where({ familyId }).get();
-  const config = configRes.data[0] || { scoreMultipliers: { '3': 1.5, '2': 1.0, '1': 0.6 } };
+  const config = configRes.data[0] || { scoreMultipliers: { '3': 1.5, '2': 1.2, '1': 1.0 } };
   const multipliers = (config.scoreMultipliers && config.scoreMultipliers['5'] !== undefined)
-    ? { '3': 1.5, '2': 1.0, '1': 0.6 }
+    ? { '3': 1.5, '2': 1.2, '1': 1.0 }
     : config.scoreMultipliers;
   const multiplier = multipliers[String(score)] || 1.0;
 
   // 获取任务
   const task = await db.collection('tasks').doc(taskId).get();
   if (!task.data) return { code: 404, message: '任务不存在' };
-  if (task.data.status === 'completed') return { code: 400, message: '任务已完成' };
+  if (task.data.status === 'completed') {
+    return { code: 400, message: '该任务已经被另一位家长完成啦~' };
+  }
 
   const isSelfChallenge = task.data.isSelfChallenge;
   const pointsAwarded = isSelfChallenge ? 0 : Math.round(task.data.basePoints * multiplier);
@@ -103,7 +105,8 @@ async function complete(familyId, event) {
       status: 'completed',
       score,
       pointsAwarded,
-      completedAt: new Date()
+      completedAt: new Date(),
+      completedBy: OPENID
     }
   });
 
@@ -138,6 +141,7 @@ async function complete(familyId, event) {
         type: 'self_challenge',
         relatedTaskId: taskId,
         balanceAfter: newCurrent,
+        completedBy: OPENID,
         note: `自主挑战完成: ${task.data.title}${task.data.goal ? ' - ' + task.data.goal : ''}`,
         createdAt: new Date()
       }
@@ -152,6 +156,7 @@ async function complete(familyId, event) {
         relatedTaskId: taskId,
         relatedDrawId: null,
         balanceAfter: newCurrent,
+        completedBy: OPENID,
         note: `完成任务: ${task.data.title}`,
         createdAt: new Date()
       }
@@ -190,6 +195,11 @@ async function listTasks(familyId, event) {
   if (taskType === 'daily') { conditions.taskType = 'daily'; }
   else if (taskType === 'special') { conditions.taskType = 'special'; }
 
+  // 查看日常任务时，自动重置前一天已完成的
+  if (taskType === 'daily' || !taskType) {
+    await autoResetDailyTasks(familyId);
+  }
+
   const query = db.collection('tasks').where(conditions);
   const totalRes = await query.count();
 
@@ -202,6 +212,49 @@ async function listTasks(familyId, event) {
   return { code: 0, tasks: res.data, total: totalRes.total };
 }
 
+// 自动重置前一天已完成的日常任务
+async function autoResetDailyTasks(familyId) {
+  const today = formatDate(new Date());
+  const todayStart = new Date(today + 'T00:00:00+08:00');
+
+  // 查找在今天之前完成的日常任务
+  const completedRes = await db.collection('tasks')
+    .where({
+      familyId,
+      status: 'completed',
+      taskType: 'daily',
+      completedAt: _.lt(todayStart)
+    })
+    .get();
+
+  // 也处理没有 taskType 的旧数据
+  const oldCompletedRes = await db.collection('tasks')
+    .where({
+      familyId,
+      status: 'completed',
+      taskType: _.exists(false),
+      completedAt: _.lt(todayStart)
+    })
+    .get();
+
+  const allCompleted = [...completedRes.data, ...oldCompletedRes.data];
+
+  for (const task of allCompleted) {
+    await db.collection('tasks').doc(task._id).update({
+      data: {
+        status: 'pending',
+        score: null,
+        pointsAwarded: null,
+        completedAt: null
+      }
+    });
+  }
+
+  if (allCompleted.length > 0) {
+    console.log(`Auto-reset ${allCompleted.length} daily tasks for family ${familyId}`);
+  }
+}
+
 async function getToday(familyId, event) {
   const { childId } = event;
   const today = formatDate(new Date());
@@ -210,6 +263,9 @@ async function getToday(familyId, event) {
 
   const base = { familyId };
   if (childId) base.childId = childId;
+
+  // 自动重置前一天已完成的日常任务
+  await autoResetDailyTasks(familyId);
 
   // 日常任务（含无 taskType 的旧数据）
   const dailyRes = await db.collection('tasks')
@@ -270,7 +326,7 @@ function calcStreak(child, today) {
   return 1;
 }
 
-// 孩子提议任务
+// 孩子提议任务 — 直接创建为待完成状态，无需审批
 async function propose(familyId, event) {
   const { childId, title, category, description } = event;
   if (!childId || !title || !category) return { code: 400, message: '请填写任务标题和分类' };
@@ -280,9 +336,9 @@ async function propose(familyId, event) {
     title,
     description: description || '',
     category,
-    basePoints: 0,
+    basePoints: 10,
     taskType: 'special',
-    status: 'proposed',
+    status: 'pending',
     isSelfChallenge: false,
     createdAt: new Date()
   };

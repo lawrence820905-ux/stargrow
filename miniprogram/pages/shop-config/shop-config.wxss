@@ -123,6 +123,11 @@
   background: linear-gradient(135deg, #E08800, #FF9600);
   box-shadow: 0 8px 32px rgba(255,150,0,0.35);
 }
+.sc-page__fab--default {
+  bottom: 320rpx;
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+  box-shadow: 0 8px 32px rgba(139,92,246,0.35);
+}
 
 /* Age grid */
 .sc-page__age-grid {

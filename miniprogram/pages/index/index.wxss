@@ -3,40 +3,36 @@
 
 .index-page__loading { padding: 32rpx; padding-top: 176rpx; }
 
-/* Child Area 鈥?鍦嗗舰澶村儚 + 鍒囨崲鎸夐挳 */
-.index-page__child-area {
-  display: flex; align-items: center; justify-content: center;
-  padding: 16rpx 0 0;
-  gap: 8rpx;
-}
-
-.index-page__level-wrap {
-  flex: 0 1 auto;
+/* Level area — 箭头定位在 Lv名称 文字高度 */
+.index-page__level-row {
+  position: relative;
 }
 
 .index-page__switch-btn {
+  position: absolute;
   width: 64rpx; height: 64rpx;
   border-radius: 50%;
   background: #FFFFFF;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
-  flex-shrink: 0;
+  z-index: 1;
+  top: 132rpx;  /* 32padding + 200circle/2 = 头像圆圈中心 */
+  transform: translateY(-50%);
 }
+.index-page__switch-btn--left { left: 0; }
+.index-page__switch-btn--right { right: 0; }
+
 .index-page__switch-btn:active {
-  transform: scale(0.88);
+  transform: translateY(-50%) scale(0.88);
   background: #58CC02;
 }
 .index-page__switch-btn:active .index-page__switch-arrow {
   color: #FFFFFF;
 }
-.index-page__switch-btn--disabled {
-  opacity: 0.2;
-  pointer-events: none;
-}
 
 .index-page__switch-arrow {
-  font-size: 44rpx; color: #3C3C3C; font-weight: 300;
+  font-size: 40rpx; color: #3C3C3C; font-weight: 300;
   line-height: 1;
 }
 
@@ -209,53 +205,364 @@
   font-size: 28rpx; color: #FFFFFF; font-weight: 600;
 }
 
-/* Onboard Steps */
-.index-page__onboard-steps {
+/* ========================================
+   Onboarding — 新用户引导（无孩子时展示）
+   ======================================== */
+.index-page__onboard {
+  height: calc(100vh - 120rpx);
+  padding: 0 32rpx;
+}
+
+/* ============================================
+   Hero — 装饰圆环 + 浮动粒子 + 主视觉
+   ============================================ */
+.index-page__onboard-hero {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40rpx 0 32rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 装饰圆环 */
+.index-page__onboard-hero-ring {
+  position: absolute;
+  width: 280rpx; height: 280rpx;
+  border-radius: 50%;
+  border: 3rpx dashed rgba(88,204,2,0.18);
+  top: 10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: ring-spin 20s linear infinite;
+}
+.index-page__onboard-hero-ring--inner {
+  width: 200rpx; height: 200rpx;
+  border-style: dotted;
+  border-color: rgba(28,176,246,0.15);
+  top: 50rpx;
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+
+@keyframes ring-spin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* 浮动粒子 */
+.index-page__onboard-particle {
+  position: absolute; font-size: 32rpx;
+  opacity: 0; pointer-events: none;
+}
+.index-page__onboard-particle--1 {
+  top: 20rpx; left: 24%;
+  animation: particle-float 3.5s ease-in-out infinite;
+  animation-delay: 0s;
+}
+.index-page__onboard-particle--2 {
+  top: 64rpx; right: 20%;
+  animation: particle-float 3.2s ease-in-out infinite;
+  animation-delay: 0.8s; font-size: 24rpx;
+}
+.index-page__onboard-particle--3 {
+  top: 100rpx; left: 16%;
+  animation: particle-float 4s ease-in-out infinite;
+  animation-delay: 1.6s; font-size: 28rpx;
+}
+.index-page__onboard-particle--4 {
+  top: 40rpx; right: 28%;
+  animation: particle-float 3.8s ease-in-out infinite;
+  animation-delay: 2.4s; font-size: 26rpx;
+}
+
+@keyframes particle-float {
+  0%, 100% { opacity: 0; transform: translateY(0) scale(0.6); }
+  20% { opacity: 0.7; transform: translateY(-12rpx) scale(1); }
+  40% { opacity: 0.4; transform: translateY(-20rpx) scale(0.8); }
+  60% { opacity: 0.6; transform: translateY(-8rpx) scale(1); }
+  80% { opacity: 0.2; transform: translateY(-16rpx) scale(0.7); }
+}
+
+/* 主 emoji */
+.index-page__onboard-hero-emoji-wrap {
   display: flex; align-items: center; justify-content: center;
-  gap: 12rpx; padding: 0 32rpx; margin-top: 8rpx;
+  position: relative; z-index: 1;
+  margin-bottom: 20rpx;
+}
+.index-page__onboard-hero-emoji {
+  font-size: 100rpx;
+  line-height: 1.2;
+  animation: hero-bounce 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 8rpx 16rpx rgba(88,204,2,0.25));
+}
+
+@keyframes hero-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  15% { transform: translateY(-16rpx) scale(1.06); }
+  30% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-8rpx) scale(1.03); }
+  60% { transform: translateY(0) scale(1); }
+}
+
+/* 标题 — 渐变色兜底 solid color */
+.index-page__onboard-hero-title {
+  font-size: 44rpx; font-weight: 800;
+  color: #46A800;
+  background: linear-gradient(135deg, #46A800 0%, #58CC02 40%, #1CB0F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16rpx;
+  letter-spacing: 4rpx;
+}
+
+/* 分隔装饰 */
+.index-page__onboard-hero-divider {
+  display: flex; align-items: center; gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+.index-page__onboard-hero-divider-line {
+  width: 64rpx; height: 2rpx;
+  background: linear-gradient(90deg, transparent, rgba(88,204,2,0.4), transparent);
+}
+.index-page__onboard-hero-divider-dot {
+  font-size: 14rpx; color: var(--color-primary);
+}
+
+/* 副标题 */
+.index-page__onboard-hero-sub {
+  font-size: var(--font-caption);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   Feature Cards — 彩色图标容器 + 交错滑入
+   ============================================ */
+.index-page__onboard-cards {
+  display: flex; flex-direction: column; gap: 16rpx;
+  margin-bottom: 36rpx;
+}
+
+.index-page__onboard-card {
+  display: flex; align-items: center; gap: 20rpx;
+  background: var(--color-background-card);
+  border-radius: var(--radius-lg);
+  padding: 28rpx 24rpx;
+  box-shadow: var(--shadow-card);
+  position: relative; overflow: hidden;
+  animation: card-slide-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  /* animation-delay set via inline style */
+}
+
+@keyframes card-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 左侧彩色装饰条 */
+.index-page__onboard-card::before {
+  content: ''; position: absolute; left: 0; top: 12rpx; bottom: 12rpx;
+  width: 6rpx; border-radius: 0 3rpx 3rpx 0;
+}
+.index-page__onboard-card--blue::before {
+  background: var(--gradient-blue);
+}
+.index-page__onboard-card--green::before {
+  background: var(--gradient-green);
+}
+.index-page__onboard-card--orange::before {
+  background: var(--gradient-orange);
+}
+
+/* 图标彩色圆形容器 */
+.index-page__onboard-card-icon-wrap {
+  width: 80rpx; height: 80rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.index-page__onboard-card-icon-wrap--blue {
+  background: linear-gradient(135deg, #E8F6FF, #D6F0FF);
+}
+.index-page__onboard-card-icon-wrap--green {
+  background: linear-gradient(135deg, #E8FFE0, #D0FFC8);
+}
+.index-page__onboard-card-icon-wrap--orange {
+  background: linear-gradient(135deg, #FFF6E8, #FFECD0);
+}
+.index-page__onboard-card-icon {
+  font-size: 42rpx;
+}
+
+.index-page__onboard-card-body {
+  flex: 1; min-width: 0;
+}
+.index-page__onboard-card-title {
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  display: block; margin-bottom: 6rpx;
+}
+.index-page__onboard-card-desc {
+  font-size: var(--font-small);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Steps — 第一步高亮脉冲 + 动画连接点
+   ============================================ */
+.index-page__onboard-steps {
+  display: flex; align-items: flex-start; justify-content: center;
+  gap: 0; padding: 0 24rpx; margin-bottom: 44rpx;
   flex-wrap: wrap;
 }
 
 .index-page__onboard-step {
   display: flex; flex-direction: column; align-items: center;
-  gap: 8rpx;
+  gap: 10rpx;
 }
 
 .index-page__onboard-step-num {
   width: 56rpx; height: 56rpx;
   border-radius: 50%;
-  background: #EEF8FF;
+  background: var(--color-background-blue);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(28,176,246,0.15);
+  box-shadow: 0 4px 16px rgba(28,176,246,0.12);
+  position: relative;
+}
+.index-page__onboard-step-num text {
+  font-size: 24rpx; font-weight: 800;
+  color: var(--color-text-secondary);
 }
 
-.index-page__onboard-step-num text {
-  font-size: 26rpx; font-weight: 800; color: #58CC02;
+/* 第一步脉冲高亮 */
+.index-page__onboard-step-num--pulse {
+  background: linear-gradient(135deg, #46A800, #58CC02);
+  box-shadow: 0 4px 24px rgba(88,204,2,0.35);
+  animation: step-pulse 2s ease-in-out infinite;
+}
+.index-page__onboard-step-num--pulse text {
+  color: #FFFFFF; font-size: 26rpx;
+}
+
+@keyframes step-pulse {
+  0%, 100% { box-shadow: 0 4px 24px rgba(88,204,2,0.35); }
+  50% { box-shadow: 0 4px 40px rgba(88,204,2,0.60), 0 0 0 12rpx rgba(88,204,2,0.08); }
 }
 
 .index-page__onboard-step-text {
-  font-size: 24rpx; color: #A0A0A0; font-weight: 600;
+  font-size: 22rpx; color: #A0A0A0; font-weight: 600;
+}
+.index-page__onboard-step-text--active {
+  color: var(--color-primary); font-weight: 700;
 }
 
-.index-page__onboard-arrow {
-  font-size: 24rpx; color: #CFCFCF; margin-top: -16rpx;
+/* 动画连接点 */
+.index-page__onboard-step-connector {
+  display: flex; align-items: center; gap: 6rpx;
+  padding: 0 10rpx; margin-top: 20rpx;
+}
+.index-page__onboard-step-dot {
+  width: 6rpx; height: 6rpx; border-radius: 50%;
+  background: #CFCFCF;
+  animation: dot-blink 1.4s ease-in-out infinite;
+}
+.index-page__onboard-step-dot:nth-child(1) { animation-delay: 0s; }
+.index-page__onboard-step-dot:nth-child(2) { animation-delay: 0.3s; }
+.index-page__onboard-step-dot:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.3); background: var(--color-primary); }
 }
 
-/* Quick Actions */
-.index-page__quick-actions {
-  display: flex; gap: 12rpx;
+/* ============================================
+   CTA — 添加孩子按钮
+   ============================================ */
+.index-page__onboard-cta-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20rpx 16rpx 48rpx;
 }
-.index-page__quick-btn {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  gap: 8rpx; padding: 24rpx;
-  background: linear-gradient(135deg, #FFF9E6, #FFF3CD);
-  border-radius: 24rpx;
-  box-shadow: 0 4px 0 rgba(255,150,0,0.12), 0 2px 8px rgba(0,0,0,0.04);
-  transition: all 0.15s ease;
+
+.index-page__onboard-cta {
+  width: 100%; max-width: 600rpx;
+  height: 88rpx;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #7ED321 0%, #8FE04A 100%);
+  border-radius: var(--radius-full);
+  border: none;
+  box-shadow: 0 4px 16px rgba(126,211,33,0.35), 0 4px 0 #6AB520;
+  transition: var(--transition-fast);
 }
-.index-page__quick-btn:active {
-  transform: scale(0.96);
-  box-shadow: 0 2px 0 rgba(255,150,0,0.08);
+
+.index-page__onboard-cta::after { border: none; }
+.index-page__onboard-cta:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 16px rgba(126,211,33,0.25), 0 2px 0 #6AB520;
 }
-.index-page__quick-btn-icon { font-size: 36rpx; }
-.index-page__quick-btn-text { font-size: 24rpx; font-weight: 700; color: #3C3C3C; }
+
+.index-page__onboard-cta-text {
+  font-size: 30rpx; font-weight: 700; color: #FFFFFF;
+  white-space: nowrap;
+}
+
+/* ============================================
+   Onboarding — Dark Mode
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  .index-page__onboard-hero-ring {
+    border-color: rgba(106,214,10,0.22);
+  }
+  .index-page__onboard-hero-ring--inner {
+    border-color: rgba(62,199,248,0.18);
+  }
+
+  .index-page__onboard-hero-title {
+    color: #6AD60A;
+    background: linear-gradient(135deg, #6AD60A 0%, #78E820 40%, #3EC7F8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .index-page__onboard-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  }
+
+  .index-page__onboard-card-icon-wrap--blue {
+    background: linear-gradient(135deg, #1A3050, #152E45);
+  }
+  .index-page__onboard-card-icon-wrap--green {
+    background: linear-gradient(135deg, #1A3020, #152E18);
+  }
+  .index-page__onboard-card-icon-wrap--orange {
+    background: linear-gradient(135deg, #302018, #2E2012);
+  }
+
+  .index-page__onboard-step-num {
+    background: #2C2C2E;
+  }
+  .index-page__onboard-step-num--pulse {
+    background: linear-gradient(135deg, #46A800, #58CC02);
+    box-shadow: 0 4px 28px rgba(88,204,2,0.40);
+    animation: step-pulse-dark 2s ease-in-out infinite;
+  }
+  @keyframes step-pulse-dark {
+    0%, 100% { box-shadow: 0 4px 28px rgba(88,204,2,0.40); }
+    50% { box-shadow: 0 4px 44px rgba(106,214,10,0.65), 0 0 0 12rpx rgba(106,214,10,0.10); }
+  }
+
+  .index-page__onboard-cta {
+    box-shadow: 0 4px 24px rgba(142,224,74,0.30), 0 4px 0 #5A9E18;
+  }
+
+  .index-page__onboard-hero-divider-line {
+    background: linear-gradient(90deg, transparent, rgba(106,214,10,0.4), transparent);
+  }
+}

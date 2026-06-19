@@ -55,6 +55,14 @@ async function generateGrowthStory(childId) {
   return await callStats('generateGrowthStory', { childId });
 }
 
+async function getFamilyGoal() {
+  return await callStats('getFamilyGoal', {});
+}
+
+async function setFamilyGoal(type, target, reward, title) {
+  return await callStats('setFamilyGoal', { type, target, reward, title });
+}
+
 module.exports = {
   getChildOverview,
   getWeeklyChart,
@@ -67,5 +75,7 @@ module.exports = {
   getSuperpower,
   cheerSibling,
   getPendingPromises,
-  generateGrowthStory
+  generateGrowthStory,
+  getFamilyGoal,
+  setFamilyGoal
 };
