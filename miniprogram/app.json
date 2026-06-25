@@ -4,7 +4,6 @@
     "pages/tasks/tasks",
     "pages/draw/draw",
     "pages/settings/settings",
-    "pages/login/login",
     "pages/task-create/task-create",
     "pages/task-complete/task-complete",
     "pages/draw-config/draw-config",

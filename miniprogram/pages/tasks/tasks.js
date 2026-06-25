@@ -186,6 +186,9 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 });
     }
+    // 刷新孩子列表，避免缓存过期
+    const { loadChildren } = require('../../utils/auth');
+    try { await loadChildren(); } catch (e) { /* ignore */ }
     this.setData({ children: app.globalData.children });
     const activeChild = app.getActiveChild();
     if (activeChild) {
@@ -335,6 +338,19 @@ Page({
     } catch (err) {
       wx.showToast({ title: err.message || '提议失败', icon: 'none' });
     }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '来看看孩子的任务进度吧！',
+      path: '/pages/tasks/tasks'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '成长派克 - 孩子任务管理'
+    };
   },
 
   async onRandomTasks() {

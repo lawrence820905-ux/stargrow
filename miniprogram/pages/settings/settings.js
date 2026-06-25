@@ -1,6 +1,9 @@
+const app = getApp();
+
 Page({
   data: {
     inviteCode: '',
+    joinCode: '',
     members: [],
     memberCount: 0,
     showFeedback: false,
@@ -46,14 +49,14 @@ Page({
   onCopyInvite() {
     const code = this.data.inviteCode;
     if (!code) {
-      // 邀请码为空，尝试刷新家庭数据
+      // 家庭码为空，尝试刷新家庭数据
       this.refreshInviteCode();
       return;
     }
     wx.setClipboardData({
       data: code,
       success: () => {
-        wx.showToast({ title: '邀请码已复制', icon: 'success' });
+        wx.showToast({ title: '家庭码已复制', icon: 'success' });
       },
       fail: () => {
         wx.showToast({ title: '复制失败，请重试', icon: 'none' });
@@ -62,7 +65,7 @@ Page({
   },
 
   async refreshInviteCode() {
-    wx.showLoading({ title: '获取邀请码...' });
+    wx.showLoading({ title: '获取家庭码...' });
     try {
       const res = await wx.cloud.callFunction({
         name: 'user',
@@ -78,22 +81,48 @@ Page({
           wx.setClipboardData({
             data: code,
             success: () => {
-              wx.showToast({ title: '邀请码已复制', icon: 'success' });
+              wx.showToast({ title: '家庭码已复制', icon: 'success' });
             },
             fail: () => {
               wx.showToast({ title: '复制失败，请重试', icon: 'none' });
             }
           });
         } else {
-          wx.showToast({ title: '暂无邀请码，请稍后重试', icon: 'none' });
+          wx.showToast({ title: '暂无家庭码，请稍后重试', icon: 'none' });
         }
       } else {
         wx.hideLoading();
-        wx.showToast({ title: '获取邀请码失败', icon: 'none' });
+        wx.showToast({ title: '获取家庭码失败', icon: 'none' });
       }
     } catch (err) {
       wx.hideLoading();
-      wx.showToast({ title: '获取邀请码失败', icon: 'none' });
+      wx.showToast({ title: '获取家庭码失败', icon: 'none' });
+    }
+  },
+
+  onJoinInput(e) {
+    this.setData({ joinCode: e.detail.value.toUpperCase() });
+  },
+
+  async onJoinFamily() {
+    const code = this.data.joinCode.trim().toUpperCase();
+    if (code.length < 6) {
+      wx.showToast({ title: '请输入6位家庭码', icon: 'none' });
+      return;
+    }
+    wx.showLoading({ title: '加入中...' });
+    try {
+      const { joinFamily } = require('../../utils/auth');
+      const family = await joinFamily(code);
+      app.setFamily(family);
+      await require('../../utils/auth').loadChildren();
+      wx.hideLoading();
+      wx.showToast({ title: '已切换到新家庭！', icon: 'success' });
+      this.setData({ joinCode: '' });
+      this.loadFamilyInfo();
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: err.message || '加入失败，请检查家庭码', icon: 'none' });
     }
   },
 
@@ -123,6 +152,19 @@ Page({
 
   onGoShopConfig() {
     wx.navigateTo({ url: '/pages/shop-config/shop-config' });
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '成长派克 - 孩子激励成长好帮手',
+      path: '/pages/index/index'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '成长派克 - 孩子激励成长好帮手'
+    };
   },
 
   preventBubble() {},

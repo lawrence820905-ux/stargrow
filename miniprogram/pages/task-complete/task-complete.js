@@ -128,5 +128,20 @@ Page({
     } catch (err) {
       wx.showToast({ title: err.message, icon: 'none' });
     }
+  },
+
+  onShareAppMessage() {
+    const taskTitle = this.data.task?.title || '任务';
+    return {
+      title: `我完成了「${taskTitle}」！`,
+      path: '/pages/index/index'
+    };
+  },
+
+  onShareTimeline() {
+    const taskTitle = this.data.task?.title || '任务';
+    return {
+      title: `完成「${taskTitle}」，孩子又进步了一点！`
+    };
   }
 });

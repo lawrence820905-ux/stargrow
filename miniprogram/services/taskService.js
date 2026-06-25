@@ -1,10 +1,7 @@
-async function callTask(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'task',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callTask(action, data = {}) {
+  return callCloud('task', action, data);
 }
 
 async function createTask(childId, title, description, category, basePoints, taskType = 'daily', isSelfChallenge = false, goal = '') {

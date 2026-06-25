@@ -215,6 +215,19 @@ Page({
     // 切换到记录tab时已加载
   },
 
+  onShareAppMessage() {
+    return {
+      title: '成长派克积分商城，用努力换奖励！',
+      path: '/pages/shop/shop'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '成长派克 - 积分商城'
+    };
+  },
+
   async onFulfill(e) {
     const { id } = e.currentTarget.dataset;
     try {

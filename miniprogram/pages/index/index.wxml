@@ -78,7 +78,7 @@
           <view class="index-page__onboard-step-num index-page__onboard-step-num--pulse">
             <text>①</text>
           </view>
-          <text class="index-page__onboard-step-text index-page__onboard-step-text--active">添加孩子</text>
+          <text class="index-page__onboard-step-text index-page__onboard-step-text--active">添加宝贝</text>
         </view>
         <view class="index-page__onboard-step-connector">
           <view class="index-page__onboard-step-dot"></view>
@@ -112,8 +112,29 @@
       <!-- CTA 按钮 -->
       <view class="index-page__onboard-cta-wrap">
         <button class="index-page__onboard-cta" bindtap="onStartOnboarding">
-          <text class="index-page__onboard-cta-text">✨ 添加我的孩子</text>
+          <text class="index-page__onboard-cta-text">✨ 添加我的宝贝</text>
         </button>
+      </view>
+
+      <!-- 已有家庭码？加入家人家庭 -->
+      <view class="index-page__join-wrap">
+        <view class="index-page__join-label-row">
+          <view class="index-page__join-label-line"></view>
+          <text class="index-page__join-label">已有家庭码？</text>
+          <view class="index-page__join-label-line"></view>
+        </view>
+        <view class="index-page__join-bar">
+          <input
+            class="index-page__join-input"
+            placeholder="输入6位家庭码"
+            value="{{joinCode}}"
+            bindinput="onJoinInput"
+            maxlength="6"
+          />
+          <button class="index-page__join-btn" bindtap="onJoinFamily" disabled="{{!joinCode || joinCode.length < 6}}">
+            加入家庭
+          </button>
+        </view>
       </view>
 
     </scroll-view>

@@ -1,10 +1,7 @@
-async function callConfig(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'config',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callConfig(action, data = {}) {
+  return callCloud('config', action, data);
 }
 
 async function getConfig() {

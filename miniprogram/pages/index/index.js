@@ -12,6 +12,7 @@ Page({
     loadError: false,
     isFirstVisit: false,
     showWelcomeTip: false,
+    joinCode: '',
     children: [],
     activeChildId: '',
     activeChild: {},
@@ -52,13 +53,11 @@ Page({
   async loadData() {
     this.setData({ loading: true, loadError: false });
 
-    const children = app.globalData.children;
-    if (children.length === 0) {
-      try {
-        const { loadChildren } = require('../../utils/auth');
-        await loadChildren();
-      } catch (e) { /* ignore */ }
-    }
+    // 始终从云端刷新孩子列表，避免本地缓存过期导致数据不一致
+    try {
+      const { loadChildren } = require('../../utils/auth');
+      await loadChildren();
+    } catch (e) { /* ignore */ }
 
     const allChildren = app.globalData.children;
     let activeChild = app.getActiveChild();
@@ -144,6 +143,23 @@ Page({
       this.loadGrowthStory(childId);
     } catch (err) {
       console.error('加载概览失败:', err);
+      // 如果孩子已被删除，清理脏数据并刷新
+      if (err.message && (err.message.includes('不存在') || err.message.includes('does not exist'))) {
+        const { loadChildren } = require('../../utils/auth');
+        try { await loadChildren(); } catch (e) { /* ignore */ }
+        const allChildren = app.globalData.children;
+        if (allChildren.length > 0) {
+          const next = allChildren[0];
+          app.setActiveChild(next._id);
+          this.setData({ activeChildId: next._id, activeChild: next });
+          this.loadOverview(next._id);
+          return;
+        }
+        // 没有孩子了，清空状态
+        app.setActiveChild('');
+        this.setData({ activeChildId: '', activeChild: {}, loadError: false, loading: false });
+        return;
+      }
       this.setData({ loadError: true });
     }
   },
@@ -224,6 +240,32 @@ Page({
     wx.navigateTo({ url: '/pages/child-manage/child-manage' });
   },
 
+  onJoinInput(e) {
+    this.setData({ joinCode: e.detail.value.toUpperCase() });
+  },
+
+  async onJoinFamily() {
+    const code = this.data.joinCode.trim().toUpperCase();
+    if (code.length < 6) {
+      wx.showToast({ title: '请输入6位家庭码', icon: 'none' });
+      return;
+    }
+    wx.showLoading({ title: '加入中...' });
+    try {
+      const { joinFamily } = require('../../utils/auth');
+      const family = await joinFamily(code);
+      app.setFamily(family);
+      await require('../../utils/auth').loadChildren();
+      wx.hideLoading();
+      wx.showToast({ title: '加入成功！', icon: 'success' });
+      this.setData({ joinCode: '' });
+      this.loadData();
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: err.message || '加入失败，请检查家庭码', icon: 'none' });
+    }
+  },
+
   onRetryLoad() {
     this.loadData();
   },
@@ -268,5 +310,18 @@ Page({
     wx.setStorageSync(key, true);
     const alerts = this.data.motivationAlerts.filter(a => a.type !== type);
     this.setData({ motivationAlerts: alerts });
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '成长派克 - 孩子激励成长好帮手',
+      path: '/pages/index/index'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '成长派克 - 孩子激励成长好帮手'
+    };
   }
 });

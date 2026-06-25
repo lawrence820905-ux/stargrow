@@ -9,7 +9,7 @@
         <view class="settings-page__row-left">
           <text class="settings-page__row-icon">🔑</text>
           <view class="settings-page__row-body">
-            <text class="settings-page__row-text">邀请码</text>
+            <text class="settings-page__row-text">家庭码</text>
             <text class="settings-page__row-sub">分享给家人，加入同一个家庭</text>
           </view>
         </view>
@@ -17,6 +17,26 @@
           <text class="settings-page__invite-code-text">{{inviteCode || '获取中...'}}</text>
           <text class="settings-page__invite-copy">复制</text>
         </view>
+      </view>
+      <!-- Join another family -->
+      <view class="settings-page__row settings-page__row--join">
+        <text class="settings-page__row-icon">🔗</text>
+        <view class="settings-page__row-body">
+          <text class="settings-page__row-text">加入其他家庭</text>
+          <text class="settings-page__row-sub">输入家人的家庭码，切换到同一家庭</text>
+        </view>
+      </view>
+      <view class="settings-page__join-bar">
+        <input
+          class="settings-page__join-input"
+          placeholder="输入6位家庭码"
+          value="{{joinCode}}"
+          bindinput="onJoinInput"
+          maxlength="6"
+        />
+        <button class="settings-page__join-btn" bindtap="onJoinFamily" disabled="{{!joinCode || joinCode.length < 6}}">
+          加入家庭
+        </button>
       </view>
       <view class="settings-page__row settings-page__row--members">
         <view class="settings-page__row-left">

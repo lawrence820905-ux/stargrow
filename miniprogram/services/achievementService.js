@@ -1,13 +1,7 @@
-async function callAchievement(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'achievement',
-    data: { action, ...data }
-  });
-  const result = res && res.result;
-  if (!result || result.code !== 0) {
-    throw new Error((result && result.message) || '服务器错误');
-  }
-  return result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callAchievement(action, data = {}) {
+  return callCloud('achievement', action, data);
 }
 
 async function checkAndAward(childId) {

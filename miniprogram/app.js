@@ -14,6 +14,29 @@ App({
     });
 
     this.loadGlobalData();
+    this.recoverFamilyIfNeeded();
+  },
+
+  // 如果本地有 userInfo 但家庭缺失，尝试从云端恢复
+  async recoverFamilyIfNeeded() {
+    if (!this.globalData.userInfo) return;
+    if (this.globalData.family) return;
+
+    console.log('检测到 userInfo 存在但 family 缺失，尝试从云端恢复…');
+    try {
+      const { ensureFamily } = require('./utils/auth');
+      const family = await ensureFamily();
+      if (family) {
+        console.log('家庭恢复成功:', family._id);
+        // 恢复成功后刷新孩子列表
+        const { loadChildren } = require('./utils/auth');
+        await loadChildren();
+      } else {
+        console.warn('家庭恢复失败，将在需要时重新登录');
+      }
+    } catch (err) {
+      console.error('家庭恢复异常:', err);
+    }
   },
 
   loadGlobalData: function () {

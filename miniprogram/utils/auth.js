@@ -38,10 +38,19 @@ async function login() {
             name: 'user',
             data: { action: 'login', code: res.code }
           });
+          // 检查云函数返回的业务状态码
+          if (result.result.code !== 0) {
+            reject(new Error(result.result.message || '登录失败'));
+            return;
+          }
           const { openid, family, isNew } = result.result;
           app.setUserInfo({ openid });
           if (family) {
             app.setFamily(family);
+          } else {
+            // 家庭不存在且未创建成功，清除旧数据
+            app.setFamily(null);
+            wx.removeStorageSync('family');
           }
           resolve({ openid, family, isNew });
         } catch (err) {
@@ -51,6 +60,30 @@ async function login() {
       fail: reject
     });
   });
+}
+
+// 确保家庭存在：如果云端没有家庭，自动创建一个
+// 用于恢复"本地有 userInfo 但云端无 family"的脏数据场景
+async function ensureFamily() {
+  try {
+    const res = await wx.cloud.callFunction({
+      name: 'user',
+      data: { action: 'login' }
+    });
+    if (res.result.code !== 0) {
+      console.error('ensureFamily 失败:', res.result.message);
+      return null;
+    }
+    const { family } = res.result;
+    if (family) {
+      app.setFamily(family);
+      console.log('ensureFamily: 家庭已恢复');
+    }
+    return family;
+  } catch (err) {
+    console.error('ensureFamily 异常:', err);
+    return null;
+  }
 }
 
 async function loadChildren() {
@@ -86,6 +119,7 @@ module.exports = {
   getActiveChildId,
   isLoggedIn,
   login,
+  ensureFamily,
   loadChildren,
   joinFamily
 };

@@ -1,10 +1,7 @@
-async function callDraw(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'draw',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callDraw(action, data = {}) {
+  return callCloud('draw', action, data);
 }
 
 async function getPools(childId) {

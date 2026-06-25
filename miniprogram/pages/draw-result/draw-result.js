@@ -20,5 +20,20 @@ Page({
 
   onDone() {
     wx.navigateBack();
+  },
+
+  onShareAppMessage() {
+    const prizeName = this.data.prizeName || '惊喜奖励';
+    return {
+      title: `我抽到了「${prizeName}」！`,
+      path: '/pages/draw/draw'
+    };
+  },
+
+  onShareTimeline() {
+    const prizeName = this.data.prizeName || '惊喜奖励';
+    return {
+      title: `抽到了「${prizeName}」，来成长派克试试手气吧！`
+    };
   }
 });

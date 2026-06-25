@@ -1,10 +1,7 @@
-async function callStats(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'stats',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callStats(action, data = {}) {
+  return callCloud('stats', action, data);
 }
 
 async function getChildOverview(childId) {

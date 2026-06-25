@@ -1,13 +1,9 @@
 const { login, loadChildren } = require('../utils/auth');
+const { callCloud } = require('../utils/cloudHelper');
 const app = getApp();
 
-async function callChild(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'child',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+function callChild(action, data = {}) {
+  return callCloud('child', action, data);
 }
 
 async function createChild(name, avatarUrl, age, birthYear) {

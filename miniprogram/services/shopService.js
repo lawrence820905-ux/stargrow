@@ -1,4 +1,5 @@
 const db = wx.cloud.database();
+const { callCloud } = require('../utils/cloudHelper');
 
 function app() { return getApp(); }
 
@@ -35,13 +36,8 @@ async function getFamilyId() {
 }
 
 /** 云函数调用 */
-async function callShop(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'shop',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+function callShop(action, data = {}) {
+  return callCloud('shop', action, data);
 }
 
 /** 列出商品 — 双路径并发查询 */

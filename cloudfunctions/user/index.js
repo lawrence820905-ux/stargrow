@@ -24,7 +24,7 @@ exports.main = async (event, context) => {
   }
 };
 
-// 邀请码长度
+// 家庭码长度
 const CODE_LEN = 6;
 
 async function login(openid, event) {
@@ -103,12 +103,12 @@ async function login(openid, event) {
 async function joinFamily(openid, event) {
   const { inviteCode } = event;
   if (!inviteCode || inviteCode.length !== CODE_LEN) {
-    return { code: 400, message: '请输入6位邀请码' };
+    return { code: 400, message: '请输入6位家庭码' };
   }
 
   const familyRes = await db.collection('families').where({ inviteCode: inviteCode.toUpperCase() }).get();
   if (familyRes.data.length === 0) {
-    return { code: 404, message: '邀请码无效，请检查后重试' };
+    return { code: 404, message: '家庭码无效，请检查后重试' };
   }
 
   const family = familyRes.data[0];

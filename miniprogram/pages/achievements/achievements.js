@@ -16,6 +16,9 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 });
     }
+    // 刷新孩子列表，避免缓存过期
+    const { loadChildren } = require('../../utils/auth');
+    try { await loadChildren(); } catch (e) { /* ignore */ }
     this.setData({ children: app.globalData.children });
     const activeChild = app.getActiveChild();
     if (activeChild) {
@@ -35,6 +38,19 @@ Page({
         total: result.total
       });
     } catch (e) { /* ignore */ }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '看看孩子获得了哪些成就徽章！',
+      path: '/pages/achievements/achievements'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '成长派克 - 孩子成就墙'
+    };
   },
 
   onChildChange(e) {

@@ -1,10 +1,7 @@
-async function callObserve(action, data = {}) {
-  const res = await wx.cloud.callFunction({
-    name: 'observe',
-    data: { action, ...data }
-  });
-  if (res.result.code !== 0) throw new Error(res.result.message);
-  return res.result;
+const { callCloud } = require('../utils/cloudHelper');
+
+function callObserve(action, data = {}) {
+  return callCloud('observe', action, data);
 }
 
 async function addObservation(childId, content, mood = '', tags = [], bonusPoints = 0) {

@@ -41,7 +41,15 @@ async function getFamilyByOpenid(openid) {
 
 async function getChildOverview(familyId, event) {
   const { childId } = event;
-  const child = await db.collection('children').doc(childId).get();
+  if (!childId) return { code: 400, message: '缺少孩子ID' };
+
+  let child;
+  try {
+    child = await db.collection('children').doc(childId).get();
+    if (!child.data) return { code: 404, message: '孩子不存在' };
+  } catch (e) {
+    return { code: 404, message: '孩子不存在' };
+  }
 
   // 本周任务数
   const today = new Date();
